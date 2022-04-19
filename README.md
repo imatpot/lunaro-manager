@@ -6,7 +6,7 @@
 
 <p align="center">
   <i>
-    Discord bot for tracking <a href="https://warframe.fandom.com/wiki/Lunaro">Lunaro</a>
+    Discord bot for periodic tracking of <a href="https://warframe.fandom.com/wiki/Lunaro">Lunaro</a>
     players in the <a href="https://discord.gg/mUjGHEw">Lunaro Revival Server</a>
   </i>
 </p>
@@ -32,7 +32,21 @@ https://discord.com/api/oauth2/authorize?permissions=277293828096&scope=bot%20ap
 
 ## Usage
 
-todo
+
+
+```sh
+# Enable / disable Lunaro Tracker (5 min interval, disabled by default)
+/tracker on
+/tracker off
+
+# Allow / deny Lunaro Tracking (denied by default)
+/tracker allow
+/tracker deny
+
+# Join / leave "Ready To Play"
+/rtp join
+/rtp leave
+```
 
 ---
 
