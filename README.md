@@ -12,8 +12,8 @@
 </p>
 
 <p align="center">
-  <a href="https://svelte.dev">
-    <img src="https://img.shields.io/badge/Built%20with-JavaScript-yellow?logo=javascript&style=flat-square">
+  <a href="https://nodejs.org">
+    <img src="https://img.shields.io/badge/Built%20with-NodeJS-darkgreen?logo=node.js&style=flat-square">
   </a>
   <a href="LICENSE.md">
     <img src="https://img.shields.io/github/license/imatpot/lunaro-tracking-bot?style=flat-square">
