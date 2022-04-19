@@ -1,0 +1,14 @@
+version: "3"
+
+services:
+  lunaro-tracking-bot:
+    image: "lunaro-tracking-bot"
+    build: "."
+    hostname: "lunaro-tracking-bot"
+    container_name: "lunaro-tracking-bot"
+    restart: "unless-stopped"
+    command: "npm start"
+    environment:
+      DISCORD_TOKEN: "${DISCORD_TOKEN}"
+      OWNERS: "${OWNERS}"
+      PREFIXES: "${PREFIXES:-:}"
