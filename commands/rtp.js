@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
+const { fetchRTPRole } = require('../util/fetchRTPRole');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -11,7 +12,23 @@ module.exports = {
             subcommand.setName('leave').setDescription('🌙 Leave RTP')
         ),
 
-    execute: async (interaction) => {
-        await interaction.reply('rtp ' + interaction.options.getSubcommand());
+    run: async (interaction) => {
+        const subcommand = interaction.options.getSubcommand();
+        switch (subcommand) {
+            case 'join':
+                return joinRTP(interaction);
+            case 'leave':
+                return leaveRTP(interaction);
+        }
     },
+};
+
+const joinRTP = (interaction) => {
+    interaction.member.roles.add(fetchRTPRole(interaction));
+    interaction.reply("*You joined RTP.*\nTime to show 'em what you can do!");
+};
+
+const leaveRTP = (interaction) => {
+    interaction.member.roles.remove(fetchRTPRole(interaction));
+    interaction.reply("*You left RTP.*\nYou'll come back eventually, right?");
 };

@@ -26,13 +26,11 @@
 
 Replace your client ID and keep the scopes. The bot is designed to only be active in 1 server at a time.
 
-https://discord.com/api/oauth2/authorize?permissions=277293828096&scope=bot%20applications.commands&client_id=123
+https://discord.com/api/oauth2/authorize?permissions=277293894656&scope=bot%20applications.commands&client_id=123
 
 ---
 
 ## Usage
-
-
 
 ```sh
 # Enable / disable Lunaro Tracker (5 min interval, disabled by default)
@@ -52,7 +50,13 @@ https://discord.com/api/oauth2/authorize?permissions=277293828096&scope=bot%20ap
 
 ## Local Setup
 
-Create a `.env` file following the example of [.env.example](.env.example)
+1. Create a bot on https://discord.com/developers
+
+2. Enable `PRESENCE` & `SERVER MEMBERS` intents in the Bot section
+
+3. Create a `.env` file following the example of [.env.example](.env.example)
+
+4. Run the bot
 
 ## Run directly
 

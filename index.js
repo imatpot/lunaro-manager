@@ -1,11 +1,15 @@
 const { Client, Collection, Intents } = require('discord.js');
 const { readdirSync } = require('node:fs');
-const { DISCORD_TOKEN } = require('./config');
+const { DISCORD_TOKEN } = require('./environment');
 const { deployCommands } = require('./deploy-commands');
 const { interactionCreate } = require('./events/interactionCreate');
 
 const client = new Client({
-    intents: [Intents.FLAGS.GUILDS],
+    intents: [
+        Intents.FLAGS.GUILDS,
+        Intents.FLAGS.GUILD_MEMBERS,
+        Intents.FLAGS.GUILD_PRESENCES,
+    ],
 });
 
 client.commands = new Collection();
@@ -19,8 +23,9 @@ for (const file of commandFiles) {
     client.commands.set(command.data.name, command);
 }
 
-client.on('interactionCreate', (interaction) =>
-    interactionCreate(interaction, client)
+client.on(
+    'interactionCreate',
+    async (interaction) => await interactionCreate(interaction, client)
 );
 
 client.once('ready', async () => {

@@ -7,13 +7,13 @@ module.exports = {
         if (!command) return;
 
         try {
-            await command.execute(interaction);
+            await command.run(interaction);
         } catch (error) {
             console.error(error);
             await interaction.reply({
-                content: 'There was an error while executing this command!',
+                content: 'Failed to run the command.\n```\n' + error + '\n```',
                 ephemeral: true,
             });
         }
-    }
+    },
 };
