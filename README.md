@@ -81,3 +81,7 @@ npm run watch   # for development
 ```sh
 docker-compose up -d
 ```
+
+## Development
+
+For missing features, see [TODO.md](TODO.md)
