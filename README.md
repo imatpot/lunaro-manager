@@ -32,10 +32,13 @@ https://discord.com/api/oauth2/authorize?permissions=277293894656&scope=bot%20ap
 
 ## Usage
 
-```sh
+```py
 # Enable / disable Lunaro Tracker (5 min interval, disabled by default)
-/tracker on
-/tracker off
+/tracker enable
+/tracker disable
+
+# Force-run Luanro Tracking
+/tracker scan
 
 # Allow / deny Lunaro Tracking (denied by default)
 /tracker allow
