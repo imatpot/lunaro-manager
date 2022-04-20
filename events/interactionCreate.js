@@ -11,7 +11,7 @@ module.exports = {
         } catch (error) {
             console.error(error);
             await interaction.reply({
-                content: 'Failed to run the command.\n```\n' + error + '\n```',
+                content: '❌ Failed to run the command.\n```\n' + error + '\n```',
                 ephemeral: true,
             });
         }

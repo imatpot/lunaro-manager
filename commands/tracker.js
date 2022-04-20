@@ -1,6 +1,11 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { fetchLunaroPlayers } = require('../util/fetchLunaroPlayers');
 const { fetchRTPRole } = require('../util/fetchRTPRole');
+const {
+    addToWhitelist,
+    removeFromWhitelist,
+    readWhitelist,
+} = require('../util/whitelist');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -44,25 +49,40 @@ module.exports = {
             case 'scan':
                 return scanForPlayers(interaction);
             case 'allow':
-                return addMemberToWhitelist(interaction);
+                return allowTracking(interaction);
             case 'deny':
-                return removeMemberFromWhitelist(interaction);
+                return denyTracking(interaction);
         }
     },
 };
 
-const enableTracker = async (interaction) => {};
+const enableTracker = (interaction) => {};
 
-const disableTracker = async (interaction) => {};
+const disableTracker = (interaction) => {};
 
 const scanForPlayers = async (interaction) => {
     const players = await fetchLunaroPlayers(interaction);
     for (const player of players) {
         player.roles.add(fetchRTPRole(interaction));
     }
-    interaction.reply(`Found a total of ${players.length} Lunaro players.`);
+    interaction.reply(`🔎 Found a total of ${players.length} Lunaro players.`);
+    console.log('Member scanned for players');
 };
 
-const addMemberToWhitelist = async (interaction) => {};
+const allowTracking = async (interaction) => {
+    addToWhitelist(interaction.member.id);
+    interaction.reply({
+        content: '✅ You are now being tracked.',
+        ephemeral: true,
+    });
+    console.log('Member enabled tracking');
+};
 
-const removeMemberFromWhitelist = async (interaction) => {};
+const denyTracking = async (interaction) => {
+    removeFromWhitelist(interaction.member.id);
+    interaction.reply({
+        content: '⛔ You are no longer being tracked.',
+        ephemeral: true,
+    });
+    console.log('Member disabled tracking');
+};
