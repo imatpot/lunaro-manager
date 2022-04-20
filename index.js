@@ -30,7 +30,7 @@ client.on(
 
 client.once('ready', async () => {
     await deployCommands(client);
-    console.log('Tracker is ready.');
+    console.log('Lunaro Tracker is ready.');
 });
 
 client.login(DISCORD_TOKEN);

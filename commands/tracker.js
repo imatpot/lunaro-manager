@@ -1,11 +1,16 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { fetchLunaroPlayers } = require('../util/fetchLunaroPlayers');
-const { fetchRTPRole } = require('../util/fetchRTPRole');
+const { RTP_ROLE_ID } = require('../environment');
+const { fetchRTPRole } = require('../util/rtpRole');
 const {
     addToWhitelist,
     removeFromWhitelist,
     readWhitelist,
 } = require('../util/whitelist');
+const {
+    fetchAvailablePlayers,
+    fetchLunaroPlayers,
+    fetchRTPMembers,
+} = require('../util/lunaroPlayers');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -61,12 +66,28 @@ const enableTracker = (interaction) => {};
 const disableTracker = (interaction) => {};
 
 const scanForPlayers = async (interaction) => {
-    const players = await fetchLunaroPlayers(interaction);
-    for (const player of players) {
-        player.roles.add(fetchRTPRole(interaction));
+    const lunaroPlayers = await fetchLunaroPlayers(interaction);
+    for (const player of lunaroPlayers) {
+        if (readWhitelist().includes(interaction.member.id)) {
+            player.roles.add(fetchRTPRole(interaction));
+        }
     }
-    interaction.reply(`🔎 Found a total of ${players.length} Lunaro players.`);
-    console.log('Member scanned for players');
+
+    const rtpMembers = await fetchRTPMembers(interaction);
+    for (const member of rtpMembers) {
+        if (readWhitelist().includes(interaction.member.id)) {
+            if (!lunaroPlayers.includes(member)) {
+                member.roles.remove(fetchRTPRole(interaction));
+            }
+        }
+    }
+
+    const availablePlayers = (await fetchAvailablePlayers(interaction)).length;
+
+    interaction.reply(
+        `🔎 Found a total of ${availablePlayers} Lunaro players.`
+    );
+    console.log('Member scanned for players.');
 };
 
 const allowTracking = async (interaction) => {
@@ -75,7 +96,7 @@ const allowTracking = async (interaction) => {
         content: '✅ You are now being tracked.',
         ephemeral: true,
     });
-    console.log('Member enabled tracking');
+    console.log('Member enabled tracking.');
 };
 
 const denyTracking = async (interaction) => {
@@ -84,5 +105,5 @@ const denyTracking = async (interaction) => {
         content: '⛔ You are no longer being tracked.',
         ephemeral: true,
     });
-    console.log('Member disabled tracking');
+    console.log('Member disabled tracking.');
 };

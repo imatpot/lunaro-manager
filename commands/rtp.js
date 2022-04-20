@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { fetchRTPRole } = require('../util/fetchRTPRole');
+const { fetchRTPRole } = require('../util/rtpRole');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -26,11 +26,11 @@ module.exports = {
 const joinRTP = (interaction) => {
     interaction.member.roles.add(fetchRTPRole(interaction));
     interaction.reply("🟢 *You joined RTP.*\nTime to show 'em what you can do!");
-    console.log('Member joined RTP');
+    console.log('Member joined RTP.');
 };
 
 const leaveRTP = (interaction) => {
     interaction.member.roles.remove(fetchRTPRole(interaction));
     interaction.reply("🌙 *You left RTP.*\nYou'll come back eventually, right?");
-    console.log('Member left RTP');
+    console.log('Member left RTP.');
 };
