@@ -22,14 +22,18 @@ module.exports = {
 
     addToWhitelist: (id) => {
         const whitelist = module.exports.readWhitelist();
-        whitelist.push(id);
-        writeFileSync(whitelistFile, whitelist.join('\n'));
+        if (!whitelist.includes(id)) {
+            whitelist.push(id);
+            writeFileSync(whitelistFile, whitelist.join('\n'));
+        }
     },
 
     removeFromWhitelist: (id) => {
         let whitelist = module.exports.readWhitelist();
-        whitelist = whitelist.filter((entry) => entry !== id);
-        writeFileSync(whitelistFile, whitelist.join('\n'));
+        if (whitelist.includes(id)) {
+            whitelist = whitelist.filter((entry) => entry !== id);
+            writeFileSync(whitelistFile, whitelist.join('\n'));
+        }
     },
 };
 

@@ -34,13 +34,13 @@ module.exports = {
         .addSubcommand((subcommand) =>
             subcommand
                 .setName('allow')
-                .setDescription('✅ Allow Luanro Tracker to read your activity')
+                .setDescription('✅ Allow Lunaro Tracker to read your activity')
         )
         .addSubcommand((subcommand) =>
             subcommand
                 .setName('deny')
                 .setDescription(
-                    '⛔ Deny Luanro Tracker from reading your activity'
+                    '⛔ Deny Lunaro Tracker from reading your activity'
                 )
         ),
 
