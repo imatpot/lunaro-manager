@@ -1,6 +1,11 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { RTP_ROLE_ID } = require('../environment');
+const {
+    isTrackerEnabled,
+    enableTracker,
+    disableTracker,
+} = require('../util/state');
 const { fetchRTPRole } = require('../util/rtpRole');
+const { isTrackerEnabled } = require('../util/state');
 const {
     addToWhitelist,
     removeFromWhitelist,
@@ -11,6 +16,7 @@ const {
     fetchLunaroPlayers,
     fetchRTPMembers,
 } = require('../util/lunaroPlayers');
+const { Permissions } = require('discord.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -48,9 +54,9 @@ module.exports = {
         const subcommand = interaction.options.getSubcommand();
         switch (subcommand) {
             case 'enable':
-                return enableTracker(interaction);
+                return enableTrackerGlobally(interaction);
             case 'disable':
-                return disableTracker(interaction);
+                return disableTrackerGlobally(interaction);
             case 'scan':
                 return scanForPlayers(interaction);
             case 'allow':
@@ -61,11 +67,50 @@ module.exports = {
     },
 };
 
-const enableTracker = (interaction) => {};
+const enableTrackerGlobally = (interaction) => {
+    if (!isModerator(interaction)) {
+        interaction.reply({
+            content: '❌  Permission denied.',
+            ephemeral: true,
+        });
 
-const disableTracker = (interaction) => {};
+        return;
+    }
+
+    enableTracker();
+    interaction.reply('⚡  Lunaro tracker has been enabled.');
+    interaction.client.user.setStatus('online');
+    interaction.client.user.setActivity('Lunaro. Tracker is on.');
+
+    console.log('Member enabled tracker.');
+};
+
+const disableTrackerGlobally = (interaction) => {
+    if (!isModerator(interaction)) {
+        interaction.reply({
+            content: '❌  Permission denied.',
+            ephemeral: true,
+        });
+
+        return;
+    }
+
+    disableTracker();
+    interaction.reply('🛑  Lunaro tracker has been disabled.');
+    interaction.client.user.setStatus('dnd');
+    interaction.client.user.setActivity('Lunaro. Tracker is off.');
+
+    console.log('Member disabled tracker.');
+};
 
 const scanForPlayers = async (interaction) => {
+    if (!isTrackerEnabled()) {
+        interaction.reply({
+            content: '❌  Tracker is disabled.',
+        });
+        return;
+    }
+
     const lunaroPlayers = await fetchLunaroPlayers(interaction);
     for (const player of lunaroPlayers) {
         if (readWhitelist().includes(interaction.member.id)) {
@@ -85,25 +130,31 @@ const scanForPlayers = async (interaction) => {
     const availablePlayers = (await fetchAvailablePlayers(interaction)).length;
 
     interaction.reply(
-        `🔎 Found a total of ${availablePlayers} Lunaro players.`
+        `🔎  Found a total of ${availablePlayers} Lunaro players.`
     );
+
     console.log('Member scanned for players.');
 };
 
 const allowTracking = async (interaction) => {
     addToWhitelist(interaction.member.id);
     interaction.reply({
-        content: '✅ You are now being tracked.',
+        content: '✅  Your activity is now being tracked.',
         ephemeral: true,
     });
+
     console.log('Member enabled tracking.');
 };
 
 const denyTracking = async (interaction) => {
     removeFromWhitelist(interaction.member.id);
     interaction.reply({
-        content: '⛔ You are no longer being tracked.',
+        content: '⛔  Your activity is no longer being tracked.',
         ephemeral: true,
     });
+
     console.log('Member disabled tracking.');
 };
+
+const isModerator = (interaction) =>
+    interaction.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR);

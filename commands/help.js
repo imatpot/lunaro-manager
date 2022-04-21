@@ -10,5 +10,7 @@ module.exports = {
             content: 'help',
             ephemeral: true,
         });
+
+        console.log('Member asked for help.');
     },
 };

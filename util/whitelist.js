@@ -38,6 +38,6 @@ module.exports = {
 };
 
 const createWhitelistFile = () => {
-    mkdirSync('data');
-    closeSync(openSync(whitelistFile, 'w'));
+    if (!existsSync('data')) mkdirSync('data');
+    writeFileSync(whitelistFile, '', { flag: 'w' });
 };

@@ -7,8 +7,8 @@
 - [ ] Periodic player tracking
 - [x] Add to/remove from whitelist
 - [x] Respecting whitelist/opt-in when tracking
-- [ ] Globally enabling/disabling tracking
-- [ ] Adjust Discord presence according to on/off status
+- [x] Globally enabling/disabling tracking
+- [x] Adjust Discord presence according to on/off status
 - [x] Option to enable/disable future tracking when managing RTP manually
 - [ ] Basic code cleanup/refactor (where deemed necessary)
 - [ ] Testing

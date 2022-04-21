@@ -52,16 +52,14 @@ module.exports = {
 
 const joinRTP = (interaction) => {
     interaction.member.roles.add(fetchRTPRole(interaction));
-    interaction.reply(
-        "🟢 *You joined RTP.*\nTime to show 'em what you can do!"
-    );
+    interaction.reply('🟢  You joined RTP.');
+
     console.log('Member joined RTP.');
 };
 
 const leaveRTP = (interaction) => {
     interaction.member.roles.remove(fetchRTPRole(interaction));
-    interaction.reply(
-        "🌙 *You left RTP.*\nYou'll come back eventually, right?"
-    );
+    interaction.reply('🌙  You left RTP.');
+
     console.log('Member left RTP.');
 };
