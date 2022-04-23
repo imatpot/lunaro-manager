@@ -106,7 +106,9 @@ const scanForPlayers = async (interaction) => {
 
     const playerCount = (await fetchAvailablePlayers(interaction.guild)).length;
 
-    interaction.reply(`🔎  Found ${playerCount} Lunaro players.`);
+    interaction.reply(
+        `🔎  Found ${playerCount} Lunaro player${playerCount !== 1 ? 's' : ''}.`
+    );
 
     log('Member scanned for players.');
 };
