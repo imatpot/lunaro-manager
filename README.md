@@ -28,6 +28,8 @@ Replace your client ID and keep the scopes. The bot is designed to only be activ
 
 https://discord.com/api/oauth2/authorize?permissions=277293894656&scope=bot%20applications.commands&client_id=123
 
+Please make sure the bot's personal role is ranked *above* the managed RTP role!
+
 ---
 
 ## Usage
