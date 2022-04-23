@@ -9,7 +9,7 @@ services:
     restart: "unless-stopped"
     command: "npm start"
     volumes:
-      - "./data:/data"
+      - "./data:/app/data"
     environment:
       DISCORD_TOKEN: "${DISCORD_TOKEN}"
       CLIENT_ID: "${CLIENT_ID}"
