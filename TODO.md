@@ -10,6 +10,7 @@
 - [x] Globally enabling/disabling tracking
 - [x] Adjust Discord presence according to on/off status
 - [x] Option to enable/disable future tracking when managing RTP manually
+- [ ] Improved logging
 - [ ] Basic code cleanup/refactor (where deemed necessary)
 - [ ] Testing
 - [ ] Release/deployment
