@@ -3,7 +3,7 @@ const { log } = require('../util/logger');
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('help')
+        .setName('source')
         .setDescription("💾 View Luanro Tracker's source code"),
 
     run: async (interaction) => {
