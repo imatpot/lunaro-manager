@@ -38,7 +38,7 @@ https://discord.com/api/oauth2/authorize?permissions=277293894656&scope=bot%20ap
 /tracker enable
 /tracker disable
 
-# Force-run Luanro Tracking
+# Force-run Lunaro Tracking
 /tracker scan
 
 # Allow / deny Lunaro Tracking

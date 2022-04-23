@@ -1,7 +1,7 @@
 # Pre-Release TODO
 
 - [x] Command templating
-- [ ] Help command
+- [x] Help command
 - [x] Manual RTP join/leave
 - [x] Manual player tracking
 - [x] Periodic player tracking
