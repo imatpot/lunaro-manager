@@ -8,7 +8,10 @@ services:
     container_name: "lunaro-tracking-bot"
     restart: "unless-stopped"
     command: "npm start"
+    volumes:
+      - "./data:/data"
     environment:
       DISCORD_TOKEN: "${DISCORD_TOKEN}"
-      OWNERS: "${OWNERS}"
-      PREFIXES: "${PREFIXES:-:}"
+      CLIENT_ID: "${CLIENT_ID}"
+      TRACKED_GUILD_ID: "${TRACKED_GUILD_ID}"
+      RTP_ROLE_ID: "${RTP_ROLE_ID}"
