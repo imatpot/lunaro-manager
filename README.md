@@ -34,7 +34,7 @@ Please make sure the bot's personal role is ranked *above* the managed RTP role!
 
 ## Usage
 
-```py
+```r
 # Enable / disable Lunaro Tracker
 # (1 min interval, disabled by default, admin only)
 /tracker enable
@@ -52,6 +52,12 @@ Please make sure the bot's personal role is ranked *above* the managed RTP role!
 # Option `tracking` is optional to enable/disable future tracking
 /rtp join [tracking: boolean]
 /rtp leave [tracking: boolean]
+
+# Request help
+/help
+
+# Request source code
+/source
 ```
 
 ---
