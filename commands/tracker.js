@@ -4,18 +4,8 @@ const {
     enableTracker,
     disableTracker,
 } = require('../util/state');
-const { fetchRTPRole } = require('../util/rtpRole');
-const { isTrackerEnabled } = require('../util/state');
-const {
-    addToWhitelist,
-    removeFromWhitelist,
-    readWhitelist,
-} = require('../util/whitelist');
-const {
-    fetchAvailablePlayers,
-    fetchLunaroPlayers,
-    fetchRTPMembers,
-} = require('../util/lunaroPlayers');
+const { addToWhitelist, removeFromWhitelist } = require('../util/whitelist');
+const { fetchAvailablePlayers, updateRTP } = require('../util/lunaroPlayers');
 const { Permissions } = require('discord.js');
 
 module.exports = {
@@ -77,10 +67,8 @@ const enableTrackerGlobally = (interaction) => {
         return;
     }
 
-    enableTracker();
+    enableTracker(interaction.guild, interaction.client);
     interaction.reply('⚡  Lunaro tracker has been enabled.');
-    interaction.client.user.setStatus('online');
-    interaction.client.user.setActivity('Lunaro. Tracker is on.');
 
     console.log('Member enabled tracker.');
 };
@@ -95,10 +83,8 @@ const disableTrackerGlobally = (interaction) => {
         return;
     }
 
-    disableTracker();
+    disableTracker(interaction.client);
     interaction.reply('🛑  Lunaro tracker has been disabled.');
-    interaction.client.user.setStatus('dnd');
-    interaction.client.user.setActivity('Lunaro. Tracker is off.');
 
     console.log('Member disabled tracker.');
 };
@@ -111,27 +97,11 @@ const scanForPlayers = async (interaction) => {
         return;
     }
 
-    const lunaroPlayers = await fetchLunaroPlayers(interaction);
-    for (const player of lunaroPlayers) {
-        if (readWhitelist().includes(interaction.member.id)) {
-            player.roles.add(fetchRTPRole(interaction));
-        }
-    }
+    await updateRTP(interaction.guild);
 
-    const rtpMembers = await fetchRTPMembers(interaction);
-    for (const member of rtpMembers) {
-        if (readWhitelist().includes(interaction.member.id)) {
-            if (!lunaroPlayers.includes(member)) {
-                member.roles.remove(fetchRTPRole(interaction));
-            }
-        }
-    }
+    const playerCount = (await fetchAvailablePlayers(interaction.guild)).length;
 
-    const availablePlayers = (await fetchAvailablePlayers(interaction)).length;
-
-    interaction.reply(
-        `🔎  Found a total of ${availablePlayers} Lunaro players.`
-    );
+    interaction.reply(`🔎  Found a total of ${playerCount} Lunaro players.`);
 
     console.log('Member scanned for players.');
 };

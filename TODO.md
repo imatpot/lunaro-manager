@@ -4,7 +4,7 @@
 - [ ] Help command
 - [x] Manual RTP join/leave
 - [x] Manual player tracking
-- [ ] Periodic player tracking
+- [x] Periodic player tracking
 - [x] Add to/remove from whitelist
 - [x] Respecting whitelist/opt-in when tracking
 - [x] Globally enabling/disabling tracking

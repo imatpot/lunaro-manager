@@ -51,14 +51,14 @@ module.exports = {
 };
 
 const joinRTP = (interaction) => {
-    interaction.member.roles.add(fetchRTPRole(interaction));
+    interaction.member.roles.add(fetchRTPRole(interaction.guild));
     interaction.reply('🟢  You joined RTP.');
 
     console.log('Member joined RTP.');
 };
 
 const leaveRTP = (interaction) => {
-    interaction.member.roles.remove(fetchRTPRole(interaction));
+    interaction.member.roles.remove(fetchRTPRole(interaction.guild));
     interaction.reply('🌙  You left RTP.');
 
     console.log('Member left RTP.');

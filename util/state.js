@@ -4,8 +4,10 @@ const {
     writeFileSync,
     readFileSync,
 } = require('node:fs');
+const { updateRTP } = require('./lunaroPlayers');
 
 const trackerEnabledFile = 'data/trackerEnabled';
+let periodicTracker;
 
 module.exports = {
     isTrackerEnabled: () => {
@@ -21,23 +23,28 @@ module.exports = {
         }
     },
 
-    enableTracker: () => {
-        const trackerEnabled = module.exports.isTrackerEnabled();
-        if (!trackerEnabled) {
-            writeFileSync(trackerEnabledFile, 'true');
-        }
+    enableTracker: (guild, client) => {
+        writeFileSync(trackerEnabledFile, 'true');
+        module.exports.enablePeriodicTracking(guild);
+        client.user.setStatus('online');
+        client.user.setActivity('Lunaro Tracker is on');
     },
 
-    disableTracker: () => {
-        const trackerEnabled = module.exports.isTrackerEnabled();
-        if (trackerEnabled) {
-            writeFileSync(trackerEnabledFile, 'false');
-        }
+    disableTracker: (client) => {
+        writeFileSync(trackerEnabledFile, 'false');
+        module.exports.disablePeriodicTracking();
+        client.user.setStatus('dnd');
+        client.user.setActivity('Lunaro Tracker is off');
     },
 
-    enablePeriodicTracking: () => {},
+    enablePeriodicTracking: (guild) => {
+        const oneMinInMs = 60 * 1000;
+        periodicTracker = setInterval(() => updateRTP(guild), oneMinInMs);
+    },
 
-    disablePeriodicTracking: () => {},
+    disablePeriodicTracking: () => {
+        clearInterval(periodicTracker);
+    },
 };
 
 const createTrackerEnabledFile = () => {

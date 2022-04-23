@@ -1,8 +1,14 @@
 const { Client, Collection, Intents } = require('discord.js');
 const { readdirSync } = require('node:fs');
-const { DISCORD_TOKEN } = require('./environment');
+const { DISCORD_TOKEN, TRACKED_GUILD_ID } = require('./environment');
 const { deployCommands } = require('./deploy-commands');
 const { interactionCreate } = require('./events/interactionCreate');
+const {
+    isTrackerEnabled,
+    enableTracker,
+    enablePeriodicTracking,
+    disableTracker,
+} = require('./util/state');
 
 const client = new Client({
     intents: [
@@ -30,6 +36,13 @@ client.on(
 
 client.once('ready', async () => {
     await deployCommands(client);
+
+    if (isTrackerEnabled()) {
+        enableTracker(client.guilds.cache.get(TRACKED_GUILD_ID), client);
+    } else {
+        disableTracker(client);
+    }
+
     console.log('Lunaro Tracker is ready.');
 });
 
