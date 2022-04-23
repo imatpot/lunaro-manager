@@ -18,6 +18,8 @@ module.exports = {
             '```/rtp join [tracking: bool]\n/rtp leave [tracking: bool]```\n' +
             'You can also quickly check how many players are ready to play.\n' +
             '```/tracker scan```\n' +
+            "Look at my source code on GitHub and contribute to it via pull requests or issues.\n" +
+            '```/source```\n' +
             "And that's about it. Now go out there and make Teshin proud!";
 
         interaction.reply({
