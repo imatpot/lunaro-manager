@@ -17,7 +17,12 @@ module.exports = {
                     presence.activities.filter(
                         (activity) =>
                             activity.name.toLowerCase().includes('warframe') &&
-                            activity.details?.toLowerCase().includes('lunaro')
+                            (activity.details
+                                ?.toLowerCase()
+                                .includes('lunaro') ||
+                            activity.details
+                                ?.toLowerCase()
+                                .includes('лунаро'))
                     ).length
             )
             .map((presence) => presence.member),
