@@ -34,7 +34,7 @@ Please make sure the bot's personal role is ranked *above* the managed RTP role!
 
 ## Usage
 
-```r
+```php
 # Enable / disable Lunaro Tracker
 # (1 min interval, disabled by default, admin only)
 /tracker enable
@@ -44,7 +44,7 @@ Please make sure the bot's personal role is ranked *above* the managed RTP role!
 /tracker scan
 
 # Allow / deny Lunaro Tracking
-# (denied by default)
+# (per user, denied by default)
 /tracker allow
 /tracker deny
 
