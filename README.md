@@ -33,20 +33,23 @@ https://discord.com/api/oauth2/authorize?permissions=277293894656&scope=bot%20ap
 ## Usage
 
 ```py
-# Enable / disable Lunaro Tracker (5 min interval, disabled by default)
+# Enable / disable Lunaro Tracker
+# (1 min interval, disabled by default, admin only)
 /tracker enable
 /tracker disable
 
 # Force-run Luanro Tracking
 /tracker scan
 
-# Allow / deny Lunaro Tracking (denied by default)
+# Allow / deny Lunaro Tracking
+# (denied by default)
 /tracker allow
 /tracker deny
 
 # Join / leave "Ready To Play"
-/rtp join
-/rtp leave
+# Option `tracking` is optional to enable/disable future tracking
+/rtp join [tracking: boolean]
+/rtp leave [tracking: boolean]
 ```
 
 ---

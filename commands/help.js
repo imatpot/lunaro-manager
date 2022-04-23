@@ -6,6 +6,8 @@ module.exports = {
         .setDescription('🎓 Learn how to use Lunaro Tracker'),
 
     run: async (interaction) => {
+        const message = '';
+
         interaction.reply({
             content: 'help',
             ephemeral: true,
