@@ -9,6 +9,7 @@ const {
     enablePeriodicTracking,
     disableTracker,
 } = require('./util/state');
+const { log } = require('./util/logger');
 
 const client = new Client({
     intents: [
@@ -39,11 +40,13 @@ client.once('ready', async () => {
 
     if (isTrackerEnabled()) {
         enableTracker(client.guilds.cache.get(TRACKED_GUILD_ID), client);
+        log('Lunaro Tracker will launch enabled.');
     } else {
         disableTracker(client);
+        log('Lunaro Tracker will launch disabled.');
     }
 
-    console.log('Lunaro Tracker is ready.');
+    log('Lunaro Tracker is ready.');
 });
 
 client.login(DISCORD_TOKEN);

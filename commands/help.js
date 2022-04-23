@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
+const { log } = require('../util/logger');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -24,6 +25,6 @@ module.exports = {
             ephemeral: true,
         });
 
-        console.log('Member asked for help.');
+        log('Member asked for help.');
     },
 };

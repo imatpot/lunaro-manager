@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
+const { log } = require('../util/logger');
 const { fetchRTPRole } = require('../util/rtpRole');
 const { addToWhitelist, removeFromWhitelist } = require('../util/whitelist');
 
@@ -54,12 +55,12 @@ const joinRTP = (interaction) => {
     interaction.member.roles.add(fetchRTPRole(interaction.guild));
     interaction.reply('🟢  You joined RTP.');
 
-    console.log('Member joined RTP.');
+    log('Member joined RTP.');
 };
 
 const leaveRTP = (interaction) => {
     interaction.member.roles.remove(fetchRTPRole(interaction.guild));
     interaction.reply('🌙  You left RTP.');
 
-    console.log('Member left RTP.');
+    log('Member left RTP.');
 };

@@ -1,4 +1,5 @@
 const { RTP_ROLE_ID } = require('../environment');
+const { log } = require('./logger');
 const { fetchRTPRole } = require('./rtpRole');
 const { readWhitelist } = require('./whitelist');
 
@@ -46,6 +47,8 @@ module.exports = {
                 }
             }
         }
+
+        log('Updated RTP.');
     },
 };
 

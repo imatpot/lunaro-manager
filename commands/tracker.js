@@ -7,6 +7,7 @@ const {
 const { addToWhitelist, removeFromWhitelist } = require('../util/whitelist');
 const { fetchAvailablePlayers, updateRTP } = require('../util/lunaroPlayers');
 const { Permissions } = require('discord.js');
+const { log } = require('../util/logger');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -64,13 +65,14 @@ const enableTrackerGlobally = (interaction) => {
             ephemeral: true,
         });
 
+        log('Member was denied permission to enable tracker.');
         return;
     }
 
     enableTracker(interaction.guild, interaction.client);
     interaction.reply('⚡  Lunaro tracker has been enabled.');
 
-    console.log('Member enabled tracker.');
+    log('Member enabled tracker.');
 };
 
 const disableTrackerGlobally = (interaction) => {
@@ -80,13 +82,14 @@ const disableTrackerGlobally = (interaction) => {
             ephemeral: true,
         });
 
+        log('Member was denied permission to disable tracker.');
         return;
     }
 
     disableTracker(interaction.client);
     interaction.reply('🛑  Lunaro tracker has been disabled.');
 
-    console.log('Member disabled tracker.');
+    log('Member disabled tracker.');
 };
 
 const scanForPlayers = async (interaction) => {
@@ -94,6 +97,8 @@ const scanForPlayers = async (interaction) => {
         interaction.reply({
             content: '❌  Tracker is disabled.',
         });
+
+        log('Member tried to scan for players, but tracker is disabled.');
         return;
     }
 
@@ -101,9 +106,9 @@ const scanForPlayers = async (interaction) => {
 
     const playerCount = (await fetchAvailablePlayers(interaction.guild)).length;
 
-    interaction.reply(`🔎  Found a total of ${playerCount} Lunaro players.`);
+    interaction.reply(`🔎  Found ${playerCount} Lunaro players.`);
 
-    console.log('Member scanned for players.');
+    log('Member scanned for players.');
 };
 
 const allowTracking = async (interaction) => {
@@ -113,7 +118,7 @@ const allowTracking = async (interaction) => {
         ephemeral: true,
     });
 
-    console.log('Member enabled tracking.');
+    log('Member enabled tracking.');
 };
 
 const denyTracking = async (interaction) => {
@@ -123,7 +128,7 @@ const denyTracking = async (interaction) => {
         ephemeral: true,
     });
 
-    console.log('Member disabled tracking.');
+    log('Member disabled tracking.');
 };
 
 const isModerator = (interaction) =>

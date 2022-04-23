@@ -2,6 +2,7 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 const { CLIENT_ID, DISCORD_TOKEN, TRACKED_GUILD_ID } = require('./environment');
+const { log } = require('./util/logger');
 
 module.exports = {
     deployCommands: async (client) => {
@@ -14,7 +15,7 @@ module.exports = {
             .put(Routes.applicationGuildCommands(CLIENT_ID, TRACKED_GUILD_ID), {
                 body: commands,
             })
-            .then(() => console.log('Deployed application commands.'))
-            .catch(console.error);
+            .then(() => log('Deployed application commands.'))
+            .catch(log);
     },
 };
