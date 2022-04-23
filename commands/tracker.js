@@ -113,6 +113,7 @@ const scanForPlayers = async (interaction) => {
 
 const allowTracking = async (interaction) => {
     addToWhitelist(interaction.member.id);
+
     interaction.reply({
         content: '✅  Your activity is now being tracked.',
         ephemeral: true,
@@ -123,6 +124,7 @@ const allowTracking = async (interaction) => {
 
 const denyTracking = async (interaction) => {
     removeFromWhitelist(interaction.member.id);
+
     interaction.reply({
         content: '⛔  Your activity is no longer being tracked.',
         ephemeral: true,
