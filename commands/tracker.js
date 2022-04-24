@@ -46,7 +46,6 @@ module.exports = {
             enable: enableTrackerGlobally,
             disable: disableTrackerGlobally,
             scan: scanForPlayers,
-            info: displayTrackerInfo,
             allow: allowTracking,
             deny: denyTracking,
         };
