@@ -5,11 +5,11 @@ const {
     getTime,
     formatDistanceToNow,
 } = require('date-fns');
-import fetch from 'node-fetch';
 const { log } = require('../util/logger');
 const { isTrackerEnabled } = require('../util/state');
 const { readWhitelist } = require('../util/whitelist');
 const { version: djsVersion } = require('discord.js');
+const { default: fetch } = require('node-fetch');
 
 module.exports = {
     data: new SlashCommandBuilder()
