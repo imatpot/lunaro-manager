@@ -58,6 +58,9 @@ Please make sure the bot's personal role is ranked *above* the managed RTP role!
 
 # Request source code
 /source
+
+# View basic stats
+/tracker info
 ```
 
 ---
