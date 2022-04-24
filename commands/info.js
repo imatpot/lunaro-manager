@@ -27,7 +27,7 @@ module.exports = {
         const now = new Date();
         const uptime = formatDuration(
             intervalToDuration({
-                start: new Date(getTime(now) - interaction.client.uptime),
+                start: getTime(now) - interaction.client.uptime,
                 end: now,
             })
         );
@@ -39,12 +39,15 @@ module.exports = {
             ).then((commits) => commits.json())
         )[0];
         const lastUpdated = formatDistanceToNow(
-            Date.parse(latestCommit.committer.date),
+            Date.parse(latestCommit.commit.committer.date),
             { locale: require('date-fns/locale/en-GB'), addSuffix: true }
         );
         const lastUpdatedEmoji = '🚧';
 
-        const engine = `Node ${process.version} w/ discord.js ${djsVersion}`;
+        const engine = `Node ${process.version.replace(
+            'v',
+            ''
+        )} + discord.js ${djsVersion}`;
         const engineEmoji = '⚙';
 
         const message =

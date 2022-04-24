@@ -15,7 +15,7 @@ module.exports = {
                 content: '❌  Failed to run the command.\n```\n' + error + '\n```',
                 ephemeral: true,
             });
-            log(error);
+            console.error(error);
         }
     },
 };
