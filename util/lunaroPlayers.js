@@ -3,11 +3,14 @@ const { log } = require('./logger');
 const { fetchRTPRole } = require('./rtpRole');
 const { readWhitelist } = require('./whitelist');
 
+const localizedLunaro = ['lunaro', 'лунаро'];
+
 module.exports = {
     fetchAvailablePlayers: async (guild) =>
         module.exports
             .fetchLunaroPlayers(guild)
             .concat(await module.exports.fetchRTPMembers(guild))
+            .filter((player) => readWhitelist().includes(player.id))
             .filter(unique),
 
     fetchLunaroPlayers: (guild) =>
@@ -17,12 +20,9 @@ module.exports = {
                     presence.activities.filter(
                         (activity) =>
                             activity.name.toLowerCase().includes('warframe') &&
-                            (activity.details
-                                ?.toLowerCase()
-                                .includes('lunaro') ||
-                            activity.details
-                                ?.toLowerCase()
-                                .includes('лунаро'))
+                            localizedLunaro.includes(
+                                activity.details?.toLowerCase()
+                            )
                     ).length
             )
             .map((presence) => presence.member),

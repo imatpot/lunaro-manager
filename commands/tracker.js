@@ -4,10 +4,20 @@ const {
     enableTracker,
     disableTracker,
 } = require('../util/state');
-const { addToWhitelist, removeFromWhitelist } = require('../util/whitelist');
+const {
+    addToWhitelist,
+    removeFromWhitelist,
+    readWhitelist,
+} = require('../util/whitelist');
 const { fetchAvailablePlayers, updateRTP } = require('../util/lunaroPlayers');
-const { Permissions } = require('discord.js');
+const { Permissions, version: djsVersion } = require('discord.js');
 const { log } = require('../util/logger');
+const {
+    formatDuration,
+    intervalToDuration,
+    getTime,
+    formatDistanceToNow,
+} = require('date-fns');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -30,6 +40,11 @@ module.exports = {
         )
         .addSubcommand((subcommand) =>
             subcommand
+                .setName('info')
+                .setDescription('💡 See runtime details about Lunaro Tracker')
+        )
+        .addSubcommand((subcommand) =>
+            subcommand
                 .setName('allow')
                 .setDescription('✅ Allow Lunaro Tracker to read your activity')
         )
@@ -42,19 +57,17 @@ module.exports = {
         ),
 
     run: async (interaction) => {
+        const subcommandFunctions = {
+            enable: enableTrackerGlobally,
+            disable: disableTrackerGlobally,
+            scan: scanForPlayers,
+            info: displayTrackerInfo,
+            allow: allowTracking,
+            deny: denyTracking,
+        };
+
         const subcommand = interaction.options.getSubcommand();
-        switch (subcommand) {
-            case 'enable':
-                return enableTrackerGlobally(interaction);
-            case 'disable':
-                return disableTrackerGlobally(interaction);
-            case 'scan':
-                return scanForPlayers(interaction);
-            case 'allow':
-                return allowTracking(interaction);
-            case 'deny':
-                return denyTracking(interaction);
-        }
+        subcommandFunctions[subcommand](interaction);
     },
 };
 
@@ -111,6 +124,47 @@ const scanForPlayers = async (interaction) => {
     );
 
     log('Member scanned for players.');
+};
+
+const displayTrackerInfo = async (interaction) => {
+    const enabled = isTrackerEnabled();
+    const enabledString = enabled ? 'enabled' : 'disabled';
+    const enabledEmoji = enabled ? '⚡' : '🛑';
+
+    const trackedPlayers = readWhitelist().length;
+    const trackedPlayersEmoji = '🔎';
+
+    const now = new Date();
+    const uptime = formatDuration(
+        intervalToDuration({
+            start: new Date(getTime(now) - interaction.client.uptime),
+            end: now,
+        })
+    );
+    const uptimeEmoji = '⏱';
+
+    const latestCommit = (
+        await fetch(
+            'https://api.github.com/repos/imatpot/lunaro-tracking-bot/commits?per_page=1'
+        ).then((commits) => commits.json())
+    )[0];
+    const lastUpdated = formatDistanceToNow(
+        Date.parse(latestCommit.committer.date),
+        { locale: require('date-fns/locale/en-GB'), addSuffix: true }
+    );
+    const lastUpdatedEmoji = '🚧';
+
+    const engine = `Node ${process.version} w/ discord.js ${djsVersion}`;
+    const engineEmoji = '⚙';
+
+    const message =
+        `${enabledEmoji}  Tracker is ${enabledString}\n` +
+        `${trackedPlayersEmoji}  Tracking ${trackedPlayers} players\n` +
+        `${uptimeEmoji}  Current uptime is ${uptime}\n` +
+        `${lastUpdatedEmoji}  Last updated ${lastUpdated}\n` +
+        `${engineEmoji}  Running via ${engine}\n`;
+
+    interaction.reply(message);
 };
 
 const allowTracking = async (interaction) => {

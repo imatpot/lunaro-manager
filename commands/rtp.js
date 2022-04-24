@@ -33,8 +33,6 @@ module.exports = {
         ),
 
     run: async (interaction) => {
-        const subcommand = interaction.options.getSubcommand();
-
         const tracking = interaction.options.getBoolean(trackingOptionName);
         if (tracking !== null) {
             const id = interaction.member.id;
@@ -42,12 +40,13 @@ module.exports = {
             else removeFromWhitelist(id);
         }
 
-        switch (subcommand) {
-            case 'join':
-                return joinRTP(interaction);
-            case 'leave':
-                return leaveRTP(interaction);
-        }
+        const subcommandFunctions = {
+            join: joinRTP,
+            leave: leaveRTP,
+        };
+
+        const subcommand = interaction.options.getSubcommand();
+        subcommandFunctions[subcommand](interaction);
     },
 };
 

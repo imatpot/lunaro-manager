@@ -22,10 +22,7 @@ module.exports = {
             '```/source```\n' +
             "And that's about it. Now go out there and make Teshin proud!";
 
-        interaction.reply({
-            content: message,
-            ephemeral: true,
-        });
+        interaction.reply(message);
 
         log('Member asked for help.');
     },
