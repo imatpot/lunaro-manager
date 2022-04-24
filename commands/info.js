@@ -9,7 +9,7 @@ const { log } = require('../util/logger');
 const { isTrackerEnabled } = require('../util/state');
 const { readWhitelist } = require('../util/whitelist');
 const { version: djsVersion } = require('discord.js');
-const { default: fetch } = require('node-fetch');
+const { default: fetch } = require('node-fetch-commonjs');
 
 module.exports = {
     data: new SlashCommandBuilder()
