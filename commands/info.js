@@ -5,6 +5,7 @@ const {
     getTime,
     formatDistanceToNow,
 } = require('date-fns');
+import fetch from 'node-fetch';
 const { log } = require('../util/logger');
 const { isTrackerEnabled } = require('../util/state');
 const { readWhitelist } = require('../util/whitelist');
