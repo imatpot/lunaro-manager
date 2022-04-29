@@ -5,9 +5,10 @@ const {
     disableTracker,
 } = require('../util/state');
 const { addToWhitelist, removeFromWhitelist } = require('../util/whitelist');
-const { fetchAvailablePlayers, updateRTP } = require('../util/lunaroPlayers');
+const { fetchAvailablePlayers } = require('../util/lunaroPlayers');
 const { Permissions } = require('discord.js');
 const { log } = require('../util/logger');
+const { updateRTP } = require('../util/rtpRole');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -104,7 +105,7 @@ const scanForPlayers = async (interaction) => {
     const playerCount = (await fetchAvailablePlayers(interaction.guild)).length;
 
     interaction.reply(
-        `🔎  Found ${playerCount} Lunaro player${playerCount !== 1 ? 's' : ''}.`
+        `🔎  Found ${playerCount} Lunaro player${playerCount === 1 ? '' : 's'}.`
     );
 
     log('Member scanned for players.');

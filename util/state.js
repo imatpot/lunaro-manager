@@ -4,7 +4,7 @@ const {
     writeFileSync,
     readFileSync,
 } = require('node:fs');
-const { updateRTP } = require('./lunaroPlayers');
+const { updateRTP } = require('./rtpRole');
 
 const trackerEnabledFile = 'data/trackerEnabled';
 let periodicTracker;

@@ -52,7 +52,9 @@ module.exports = {
 
         const message =
             `${enabledEmoji}  Tracker is ${enabledString}\n` +
-            `${trackedPlayersEmoji}  Tracking ${trackedPlayers} players\n` +
+            `${trackedPlayersEmoji}  Tracking ${trackedPlayers} player${
+                trackedPlayers === 1 ? '' : 's'
+            }\n` +
             `${uptimeEmoji}  Current uptime is ${uptime}\n` +
             `${lastUpdatedEmoji}  Last updated ${lastUpdated}\n` +
             `${engineEmoji}  Running via ${engine}\n`;

@@ -1,22 +1,22 @@
 <p align="center">
-  <img src="assets/lunaro-tracker.png" height="100px">
+  <img src="assets/lunaro-manager.png" height="100px">
 </p>
 
-<h1 align="center">Lunaro Tracker</h1>
+<h1 align="center">Lunaro Manager</h1>
 
 <p align="center">
   <i>
-    Discord bot for periodic tracking of <a href="https://warframe.fandom.com/wiki/Lunaro">Lunaro</a>
-    players in the <a href="https://discord.gg/mUjGHEw">Lunaro Revival Server</a>
+    Discord bot for managing <a href="https://warframe.fandom.com/wiki/Lunaro">Lunaro</a>
+    related ideas, targeted at the <a href="https://discord.gg/mUjGHEw">Lunaro Revival Server</a>
   </i>
 </p>
 
 <p align="center">
-  <a href="https://nodejs.org">
-    <img src="https://img.shields.io/badge/Built%20with-NodeJS-darkgreen?logo=node.js&style=flat-square">
+  <a href="https://www.npmjs.com/package/ts-node">
+    <img src="https://img.shields.io/badge/built%20with-ts--node-blue?logo=ts-node&style=flat-square">
   </a>
   <a href="LICENSE.md">
-    <img src="https://img.shields.io/github/license/imatpot/lunaro-tracking-bot?style=flat-square">
+    <img src="https://img.shields.io/github/license/imatpot/lunaro-tracking-bot?color=red&style=flat-square">
   </a>
 </p>
 
@@ -35,32 +35,36 @@ Please make sure the bot's personal role is ranked *above* the managed RTP role!
 ## Usage
 
 ```php
-# Enable / disable Lunaro Tracker
-# (1 min interval, disabled by default, admin only)
-/tracker enable
-/tracker disable
-
-# Force-run Lunaro Tracking
-/tracker scan
-
-# Allow / deny Lunaro Tracking
-# (per user, denied by default)
-/tracker allow
-/tracker deny
-
-# Join / leave "Ready To Play"
-# Option `tracking` is optional to enable/disable future tracking
-/rtp join [tracking: boolean]
-/rtp leave [tracking: boolean]
-
-# Request help
+# Display help message to author
 /help
 
-# Request source code
-/source
+# Force-run tracker and show how many players are active
+/tracker scan
 
-# View basic stats
-/info
+# Pause or resume tracking of the author's activity
+/tracker pause
+/tracker resume
+
+# Manually join or leave RTP role
+/rtp join
+/rtp leave
+
+# Display link to GitHub repository
+/contribute
+
+# Display runtime bot stats
+/about
+
+
+
+### INTENDED AS ADMIN-ONLY, CONFIGURE IN SERVER ACCORDINGLY ###
+
+# Enable or disable tracker via [enabled]
+/config tracker-enabled [enabled: bool]
+
+# Configure interval in [seconds] in which tracker should scan automatically.
+# Minimum is 5.
+/config tracker-interval [seconds: int]
 ```
 
 ---
@@ -87,15 +91,11 @@ Start the bot
 
 ```sh
 npm start
-npm run watch   # for development
+npm run watch # for development
 ```
 
 ## Run in Docker
 
 ```sh
-docker-compose up -d
+docker-compose up --build -d
 ```
-
-## Development
-
-For missing features, see [TODO.md](TODO.md)
