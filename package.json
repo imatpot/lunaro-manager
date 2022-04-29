@@ -9,24 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/imatpot/lunaro-tracking-bot.git"
+    "url": "git+https://github.com/imatpot/lunaro-manager.git"
   },
   "author": "@imatpot",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/imatpot/lunaro-tracking-bot/issues"
+    "url": "https://github.com/imatpot/lunaro-manager/issues"
   },
-  "homepage": "https://github.com/imatpot/lunaro-tracking-bot#readme",
-  "devDependencies": {
-    "nodemon": "^2.0.15"
-  },
-  "dependencies": {
-    "@discordjs/builders": "^0.13.0",
-    "@discordjs/rest": "^0.4.1",
-    "date-fns": "^2.28.0",
-    "discord-api-types": "^0.31.2",
-    "discord.js": "^13.6.0",
-    "dotenv": "^16.0.0",
-    "node-fetch-commonjs": "^3.1.1"
-  }
+  "homepage": "https://github.com/imatpot/lunaro-manager#readme",
+  "devDependencies": {},
+  "dependencies": {}
 }
