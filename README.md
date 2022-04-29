@@ -91,7 +91,7 @@ Start the bot
 
 ```sh
 npm start
-npm run watch # for development
+npm run dev   # use nodemon
 ```
 
 ## Run in Docker

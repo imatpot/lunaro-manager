@@ -1,13 +1,14 @@
 {
-    "configurations": [
-        {
-            "name": "npm start",
-            "program": "${workspaceFolder}/index.js",
-            "request": "launch",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "type": "node"
-        }
-    ]
+  "configurations": [
+    {
+      "name": "Node: Launch",
+      "program": "${workspaceFolder}/src/index.ts",
+      "request": "launch",
+      "restart": true,
+      "runtimeArgs": [ "--legacy-watch" ],
+      "runtimeExecutable": "${workspaceFolder}/node_modules/nodemon/bin/nodemon.js",
+      "skipFiles": [ "<node_internals>/**" ],
+      "type": "node"
+    }
+  ]
 }

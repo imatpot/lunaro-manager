@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "baseUrl": "src",
+    "paths": {
+      ":commands/*": [ "commands/*" ],
+      ":data/*": [ "data/*" ],
+      ":events/*": [ "events/*" ],
+      ":interfaces/*": [ "interfaces/*" ],
+      ":util/*": [ "util/*" ]
+    },
+  },
+}
