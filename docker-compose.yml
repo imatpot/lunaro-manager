@@ -1,13 +1,12 @@
 version: "3"
 
 services:
-  lunaro-tracking-bot:
-    image: "lunaro-tracking-bot"
+  lunaro-manager:
+    image: "lunaro-manager"
     build: "."
-    hostname: "lunaro-tracking-bot"
-    container_name: "lunaro-tracking-bot"
+    hostname: "lunaro-manager"
+    container_name: "lunaro-manager"
     restart: "unless-stopped"
-    command: "npm start"
     volumes:
       - "./data:/mnt/app/data"
     environment:

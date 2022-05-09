@@ -12,11 +12,11 @@
 </p>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/ts-node">
-    <img src="https://img.shields.io/badge/built%20with-ts--node-blue?logo=ts-node&style=flat-square">
+  <a href="https://deno.land" style="text-decoration: none">
+    <img src="https://img.shields.io/badge/built%20with-deno-black?logo=deno&style=flat-square">
   </a>
-  <a href="LICENSE.md">
-    <img src="https://img.shields.io/github/license/imatpot/lunaro-tracking-bot?color=red&style=flat-square">
+  <a href="LICENSE.md" style="text-decoration: none">
+    <img src="https://img.shields.io/github/license/imatpot/lunaro-tracking-bot?color=blue&style=flat-square">
   </a>
 </p>
 
@@ -57,7 +57,7 @@ Please make sure the bot's personal role is ranked *above* the managed RTP role!
 
 
 
-### INTENDED AS ADMIN-ONLY, CONFIGURE IN SERVER ACCORDINGLY ###
+### INTENDED FOR ADMINS ONLY, CONFIGURE IN SERVER ACCORDINGLY ###
 
 # Enable or disable tracker via [enabled]
 /config tracker-enabled [enabled: bool]
@@ -81,21 +81,22 @@ Please make sure the bot's personal role is ranked *above* the managed RTP role!
 
 ## Run directly
 
-You need to have [NodeJS](https://nodejs.org) installed. Install the dependencies
+You need to have [Deno](https://deno.land) installed. Cache the dependencies to
+make compilation faster later on.
 
 ```sh
-npm ci
+$ deno cache deps.ts
 ```
 
-Start the bot
+Then start the bot
 
 ```sh
-npm start
-npm run dev   # use nodemon
+$ deno task start
+$ deno task start:watch   # during development
 ```
 
 ## Run in Docker
 
 ```sh
-docker-compose up --build -d
+$ docker-compose up --build -d
 ```

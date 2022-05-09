@@ -1,0 +1,7 @@
+{
+  "importMap": "import-map.json",
+  "tasks": {
+    "start": "deno run main.ts",
+    "start:watch": "denon run main.ts"
+  }
+}
