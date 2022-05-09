@@ -9,9 +9,9 @@ services:
     restart: "unless-stopped"
     command: "npm start"
     volumes:
-      - "./data:/app/data"
+      - "./data:/mnt/app/data"
     environment:
       DISCORD_TOKEN: "${DISCORD_TOKEN}"
       CLIENT_ID: "${CLIENT_ID}"
-      TRACKED_GUILD_ID: "${TRACKED_GUILD_ID}"
+      HOME_GUILD_ID: "${HOME_GUILD_ID}"
       RTP_ROLE_ID: "${RTP_ROLE_ID}"

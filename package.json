@@ -1,17 +1,14 @@
 {
   "name": "lunaro-tracking-bot",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Discord bot for tracking Lunaro players in a given server",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "start": "nodemon --legacy-watch"
-  },
-  "nodemonConfig": {
-    "exec": "ts-node -r tsconfig-paths/register src/index.ts",
-    "ext": "ts, js",
-    "watch": [
-      "src"
-    ]
+    "build": "tsc && tsc-alias",
+    "build:watch": "tsc -w && tsc-alias -w",
+    "start": "npm run build && node dist/index.js",
+    "start:watch": "nodemon --legacy-watch"
   },
   "repository": {
     "type": "git",
@@ -30,12 +27,14 @@
     "discord-api-types": "^0.32.0",
     "discord.js": "^13.6.0",
     "dotenv": "^16.0.0",
-    "node-fetch": "^3.2.4",
-    "ts-node": "^10.7.0"
+    "node-fetch": "^3.2.4"
   },
   "devDependencies": {
-    "@types/node": "^17.0.30",
+    "@types/node": "^17.0.31",
     "nodemon": "^2.0.16",
-    "tsconfig-paths": "^3.14.1"
+    "ts-node": "^10.7.0",
+    "tsc-alias": "^1.6.7",
+    "tsconfig-paths": "^4.0.0",
+    "typescript": "^4.6.4"
   }
 }

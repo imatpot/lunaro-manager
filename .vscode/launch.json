@@ -5,7 +5,6 @@
       "program": "${workspaceFolder}/src/index.ts",
       "request": "launch",
       "restart": true,
-      "runtimeArgs": [ "--legacy-watch" ],
       "runtimeExecutable": "${workspaceFolder}/node_modules/nodemon/bin/nodemon.js",
       "skipFiles": [ "<node_internals>/**" ],
       "type": "node"

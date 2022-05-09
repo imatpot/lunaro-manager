@@ -1,5 +1,5 @@
 import { log } from ':util/logger';
-import { Collection, Interaction } from 'discord.js';
+import { Collection, CommandInteraction, Interaction } from 'discord.js';
 import { BotCommand } from '../interfaces/bot-command';
 
 export async function interactionCreate(
@@ -12,14 +12,16 @@ export async function interactionCreate(
 
     if (!command) return;
 
-    try {
-        await command.run(interaction);
-    } catch (error) {
-        await interaction.reply({
-            content: '❌  Failed to run the command.\n```\n' + error.stack + '\n```',
-            ephemeral: true,
-        });
+    try { await command.execute(interaction); }
+    catch (error) { handleError(interaction, error); }
+}
 
-        log(error.stack);
-    }
+async function handleError(interaction: CommandInteraction, error: Error) {
+    await interaction.reply({
+        content: '❌  Failed to run the command.\n```\n' + error + '\n```',
+        ephemeral: true,
+        fetchReply: true
+    });
+
+    log(error.stack);
 }

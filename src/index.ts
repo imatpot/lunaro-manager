@@ -4,9 +4,11 @@ import { log } from ':util/logger';
 import { deployCommands } from 'deploy-commands';
 import { Client, Collection, Intents } from 'discord.js';
 import { readdirSync } from 'fs';
-import { join } from 'path';
+import { join, resolve } from 'path';
 
-const client = new Client({
+log('Starting Lunaro Manager');
+
+export const client = new Client({
     intents: [
         Intents.FLAGS.GUILDS,
         Intents.FLAGS.GUILD_MEMBERS,
@@ -15,16 +17,17 @@ const client = new Client({
 });
 
 const commands = new Collection<string, BotCommand>();
-const commandDir = join(__dirname, 'commands');
+const commandDir = resolve('./dist/commands');
 const commandFiles = readdirSync(commandDir)
-    .filter((file) => file.endsWith('.ts'))
+    .filter((file) => file.endsWith('.js'))
     .map((file) => join(commandDir, file));
 
+log(JSON.stringify(commandFiles));
+
 for (const file of commandFiles) {
-    import(file).then((importee) => {
-        const command = new importee.default();
-        commands.set(command.config.name, command);
-    });
+    const importedFile = await import(file);
+    const command: BotCommand = new importedFile.default();
+    commands.set(command.slashCommand.name, command);
 }
 
 client.on('interactionCreate', (interaction) =>
@@ -36,4 +39,4 @@ client.once('ready', async () => {
     log('Lunaro Manager is ready');
 });
 
-client.login();
+await client.login();

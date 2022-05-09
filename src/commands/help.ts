@@ -4,11 +4,11 @@ import { SlashCommandBuilder } from '@discordjs/builders';
 import { CommandInteraction } from 'discord.js';
 
 export default class implements BotCommand {
-    config = new SlashCommandBuilder()
+    slashCommand = new SlashCommandBuilder()
         .setName('help')
         .setDescription('🎓 Learn how to use Lunaro Manager');
 
-    async run(interaction: CommandInteraction) {
+    async execute(interaction: CommandInteraction) {
         await interaction.reply({
             content: '👋  Welcome to Lunaro Manager',
             ephemeral: true,
