@@ -85,14 +85,19 @@ You need to have [Deno](https://deno.land) installed. Cache the dependencies to
 make compilation faster later on.
 
 ```sh
-$ deno cache deps.ts
+$ deno task cache
 ```
 
 Then start the bot
 
 ```sh
 $ deno task start
-$ deno task start:watch   # during development
+```
+
+For development, [`denon`](https://deno.land/x/denon) is highly recommended.
+
+```sh
+$ deno task start:watch
 ```
 
 ## Run in Docker
