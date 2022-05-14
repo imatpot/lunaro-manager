@@ -1,38 +1,27 @@
-import { Client, GatewayIntents, Interaction, Collection } from 'harmony';
-import { Command } from ':interfaces/command.ts';
-import { DISCORD_TOKEN, CLIENT_ID, HOME_GUILD_ID } from ':src/env.ts';
-import { interactionCreate } from ':events/interaction-create.ts';
+import { HOME_GUILD_ID } from ':src/env.ts';
+import { bot } from ':src/bot.ts';
 import { log } from ':util/logger.ts';
-import { ready } from ':events/ready.ts';
+import { startBot } from 'discordeno';
 
-const client = new Client({
-    id: CLIENT_ID,
-    token: DISCORD_TOKEN,
-    intents: [GatewayIntents.GUILD_MEMBERS, GatewayIntents.GUILD_PRESENCES],
-});
-
-log('Loading commands');
-const commands = new Collection<string, Command>();
-
-for await (const entry of Deno.readDir('src/commands')) {
+for await (const entry of Deno.readDir('src/events')) {
     if (entry.isFile && entry.name.endsWith('.ts')) {
-        const importedFile = await import(':commands/' + entry.name);
-        const command: Command = new importedFile.default();
-
-        commands.set(command.slash.name, command);
+        log('Loading file src/events/' + entry.name);
+        await import(':events/' + entry.name);
     }
 }
 
-log('Deploying commands');
-for (const command of commands.values()) {
-    client.interactions.commands.create(command.slash, HOME_GUILD_ID);
+for await (const entry of Deno.readDir('src/commands')) {
+    if (entry.isFile && entry.name.endsWith('.ts')) {
+        log('Loading file src/commands/' + entry.name);
+        await import(':commands/' + entry.name);
+    }
 }
 
-log('Deploying events');
-client.once('ready', () => ready());
-client.on('interactionCreate', (interaction: Interaction) =>
-    interactionCreate(interaction, commands)
+log('Deploying application commands');
+await bot.helpers.upsertApplicationCommands(
+    bot.commands.array(),
+    BigInt(HOME_GUILD_ID)
 );
 
-log('Connecting');
-await client.connect();
+log('Logging in');
+await startBot(bot);

@@ -1,18 +1,18 @@
 // https://stackoverflow.com/a/41407246/11592858
 
-function green(content: string): string {
-    return `\x1b[32m${content}\x1b[0m`;
-}
-
-function blue(content: string): string {
-    return `\x1b[34m${content}\x1b[0m`;
-}
-
-function red(content: string): string {
+const red = (content: string): string => {
     return `\x1b[31m${content}\x1b[0m`;
-}
+};
 
-function print(content: string, color: (content: string) => string) {
+const green = (content: string): string => {
+    return `\x1b[32m${content}\x1b[0m`;
+};
+
+const yellow = (content: string): string => {
+    return `\x1b[33m${content}\x1b[0m`;
+};
+
+const print = (content: string, color: (content: string) => string) => {
     const now = new Date();
 
     const hh = doubleDigit(now.getHours());
@@ -23,20 +23,20 @@ function print(content: string, color: (content: string) => string) {
     const timestamp = color(`${time}`);
 
     console.log(`${timestamp} | ${content}`);
-}
+};
 
-function doubleDigit(num: number): string {
+const doubleDigit = (num: number): string => {
     return num.toString().padStart(2, '0');
-}
+};
 
-export function log(content: string) {
+export const log = (content: string) => {
     print(content, green);
-}
+};
 
-export function event(content: string) {
-    print(content, blue);
-}
+export const event = (content: string) => {
+    print(content, yellow);
+};
 
-export function error(content: string) {
+export const error = (content: string) => {
     print(content, red);
-}
+};

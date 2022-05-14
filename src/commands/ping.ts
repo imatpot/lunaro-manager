@@ -1,14 +1,22 @@
-import { Command } from ':interfaces/command.ts';
-import { Interaction } from 'harmony';
-import { log } from ":util/logger.ts";
+import { createCommand } from ':util/creators.ts';
+import { replyToInteraction } from ':util/interactions.ts';
+import { snowflakeToTimestamp } from ':util/time.ts';
+import { log } from ':util/logger.ts';
 
-export default class implements Command {
-    slash = { name: 'ping', description: '🏓 Check latency of Lunaro Manager' };
+import { ApplicationCommandTypes } from 'discordeno';
 
-    async run(interaction: Interaction) {
-        const ping = interaction.client.gateway.ping;
-        await interaction.reply(`🏓  Current ping is ${ping}ms`);
+createCommand({
+    name: 'ping',
+    description: '🏓 Check connection latency',
+    type: ApplicationCommandTypes.ChatInput,
+
+    run: async (_, interaction) => {
+        const ping = Date.now() - snowflakeToTimestamp(interaction.id);
+
+        await replyToInteraction(interaction, {
+            content: `🏓  Current ping is ${ping}ms\n⚠  The ping is commonly incorrect`,
+        });
 
         log(`Ping was ${ping}ms`);
-    }
-}
+    },
+});

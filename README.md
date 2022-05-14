@@ -7,7 +7,7 @@
 <p align="center">
   <i>
     Discord bot for managing <a href="https://warframe.fandom.com/wiki/Lunaro">Lunaro</a>
-    related ideas, targeted at the <a href="https://discord.gg/mUjGHEw">Lunaro Revival Server</a>
+    related ideas, targeted at the <a href="https://discord.gg/mUjGHEw">Lunaro Revival Discord Server</a>
   </i>
 </p>
 
@@ -24,30 +24,41 @@
 
 ## Invite
 
-Replace your client ID and keep the scopes. The bot is designed to only be active in 1 server at a time.
+This bot is readily available in the [Lunaro Revival Discord Server](https://discord.gg/mUjGHEw).
+
+<a href="https://discord.gg/mUjGHEw" style="text-decoration: none">
+  <img src="https://img.shields.io/badge/join-Lunaro%20Revival%20Server-%237289da?logo=discord&style=flat-square">
+</a>
+
+<br />
+
+In case you want to add this bot to a different server, use the following link:
 
 https://discord.com/api/oauth2/authorize?permissions=277293894656&scope=bot%20applications.commands&client_id=123
 
-Please make sure the bot's personal role is ranked *above* the managed RTP role!
+while inserting your client ID and keeping the scopes. Remember that the bot is
+designed to *only be active in 1 server at a time.*
+
+Please also make sure the bot's personal role is ranked *above* the managed RTP role!
 
 ---
 
 ## Usage
 
 ```php
-# Display help message to author
+# Display help message
 /help
 
-# Force-run tracker and show how many players are active
-/tracker scan
-
-# Pause or resume tracking of the author's activity
-/tracker pause
-/tracker resume
+# Pause or resume tracking of the member's activity
+/tracking pause
+/tracking resume
 
 # Manually join or leave RTP role
 /rtp join
 /rtp leave
+
+# Display RTP stats
+/rtp info
 
 # Display link to GitHub repository
 /contribute
@@ -59,12 +70,8 @@ Please make sure the bot's personal role is ranked *above* the managed RTP role!
 
 ### INTENDED FOR ADMINS ONLY, CONFIGURE IN SERVER ACCORDINGLY ###
 
-# Enable or disable tracker via [enabled]
-/config tracker-enabled [enabled: bool]
-
-# Configure interval in [seconds] in which tracker should scan automatically.
-# Minimum is 5.
-/config tracker-interval [seconds: int]
+# Enable or disable activity tracking via [enabled]
+/config tracking-enabled [enabled: bool]
 ```
 
 ---

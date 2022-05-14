@@ -1,52 +1,69 @@
-import { Command } from ':interfaces/command.ts';
-import { ApplicationCommandInteraction, SlashCommandOptionType } from 'harmony';
-import { RTP_ROLE_ID } from ':src/env.ts';
-import { log } from ':util/logger.ts';
+import { createCommand } from ':util/creators.ts';
+import { getSubcommand } from ':util/commands.ts';
+import { replyToInteraction } from ':util/interactions.ts';
+import { addMemberToRTP, removeMemberFromRTP } from ':util/rtp.ts';
+import { DiscordBot } from ':interfaces/discord-bot.ts';
+import { SubcommandMap } from ':interfaces/command.ts';
+import {
+    ApplicationCommandTypes,
+    ApplicationCommandOptionTypes,
+    Interaction,
+} from 'discordeno';
 
-export default class implements Command {
-    slash = {
-        name: 'rtp',
-        description: '🟢 Manage RTP Status',
-        options: [
-            {
-                name: 'join',
-                description: '🟢 Join RTP',
-                type: SlashCommandOptionType.SUB_COMMAND,
-            },
-            {
-                name: 'leave',
-                description: '⭕ Leave RTP',
-                type: SlashCommandOptionType.SUB_COMMAND,
-            },
-        ],
-    };
+createCommand({
+    name: 'rtp',
+    description: '🥍 Manage RTP status',
+    type: ApplicationCommandTypes.ChatInput,
 
-    async run(interaction: ApplicationCommandInteraction) {
-        switch (interaction.subCommand) {
-            case 'join':
-                return await joinRTP(interaction);
-            case 'leave':
-                return await leaveRTP(interaction);
+    options: [
+        {
+            name: 'join',
+            description: '🟢 Join RTP',
+            type: ApplicationCommandOptionTypes.SubCommand,
+            required: false,
+        },
+        {
+            name: 'leave',
+            description: '⭕ Leave RTP',
+            type: ApplicationCommandOptionTypes.SubCommand,
+            required: false,
+        },
+    ],
+
+    run: async (bot, interaction) => {
+        const subcommand = getSubcommand(interaction);
+
+        if (!subcommand) {
+            throw new Error('Cannot execute /rtp without a subcommand');
         }
-    }
-}
 
-async function joinRTP(interaction: ApplicationCommandInteraction) {
+        const subcommands: SubcommandMap = {
+            join: rtpJoin,
+            leave: rtpLeave,
+        };
+
+        await subcommands[subcommand](bot, interaction);
+    },
+});
+
+const rtpJoin = async (_: DiscordBot, interaction: Interaction) => {
     const member = interaction.member!;
-    await member.roles.add(RTP_ROLE_ID);
+    await addMemberToRTP(member);
 
-    const name = member.displayName || member.user.username;
-    await interaction.reply(`🟢  ${name} is now available for Lunaro`);
+    const name = member.nick || interaction.user.username;
 
-    log('Member added to RTP');
-}
+    await replyToInteraction(interaction, {
+        content: `🟢  ${name} is now available for Lunaro`,
+    });
+};
 
-async function leaveRTP(interaction: ApplicationCommandInteraction) {
+const rtpLeave = async (_: DiscordBot, interaction: Interaction) => {
     const member = interaction.member!;
-    await member.roles.remove(RTP_ROLE_ID);
+    await removeMemberFromRTP(member);
 
-    const name = member.displayName || member.user.username;
-    await interaction.reply(`⭕  ${name} is no longer available for Lunaro`);
+    const name = member.nick || interaction.user.username;
 
-    log('Member removed from RTP');
-}
+    await replyToInteraction(interaction, {
+        content: `⭕  ${name} is no longer available for Lunaro`,
+    });
+};

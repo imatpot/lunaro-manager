@@ -1,14 +1,9 @@
 {
-  "importMap": "import-map.json",
+  "importMap": "paths.json",
 
   "tasks": {
-    "cache": "deno cache src/main.ts",
+    "cache": "deno cache --reload src/main.ts",
     "start": "deno run --allow-all --unstable src/main.ts",
     "start:watch": "denon run --allow-all --unstable src/main.ts"
-  },
-
-  "compilerOptions": {
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
   }
 }
