@@ -1,6 +1,6 @@
 import { RTP_ROLE_ID } from ':src/env.ts';
 import { bot } from ':src/bot.ts';
-import { doActivitiesIncludeLunaro } from ':util/activity-tracker.ts';
+import { doActivitiesIncludeLunaro } from ':util/activity-tracking.ts';
 import { addMemberToRTP, removeMemberFromRTP } from ':util/rtp.ts';
 import { readActivityTrackerData } from ':util/fs.ts';
 import { event } from ':util/logger.ts';

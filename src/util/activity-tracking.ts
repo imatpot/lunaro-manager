@@ -1,5 +1,3 @@
-import { RTP_ROLE_ID, HOME_GUILD_ID } from ':src/env.ts';
-import { bot } from ':src/bot.ts';
 import {
     readActivityTrackerData,
     writeActivityTrackingData,
@@ -8,15 +6,6 @@ import { log } from ':util/logger.ts';
 import { Member, Activity } from 'discordeno';
 
 const localizedLunaroName = ['lunaro', 'лунаро', '루나로'];
-
-export const getRTPMembers = async (): Promise<Member[]> => {
-    const allMembers = await bot.helpers.getMembers(BigInt(HOME_GUILD_ID), {});
-    const rtpMembers = allMembers
-        .array()
-        .filter((member) => member.roles.includes(BigInt(RTP_ROLE_ID)));
-
-    return rtpMembers;
-};
 
 export const doActivitiesIncludeLunaro = (activities: Activity[]) => {
     const lunaroActivities = activities.filter(
