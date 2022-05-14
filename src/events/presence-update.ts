@@ -10,7 +10,7 @@ bot.events.presenceUpdate = async (_, presence) => {
 
     if (!activityTrackerData.enabled) return;
 
-    if (activityTrackerData.blocklist.includes(presence.user.id)) {
+    if (activityTrackerData.blocklist.includes(presence.user.id.toString())) {
         return;
     }
 

@@ -36,8 +36,8 @@ export const disableActivityTracking = () => {
 export const addMemberToTrackingBlocklist = (member: Member) => {
     const data = readActivityTrackerData();
 
-    if (!data.blocklist.includes(member.id)) {
-        data.blocklist.push(member.id);
+    if (!data.blocklist.includes(member.id.toString())) {
+        data.blocklist.push(member.id.toString());
         writeActivityTrackingData(data);
 
         log('Member added to activity tracking blocklist');
@@ -47,8 +47,10 @@ export const addMemberToTrackingBlocklist = (member: Member) => {
 export const removeMemberFromTrackingBlocklist = (member: Member) => {
     const data = readActivityTrackerData();
 
-    if (data.blocklist.includes(member.id)) {
-        data.blocklist = data.blocklist.filter((entry) => entry !== member.id);
+    if (data.blocklist.includes(member.id.toString())) {
+        data.blocklist = data.blocklist.filter(
+            (entry) => entry !== member.id.toString()
+        );
         writeActivityTrackingData(data);
 
         log('Member removed from activity tracking blocklist');

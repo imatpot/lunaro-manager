@@ -1,4 +1,4 @@
 export interface ActivityTrackingData {
     enabled: boolean;
-    blocklist: bigint[];
+    blocklist: string[];
 }
