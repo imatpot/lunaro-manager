@@ -15,7 +15,7 @@ import {
 
 createCommand({
     name: 'config',
-    description: '⚙ Configure Lunaro Manager',
+    description: '🤔 Configure Lunaro Manager',
     type: ApplicationCommandTypes.ChatInput,
 
     options: [
@@ -32,7 +32,7 @@ createCommand({
                     required: true,
                 },
             ],
-        },
+        }
     ],
 
     run: async (bot, interaction) => {

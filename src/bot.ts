@@ -3,7 +3,7 @@ import { createDiscordBot } from ':util/creators.ts';
 import { Collection } from 'discordeno';
 
 export const bot = createDiscordBot({
-    botId: BigInt(BOT_ID),
+    botId: BOT_ID,
     token: DISCORD_TOKEN,
     intents: ['Guilds', 'GuildMembers', 'GuildPresences'],
 

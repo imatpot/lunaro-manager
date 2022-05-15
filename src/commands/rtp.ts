@@ -1,7 +1,11 @@
 import { createCommand } from ':util/creators.ts';
 import { getSubcommand } from ':util/commands.ts';
 import { replyToInteraction } from ':util/interactions.ts';
-import { addMemberToRTP, removeMemberFromRTP } from ':util/rtp.ts';
+import {
+    getRTPMembers,
+    addMemberToRTP,
+    removeMemberFromRTP,
+} from ':util/rtp.ts';
 import { DiscordBot } from ':interfaces/discord-bot.ts';
 import { SubcommandMap } from ':interfaces/command.ts';
 import {
@@ -28,6 +32,12 @@ createCommand({
             type: ApplicationCommandOptionTypes.SubCommand,
             required: false,
         },
+        {
+            name: 'info',
+            description: "👀 Check out who's available",
+            type: ApplicationCommandOptionTypes.SubCommand,
+            required: false,
+        },
     ],
 
     run: async (bot, interaction) => {
@@ -40,6 +50,7 @@ createCommand({
         const subcommands: SubcommandMap = {
             join: rtpJoin,
             leave: rtpLeave,
+            info: rtpInfo,
         };
 
         await subcommands[subcommand](bot, interaction);
@@ -65,5 +76,19 @@ const rtpLeave = async (_: DiscordBot, interaction: Interaction) => {
 
     await replyToInteraction(interaction, {
         content: `⭕  ${name} is no longer available for Lunaro`,
+    });
+};
+
+const rtpInfo = async (_: DiscordBot, interaction: Interaction) => {
+    const rtpMembers = await getRTPMembers();
+    const rtpMemberCount = rtpMembers.length;
+
+    const rtpMemberCountText =
+        rtpMemberCount === 1
+            ? 'There is 1 member'
+            : `There are ${rtpMemberCount} members`;
+
+    await replyToInteraction(interaction, {
+        content: `👀  ${rtpMemberCountText} available for Lunaro`,
     });
 };

@@ -15,8 +15,6 @@ export interface Command {
 }
 
 export type SubcommandMap = {
-    [subcommand: string]: (
-        bot: DiscordBot,
-        interaction: Interaction
-    ) => Promise<void>;
+    [subcommand: string]:
+        (bot: DiscordBot, interaction: Interaction) => Promise<void>;
 };

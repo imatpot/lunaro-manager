@@ -20,7 +20,7 @@ for await (const entry of Deno.readDir('src/commands')) {
 log('Deploying application commands');
 await bot.helpers.upsertApplicationCommands(
     bot.commands.array(),
-    BigInt(HOME_GUILD_ID)
+    HOME_GUILD_ID
 );
 
 log('Logging in');
