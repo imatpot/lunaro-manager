@@ -1,7 +1,6 @@
 FROM denoland/deno:1.21.2
 
 WORKDIR /mnt/app
-USER deno
 
 COPY . .
 
