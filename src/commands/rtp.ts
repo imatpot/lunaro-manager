@@ -6,6 +6,7 @@ import {
     addMemberToRTP,
     removeMemberFromRTP,
 } from ':util/rtp.ts';
+import { log } from ':util/logger.ts';
 import { DiscordBot } from ':interfaces/discord-bot.ts';
 import { SubcommandMap } from ':interfaces/command.ts';
 import {
@@ -83,12 +84,14 @@ const rtpInfo = async (_: DiscordBot, interaction: Interaction) => {
     const rtpMembers = await getRTPMembers();
     const rtpMemberCount = rtpMembers.length;
 
-    const rtpMemberCountText =
+    const rtpMemberCountString =
         rtpMemberCount === 1
             ? 'There is 1 member'
             : `There are ${rtpMemberCount} members`;
 
     await replyToInteraction(interaction, {
-        content: `👀  ${rtpMemberCountText} available for Lunaro`,
+        content: `👀  ${rtpMemberCountString} available for Lunaro`,
     });
+
+    log(`${rtpMemberCountString} with the RTP role`);
 };

@@ -5,7 +5,6 @@ USER deno
 
 COPY . .
 
-RUN deno cache deps.ts
-RUN deno cache main.ts
+RUN deno task cache
 
-CMD [ "run", "--allow-net", "main.ts" ]
+CMD [ "task", "start" ]

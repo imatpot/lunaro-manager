@@ -1,7 +1,7 @@
 import {
     readActivityTrackerData,
     writeActivityTrackingData,
-} from ':util/fs.ts';
+} from ':util/data.ts';
 import { log } from ':util/logger.ts';
 import { Member, Activity } from 'discordeno';
 

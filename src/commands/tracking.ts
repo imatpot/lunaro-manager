@@ -27,7 +27,7 @@ createCommand({
         },
         {
             name: 'resume',
-            description: '⚡ Enable activity tracking on your account',
+            description: '⚡ Resume activity tracking on your account',
             type: ApplicationCommandOptionTypes.SubCommand,
             required: false,
         },

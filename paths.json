@@ -10,6 +10,8 @@
     ":util/": "./src/util/",
 
     "discordeno": "https://raw.githubusercontent.com/discordeno/discordeno/453fd45ef7be41c4557a4d1bb61b4c5d406c321a/mod.ts",
-    "dotenv": "https://deno.land/x/dotenv@v3.2.0/mod.ts"
+    "dotenv": "https://deno.land/x/dotenv@v3.2.0/mod.ts",
+
+    "date-fns": "https://esm.sh/date-fns@v2.28.0"
   }
 }

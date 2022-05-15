@@ -1,7 +1,7 @@
 // https://discord.com/developers/docs/reference#snowflakes
 export const snowflakeToTimestamp = (snowflake: bigint): number => {
-    const discordEpoch = 1420070400000n;
-    const millisecondsSinceDiscordEpoch = snowflake >> 22n;
+    const discordEpoch = 1420070400000;
+    const millisecondsSinceDiscordEpoch = Number(snowflake >> 22n);
 
-    return Number(discordEpoch + millisecondsSinceDiscordEpoch);
+    return discordEpoch + millisecondsSinceDiscordEpoch;
 };
