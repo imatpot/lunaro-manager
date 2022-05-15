@@ -13,9 +13,6 @@ createCommand({
     run: async (_, interaction) => {
         const ping = Date.now() - snowflakeToTimestamp(interaction.id);
 
-        log(interaction.id.toString())
-        log(Date.now().toString())
-
         await replyToInteraction(interaction, {
             content: `🏓  Current ping is ${ping}ms`,
         });

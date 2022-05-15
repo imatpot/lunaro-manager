@@ -48,38 +48,38 @@ Please also make sure the bot's personal role is ranked *above* the managed RTP 
 This section explains all functionality which Lunaro Manager offers. Every
 action will be replied to with a (selectively ephemeral) message.
 
-### ❓ /help
+### `❓ /help`
 
 Guides to the Discord command explorer to discover all commands, and also links
 to this GitHub section.
 
-### 🏓 /ping
+### `🏓 /ping`
 
 Check if Lunaro Manager is online and how long it took to receive the ping. This
 value is calculated from the system time, and may thus be inaccurate.
 
-### 🟢 /rtp join
+### `🟢 /rtp join`
 
 Adds the configured RTP role to your profile.
 
-### ⭕ /rtp leave
+### `⭕ /rtp leave`
 
 Removes the configured RTP role from your profile.
 
-### 👀 /rtp info
+### `👀 /rtp info`
 
 Lists the number of members with the RTP role.
 
-### ⛔ /tracking pause
+### `⛔ /tracking pause`
 
 Disables activity tracking for your account. This is useful because the activity
 tracker will otherwise override your manually set RTP status.
 
-### ⚡ /tracking resume
+### `⚡ /tracking resume`
 
 Resumes activity tracking for your account.
 
-### 💡 /about
+### `💡 /about`
 
 Displays details about Lunaro Manager, including
 
@@ -88,12 +88,12 @@ Displays details about Lunaro Manager, including
 - Time of last update (based on last commit to `main` branch)
 - Current uptime
 
-### 🤝 /contribute
+### `🤝 /contribute`
 
 Displays a link to this GitHub page, encouraging the creation of issues and
 pull requests.
 
-### 🔎 /config activity-tracking [enabled: boolean]
+### `🔎 /config activity-tracking [enabled: boolean]`
 
 Globally enables or disabled activity tracking based on the `enabled` option. *This Command is supposed to be admin-only. Please configure accordingly.*
 
