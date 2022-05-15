@@ -2,7 +2,7 @@
   "importMap": "paths.json",
 
   "tasks": {
-    "cache": "deno cache --reload src/main.ts",
+    "cache": "deno cache src/**/*.ts",
     "start": "deno run --allow-all --unstable src/main.ts",
     "start:watch": "denon run --allow-all --unstable src/main.ts"
   }

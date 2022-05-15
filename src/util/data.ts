@@ -10,6 +10,7 @@ const createDataDirIfNotExists = () => {
     } catch {
         log('Creating directory ' + dataDirPath);
         Deno.mkdirSync(dataDirPath);
+        Deno.chmod(dataDirPath, 0o777);
     }
 };
 

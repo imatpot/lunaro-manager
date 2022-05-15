@@ -4,6 +4,6 @@ WORKDIR /mnt/app
 
 COPY . .
 
-RUN deno task cache
+RUN deno cache src/**/*.ts
 
 CMD [ "task", "start" ]

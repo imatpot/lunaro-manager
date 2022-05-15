@@ -117,7 +117,7 @@ You need to have [Deno](https://deno.land) installed. Cache the dependencies to
 make compilation faster later on.
 
 ```sh
-$ deno task cache
+$ deno cache src/**/*.ts   # deno task does not currently support globs
 $ deno task start
 ```
 
