@@ -12,6 +12,8 @@ export const doActivitiesIncludeLunaro = (activities: Activity[]) => {
         (activity) =>
             activity.name.toLowerCase() === 'warframe' &&
             localizedLunaroName.includes(activity.details?.toLowerCase() || '')
+            ||
+            activity.name.toLowerCase() === 'warframe: lunaro'
     );
 
     return lunaroActivities.length > 0;
