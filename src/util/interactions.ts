@@ -2,6 +2,11 @@ import { bot } from ':src/bot.ts';
 import { InteractionReply } from ':interfaces/interaction-reply.ts';
 import { Interaction, InteractionResponseTypes } from 'discordeno';
 
+/**
+ * Replies to an interaction with a text message.
+ * @param interaction to be replied to
+ * @param reply to be replied with
+ */
 export const replyToInteraction = async (
     interaction: Interaction,
     reply: InteractionReply

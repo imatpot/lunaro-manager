@@ -7,7 +7,6 @@ import {
     removeMemberFromRTP,
 } from ':util/rtp.ts';
 import { log } from ':util/logger.ts';
-import { DiscordBot } from ':interfaces/discord-bot.ts';
 import { SubcommandMap } from ':interfaces/command.ts';
 import {
     ApplicationCommandTypes,
@@ -41,7 +40,7 @@ createCommand({
         },
     ],
 
-    run: async (bot, interaction) => {
+    run: async (interaction) => {
         const subcommand = getSubcommand(interaction);
 
         if (!subcommand) {
@@ -54,11 +53,12 @@ createCommand({
             info: rtpInfo,
         };
 
-        await subcommands[subcommand](bot, interaction);
+        await subcommands[subcommand](interaction);
     },
 });
 
-const rtpJoin = async (_: DiscordBot, interaction: Interaction) => {
+/** Function for `/rtp join`. */
+const rtpJoin = async (interaction: Interaction) => {
     const member = interaction.member!;
     await addMemberToRTP(member);
 
@@ -69,7 +69,8 @@ const rtpJoin = async (_: DiscordBot, interaction: Interaction) => {
     });
 };
 
-const rtpLeave = async (_: DiscordBot, interaction: Interaction) => {
+/** Function for `/rtp leave`. */
+const rtpLeave = async (interaction: Interaction) => {
     const member = interaction.member!;
     await removeMemberFromRTP(member);
 
@@ -80,7 +81,8 @@ const rtpLeave = async (_: DiscordBot, interaction: Interaction) => {
     });
 };
 
-const rtpInfo = async (_: DiscordBot, interaction: Interaction) => {
+/** Function for `/rtp info`. */
+const rtpInfo = async (interaction: Interaction) => {
     const rtpMembers = await getRTPMembers();
     const rtpMemberCount = rtpMembers.length;
 

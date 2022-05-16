@@ -5,7 +5,6 @@ import {
     addMemberToTrackingBlocklist,
     removeMemberFromTrackingBlocklist,
 } from ':util/activity-tracking.ts';
-import { DiscordBot } from ':interfaces/discord-bot.ts';
 import { SubcommandMap } from ':interfaces/command.ts';
 import {
     ApplicationCommandTypes,
@@ -33,7 +32,7 @@ createCommand({
         },
     ],
 
-    run: async (bot, interaction) => {
+    run: async (interaction) => {
         const subcommand = getSubcommand(interaction);
 
         if (!subcommand) {
@@ -45,11 +44,12 @@ createCommand({
             resume: trackingResume,
         };
 
-        await subcommands[subcommand](bot, interaction);
+        await subcommands[subcommand](interaction);
     },
 });
 
-const trackingPause = async (_: DiscordBot, interaction: Interaction) => {
+/** Function for `/tracking pause`. */
+const trackingPause = async (interaction: Interaction) => {
     const member = interaction.member!;
     addMemberToTrackingBlocklist(member);
 
@@ -59,7 +59,8 @@ const trackingPause = async (_: DiscordBot, interaction: Interaction) => {
     });
 };
 
-const trackingResume = async (_: DiscordBot, interaction: Interaction) => {
+/** Function for `/tracking resume`. */
+const trackingResume = async (interaction: Interaction) => {
     const member = interaction.member!;
     removeMemberFromTrackingBlocklist(member);
 

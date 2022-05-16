@@ -8,7 +8,7 @@ createCommand({
     description: '❓ Learn how to use Lunaro Manager',
     type: ApplicationCommandTypes.ChatInput,
 
-    run: async (_, interaction) => {
+    run: async (interaction) => {
         const helpString = [
             "Swazdo-lah, surah! I'm the Lunaro Manager, and my job is to help you with all things Lunaro.",
             '',

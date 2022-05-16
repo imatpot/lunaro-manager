@@ -8,7 +8,7 @@ createCommand({
     description: "🤝 Let's work together",
     type: ApplicationCommandTypes.ChatInput,
 
-    run: async (_, interaction) => {
+    run: async (interaction) => {
         const contributionString = [
             `🤝  Feel like helping out? Create an issue or pull request on GitHub:`,
             'https://github.com/imatpot/lunaro-manager',

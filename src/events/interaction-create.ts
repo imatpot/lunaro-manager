@@ -14,7 +14,7 @@ bot.events.interactionCreate = async (_, interaction) => {
         event(`Member ran /${commandName} ${subCommandName || ''}`);
 
         try {
-            bot.commands.get(commandName)?.run(bot, interaction);
+            bot.commands.get(commandName)?.run(interaction);
         } catch (err) {
             await replyToInteraction(interaction, {
                 content:

@@ -5,7 +5,6 @@ import {
     enableActivityTracking,
     disableActivityTracking,
 } from ':util/activity-tracking.ts';
-import { DiscordBot } from ':interfaces/discord-bot.ts';
 import { SubcommandMap } from ':interfaces/command.ts';
 import {
     ApplicationCommandTypes,
@@ -32,10 +31,10 @@ createCommand({
                     required: true,
                 },
             ],
-        }
+        },
     ],
 
-    run: async (bot, interaction) => {
+    run: async (interaction) => {
         const subcommand = getSubcommand(interaction);
 
         if (!subcommand) {
@@ -43,17 +42,15 @@ createCommand({
         }
 
         const subcommands: SubcommandMap = {
-            'activity-tracking': configActivityTrackiing,
+            'activity-tracking': configActivityTracking,
         };
 
-        await subcommands[subcommand](bot, interaction);
+        await subcommands[subcommand](interaction);
     },
 });
 
-const configActivityTrackiing = async (
-    _: DiscordBot,
-    interaction: Interaction
-) => {
+/** Function for `/config activity-tracking`. */
+const configActivityTracking = async (interaction: Interaction) => {
     const shouldEnable = interaction.data?.options
         ?.find((option) => option.name === 'activity-tracking')
         ?.options?.find((option) => option.name === 'enabled')

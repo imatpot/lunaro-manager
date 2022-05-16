@@ -1,8 +1,8 @@
 import { HOME_GUILD_ID } from ':src/env.ts';
+import { bot } from ":src/bot.ts";
 import { createCommand } from ':util/creators.ts';
-import { readActivityTrackerData } from ':util/data.ts';
+import { readActivityTrackingConfig } from ':util/data.ts';
 import { replyToInteraction } from ':util/interactions.ts';
-import { snowflakeToTimestamp } from ':util/time.ts';
 import { readyTimestamp } from ':events/ready.ts';
 
 import { ApplicationCommandTypes, DISCORDENO_VERSION } from 'discordeno';
@@ -17,8 +17,8 @@ createCommand({
     description: '💡 View details about Lunaro Manager',
     type: ApplicationCommandTypes.ChatInput,
 
-    run: async (bot, interaction) => {
-        const trackingData = readActivityTrackerData();
+    run: async (interaction) => {
+        const trackingData = readActivityTrackingConfig();
         const members = await bot.helpers.getMembers(HOME_GUILD_ID, {});
         const trackedMemberCount = members.size - trackingData.blocklist.length;
 

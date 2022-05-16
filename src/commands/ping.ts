@@ -10,7 +10,7 @@ createCommand({
     description: '🏓 Check connection latency',
     type: ApplicationCommandTypes.ChatInput,
 
-    run: async (_, interaction) => {
+    run: async (interaction) => {
         const ping = Date.now() - snowflakeToTimestamp(interaction.id);
 
         await replyToInteraction(interaction, {
