@@ -1,17 +1,13 @@
-import { createCommand } from ':util/creators.ts';
-import { getSubcommand } from ':util/commands.ts';
-import { replyToInteraction } from ':util/interactions.ts';
-import {
-    getRTPMembers,
-    addMemberToRTP,
-    removeMemberFromRTP,
-} from ':util/rtp.ts';
-import { log } from ':util/logger.ts';
 import { SubcommandMap } from ':interfaces/command.ts';
+import { getSubcommand } from ':util/commands.ts';
+import { createCommand } from ':util/creators.ts';
+import { replyToInteraction } from ':util/interactions.ts';
+import { log } from ':util/logger.ts';
 import {
-    ApplicationCommandTypes,
-    ApplicationCommandOptionTypes,
-    Interaction,
+    addMemberToRTP, getRTPMembers, removeMemberFromRTP
+} from ':util/rtp.ts';
+import {
+    ApplicationCommandOptionTypes, ApplicationCommandTypes, Interaction
 } from 'discordeno';
 
 createCommand({

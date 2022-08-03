@@ -1,4 +1,4 @@
-import { Interaction, ApplicationCommandOptionTypes } from 'discordeno';
+import { ApplicationCommandOptionTypes, Interaction } from 'discordeno';
 
 /**
  * Extracts the name of a subcommand from an interaction.

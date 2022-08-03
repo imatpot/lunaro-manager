@@ -1,9 +1,9 @@
-import { RTP_ROLE_ID } from ':src/env.ts';
 import { bot } from ':src/bot.ts';
+import { RTP_ROLE_ID } from ':src/env.ts';
 import { doActivitiesIncludeLunaro } from ':util/activity-tracking.ts';
-import { addMemberToRTP, removeMemberFromRTP } from ':util/rtp.ts';
 import { readActivityTrackingConfig } from ':util/data.ts';
 import { event } from ':util/logger.ts';
+import { addMemberToRTP, removeMemberFromRTP } from ':util/rtp.ts';
 
 bot.events.presenceUpdate = async (_, presence) => {
     const activityTrackerData = readActivityTrackingConfig();

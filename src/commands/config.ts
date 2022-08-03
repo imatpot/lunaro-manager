@@ -1,15 +1,12 @@
-import { createCommand } from ':util/creators.ts';
-import { getSubcommand } from ':util/commands.ts';
-import { replyToInteraction } from ':util/interactions.ts';
-import {
-    enableActivityTracking,
-    disableActivityTracking,
-} from ':util/activity-tracking.ts';
 import { SubcommandMap } from ':interfaces/command.ts';
 import {
-    ApplicationCommandTypes,
-    ApplicationCommandOptionTypes,
-    Interaction,
+    disableActivityTracking, enableActivityTracking
+} from ':util/activity-tracking.ts';
+import { getSubcommand } from ':util/commands.ts';
+import { createCommand } from ':util/creators.ts';
+import { replyToInteraction } from ':util/interactions.ts';
+import {
+    ApplicationCommandOptionTypes, ApplicationCommandTypes, Interaction
 } from 'discordeno';
 
 createCommand({

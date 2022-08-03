@@ -25,3 +25,15 @@ export const HOME_GUILD_ID = BigInt(environment.HOME_GUILD_ID);
  * Contains the value of the `RTP_ROLE_ID` environment variable.
  */
 export const RTP_ROLE_ID = BigInt(environment.RTP_ROLE_ID);
+
+/**
+ * URL of the Lunaro ranking API.
+ * Contains the value of the `RANK_API_URL` environment variable.
+ */
+export const RANK_API_URL = environment.RANK_API_URL;
+
+/**
+ * Token to access POST-endpoints in the Lunaro ranking API.
+ * Contains the value of the `RANK_API_TOKEN` environment variable.
+ */
+export const RANK_API_TOKEN = environment.RANK_API_TOKEN;

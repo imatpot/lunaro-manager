@@ -1,5 +1,5 @@
-import { HOME_GUILD_ID } from ':src/env.ts';
 import { bot } from ':src/bot.ts';
+import { HOME_GUILD_ID } from ':src/env.ts';
 import { log } from ':util/logger.ts';
 import { startBot } from 'discordeno';
 

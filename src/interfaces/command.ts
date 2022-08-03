@@ -1,7 +1,7 @@
 import {
     ApplicationCommandOption,
     ApplicationCommandTypes,
-    Interaction,
+    Interaction
 } from 'discordeno';
 
 /** Configuration for a slash command. */

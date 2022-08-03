@@ -1,5 +1,5 @@
-import { bot } from ':src/bot.ts';
 import { InteractionReply } from ':interfaces/interaction-reply.ts';
+import { bot } from ':src/bot.ts';
 import { Interaction, InteractionResponseTypes } from 'discordeno';
 
 /**

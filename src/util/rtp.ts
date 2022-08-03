@@ -1,5 +1,5 @@
-import { RTP_ROLE_ID, HOME_GUILD_ID } from ':src/env.ts';
 import { bot } from ':src/bot.ts';
+import { HOME_GUILD_ID, RTP_ROLE_ID } from ':src/env.ts';
 import { log } from ':util/logger.ts';
 import { Member } from 'discordeno';
 

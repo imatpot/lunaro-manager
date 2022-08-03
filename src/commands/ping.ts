@@ -1,7 +1,7 @@
 import { createCommand } from ':util/creators.ts';
 import { replyToInteraction } from ':util/interactions.ts';
-import { snowflakeToTimestamp } from ':util/time.ts';
 import { log } from ':util/logger.ts';
+import { snowflakeToTimestamp } from ':util/time.ts';
 
 import { ApplicationCommandTypes } from 'discordeno';
 

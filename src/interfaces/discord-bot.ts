@@ -1,5 +1,5 @@
 import { Command } from ':interfaces/command.ts';
-import { Collection, CreateBotOptions, Bot } from 'discordeno';
+import { Bot, Collection, CreateBotOptions } from 'discordeno';
 
 /** Extension of discordeno's `Bot` class with a collection of commands. */
 export interface DiscordBot extends Bot {
