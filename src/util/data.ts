@@ -48,7 +48,8 @@ export const readActivityTrackingConfig = (): ActivityTrackingConfig => {
     initializeData();
 
     const fileContents = Deno.readTextFileSync(activityTrackerDataFile);
-    const activityTrackerData: ActivityTrackingConfig = JSON.parse(fileContents);
+    const activityTrackerData: ActivityTrackingConfig =
+        JSON.parse(fileContents);
 
     return activityTrackerData;
 };

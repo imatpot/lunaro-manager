@@ -1,4 +1,4 @@
-import { DISCORD_TOKEN, BOT_ID } from ':src/env.ts';
+import { BOT_ID, DISCORD_TOKEN } from ':src/env.ts';
 import { createDiscordBot } from ':util/creators.ts';
 import { Collection } from 'discordeno';
 

@@ -1,6 +1,6 @@
-import { bot } from ':src/bot.ts';
 import { Command } from ':interfaces/command.ts';
 import { DiscordBot, DiscordBotOptions } from ':interfaces/discord-bot.ts';
+import { bot } from ':src/bot.ts';
 import { createBot } from 'discordeno';
 
 /**

@@ -1,9 +1,9 @@
 import {
     readActivityTrackingConfig,
-    writeActivityTrackingConfig,
+    writeActivityTrackingConfig
 } from ':util/data.ts';
 import { log } from ':util/logger.ts';
-import { Member, Activity } from 'discordeno';
+import { Activity, Member } from 'discordeno';
 
 /**
  * Checks for Lunaro in a list of activities. Looks for both Warframe itself and
@@ -63,7 +63,6 @@ export const addMemberToTrackingBlocklist = (member: Member) => {
         log('Member added to activity tracking blocklist');
     }
 };
-
 
 /**
  * Removes a member to the activity tracking blocklist to resume tracking for

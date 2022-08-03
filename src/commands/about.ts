@@ -1,16 +1,15 @@
+import { readyTimestamp } from ':events/ready.ts';
+import { bot } from ':src/bot.ts';
 import { HOME_GUILD_ID } from ':src/env.ts';
-import { bot } from ":src/bot.ts";
 import { createCommand } from ':util/creators.ts';
 import { readActivityTrackingConfig } from ':util/data.ts';
 import { replyToInteraction } from ':util/interactions.ts';
-import { readyTimestamp } from ':events/ready.ts';
 
-import { ApplicationCommandTypes, DISCORDENO_VERSION } from 'discordeno';
 import {
-    formatDuration,
-    intervalToDuration,
-    formatDistanceToNow,
+    formatDistanceToNow, formatDuration,
+    intervalToDuration
 } from 'date-fns';
+import { ApplicationCommandTypes, DISCORDENO_VERSION } from 'discordeno';
 
 createCommand({
     name: 'about',

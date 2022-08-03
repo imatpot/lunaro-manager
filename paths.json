@@ -9,9 +9,8 @@
     ":interfaces/": "./src/interfaces/",
     ":util/": "./src/util/",
 
-    "discordeno": "https://raw.githubusercontent.com/discordeno/discordeno/453fd45ef7be41c4557a4d1bb61b4c5d406c321a/mod.ts",
+    "discordeno": "https://deno.land/x/discordeno@13.0.0-rc39/mod.ts",
     "dotenv": "https://deno.land/x/dotenv@v3.2.0/mod.ts",
-
-    "date-fns": "https://esm.sh/date-fns@v2.28.0"
+    "date-fns": "https://esm.sh/date-fns@v2.29.1"
   }
 }
