@@ -3,12 +3,8 @@ import { getSubcommand } from ':util/commands.ts';
 import { createCommand } from ':util/creators.ts';
 import { replyToInteraction } from ':util/interactions.ts';
 import { log } from ':util/logger.ts';
-import {
-    addMemberToRTP, getRTPMembers, removeMemberFromRTP
-} from ':util/rtp.ts';
-import {
-    ApplicationCommandOptionTypes, ApplicationCommandTypes, Interaction
-} from 'discordeno';
+import { addMemberToRTP, getRTPMembers, removeMemberFromRTP } from ':util/rtp.ts';
+import { ApplicationCommandOptionTypes, ApplicationCommandTypes, Interaction } from 'discordeno';
 
 createCommand({
     name: 'rtp',
@@ -83,9 +79,7 @@ const rtpInfo = async (interaction: Interaction) => {
     const rtpMemberCount = rtpMembers.length;
 
     const rtpMemberCountString =
-        rtpMemberCount === 1
-            ? 'There is 1 member'
-            : `There are ${rtpMemberCount} members`;
+        rtpMemberCount === 1 ? 'There is 1 member' : `There are ${rtpMemberCount} members`;
 
     await replyToInteraction(interaction, {
         content: `👀  ${rtpMemberCountString} available for Lunaro`,

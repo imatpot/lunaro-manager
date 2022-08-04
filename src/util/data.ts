@@ -27,10 +27,7 @@ const createActivityTrackerConfigIfNotExists = () => {
 
         log('Creating file ' + activityTrackerDataFile);
 
-        Deno.writeTextFileSync(
-            activityTrackerDataFile,
-            JSON.stringify(emptyData, null, 2)
-        );
+        Deno.writeTextFileSync(activityTrackerDataFile, JSON.stringify(emptyData, null, 2));
     }
 };
 
@@ -48,8 +45,7 @@ export const readActivityTrackingConfig = (): ActivityTrackingConfig => {
     initializeData();
 
     const fileContents = Deno.readTextFileSync(activityTrackerDataFile);
-    const activityTrackerData: ActivityTrackingConfig =
-        JSON.parse(fileContents);
+    const activityTrackerData: ActivityTrackingConfig = JSON.parse(fileContents);
 
     return activityTrackerData;
 };
@@ -63,8 +59,5 @@ export const writeActivityTrackingConfig = (config: ActivityTrackingConfig) => {
 
     log('Writing file ' + activityTrackerDataFile);
 
-    Deno.writeTextFileSync(
-        activityTrackerDataFile,
-        JSON.stringify(config, null, 2)
-    );
+    Deno.writeTextFileSync(activityTrackerDataFile, JSON.stringify(config, null, 2));
 };

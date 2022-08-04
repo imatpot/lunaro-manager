@@ -17,8 +17,7 @@ bot.events.interactionCreate = async (_, interaction) => {
             bot.commands.get(commandName)?.run(interaction);
         } catch (err) {
             await replyToInteraction(interaction, {
-                content:
-                    '❌  Sorry, something went wrong.\n```\n' + err + '\n```',
+                content: '❌  Sorry, something went wrong.\n```\n' + err + '\n```',
                 ephemeral: true,
             });
 

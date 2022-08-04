@@ -7,21 +7,14 @@ import { Interaction, InteractionResponseTypes } from 'discordeno';
  * @param interaction to be replied to
  * @param reply to be replied with
  */
-export const replyToInteraction = async (
-    interaction: Interaction,
-    reply: InteractionReply
-) => {
-    await bot.helpers.sendInteractionResponse(
-        interaction.id,
-        interaction.token,
-        {
-            type: InteractionResponseTypes.ChannelMessageWithSource,
-            data: {
-                content: reply.content,
+export const replyToInteraction = async (interaction: Interaction, reply: InteractionReply) => {
+    await bot.helpers.sendInteractionResponse(interaction.id, interaction.token, {
+        type: InteractionResponseTypes.ChannelMessageWithSource,
+        data: {
+            content: reply.content,
 
-                // https://discord.com/developers/docs/change-log#march-5-2021
-                flags: reply.ephemeral ? 64 : undefined,
-            },
-        }
-    );
+            // https://discord.com/developers/docs/change-log#march-5-2021
+            flags: reply.ephemeral ? 64 : undefined,
+        },
+    });
 };

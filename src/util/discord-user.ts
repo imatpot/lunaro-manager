@@ -1,4 +1,4 @@
-/** Regex matching a Lunaro Revival Server username (formatted as `<username> [<platform>]`) */
+/** Regex matching a Lunaro Revival Server username (formatted as `<username> [<platform>]`). */
 const usernamePattern = /([A-Za-z0-9_.-]{4,24})\s\[(PC|XB1|PS4|SWI)\]/;
 
 /** Represents a platform Warframe can be played on. */

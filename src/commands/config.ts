@@ -1,13 +1,9 @@
 import { SubcommandMap } from ':interfaces/command.ts';
-import {
-    disableActivityTracking, enableActivityTracking
-} from ':util/activity-tracking.ts';
+import { disableActivityTracking, enableActivityTracking } from ':util/activity-tracking.ts';
 import { getSubcommand } from ':util/commands.ts';
 import { createCommand } from ':util/creators.ts';
 import { replyToInteraction } from ':util/interactions.ts';
-import {
-    ApplicationCommandOptionTypes, ApplicationCommandTypes, Interaction
-} from 'discordeno';
+import { ApplicationCommandOptionTypes, ApplicationCommandTypes, Interaction } from 'discordeno';
 
 createCommand({
     name: 'config',
@@ -50,8 +46,7 @@ createCommand({
 const configActivityTracking = async (interaction: Interaction) => {
     const shouldEnable = interaction.data?.options
         ?.find((option) => option.name === 'activity-tracking')
-        ?.options?.find((option) => option.name === 'enabled')
-        ?.value as boolean;
+        ?.options?.find((option) => option.name === 'enabled')?.value as boolean;
 
     if (shouldEnable === undefined) {
         throw new Error('Missing option `enabled`');

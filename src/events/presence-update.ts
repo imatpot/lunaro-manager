@@ -14,10 +14,7 @@ bot.events.presenceUpdate = async (_, presence) => {
         return;
     }
 
-    const member = await bot.helpers.getMember(
-        presence.guildId,
-        presence.user.id
-    );
+    const member = await bot.helpers.getMember(presence.guildId, presence.user.id);
 
     if (doActivitiesIncludeLunaro(presence.activities)) {
         event('Member started playing Lunaro');

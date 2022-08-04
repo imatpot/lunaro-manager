@@ -1,8 +1,4 @@
-import {
-    ApplicationCommandOption,
-    ApplicationCommandTypes,
-    Interaction
-} from 'discordeno';
+import { ApplicationCommandOption, ApplicationCommandTypes, Interaction } from 'discordeno';
 
 /** Configuration for a slash command. */
 export interface Command {

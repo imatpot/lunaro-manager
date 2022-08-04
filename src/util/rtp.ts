@@ -9,9 +9,7 @@ import { Member } from 'discordeno';
  */
 export const getRTPMembers = async (): Promise<Member[]> => {
     const allMembers = await bot.helpers.getMembers(HOME_GUILD_ID, {});
-    const rtpMembers = allMembers
-        .array()
-        .filter((member) => member.roles.includes(RTP_ROLE_ID));
+    const rtpMembers = allMembers.array().filter((member) => member.roles.includes(RTP_ROLE_ID));
 
     return rtpMembers;
 };

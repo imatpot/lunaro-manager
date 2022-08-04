@@ -1,7 +1,4 @@
-import {
-    readActivityTrackingConfig,
-    writeActivityTrackingConfig
-} from ':util/data.ts';
+import { readActivityTrackingConfig, writeActivityTrackingConfig } from ':util/data.ts';
 import { log } from ':util/logger.ts';
 import { Activity, Member } from 'discordeno';
 
@@ -20,8 +17,7 @@ export const doActivitiesIncludeLunaro = (activities: Activity[]) => {
             activity.name.toLowerCase() === 'warframe' &&
             localizedLunaroName.includes(activity.details?.toLowerCase() || '');
 
-        const isPyLunaroRPC =
-            activity.name.toLowerCase() === 'warframe: lunaro';
+        const isPyLunaroRPC = activity.name.toLowerCase() === 'warframe: lunaro';
 
         return isWarframeLunaro || isPyLunaroRPC;
     });
@@ -74,9 +70,7 @@ export const removeMemberFromTrackingBlocklist = (member: Member) => {
     const data = readActivityTrackingConfig();
 
     if (data.blocklist.includes(member.id.toString())) {
-        data.blocklist = data.blocklist.filter(
-            (entry) => entry !== member.id.toString()
-        );
+        data.blocklist = data.blocklist.filter((entry) => entry !== member.id.toString());
         writeActivityTrackingConfig(data);
 
         log('Member removed from activity tracking blocklist');

@@ -5,10 +5,7 @@ import { createCommand } from ':util/creators.ts';
 import { readActivityTrackingConfig } from ':util/data.ts';
 import { replyToInteraction } from ':util/interactions.ts';
 
-import {
-    formatDistanceToNow, formatDuration,
-    intervalToDuration
-} from 'date-fns';
+import { formatDistanceToNow, formatDuration, intervalToDuration } from 'date-fns';
 import { ApplicationCommandTypes, DISCORDENO_VERSION } from 'discordeno';
 
 createCommand({

@@ -10,10 +10,7 @@ export const getSubcommand = (interaction: Interaction): string | null => {
     if (!interaction.data.options) return null;
     if (!interaction.data.options[0]) return null;
 
-    if (
-        interaction.data.options[0]?.type !==
-        ApplicationCommandOptionTypes.SubCommand
-    ) {
+    if (interaction.data.options[0]?.type !== ApplicationCommandOptionTypes.SubCommand) {
         return null;
     }
 

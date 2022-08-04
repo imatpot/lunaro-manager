@@ -6,9 +6,7 @@ import {
 import { getSubcommand } from ':util/commands.ts';
 import { createCommand } from ':util/creators.ts';
 import { replyToInteraction } from ':util/interactions.ts';
-import {
-    ApplicationCommandOptionTypes, ApplicationCommandTypes, Interaction
-} from 'discordeno';
+import { ApplicationCommandOptionTypes, ApplicationCommandTypes, Interaction } from 'discordeno';
 
 createCommand({
     name: 'tracking',
