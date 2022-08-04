@@ -79,6 +79,22 @@ tracker will otherwise override your manually set RTP status.
 
 Resumes activity tracking for your account.
 
+### `🏅 /ranked view`
+
+Displays the ranking data of a specific player.
+
+### `🏆 /ranked top`
+
+Displays a certain number of top-ranked players.
+
+### `✍ /ranked register`
+
+Signs you up to the ranking system.
+
+### `🥍 /ranked submit`
+
+Lets you submit a ranked match. Requires approval from the opponent.
+
 ### `💡 /about`
 
 Displays details about Lunaro Manager, including
@@ -95,7 +111,8 @@ pull requests.
 
 ### `🔎 /config activity-tracking [enabled: boolean]`
 
-Globally enables or disabled activity tracking based on the `enabled` option. *This Command is supposed to be admin-only. Please configure accordingly.*
+Globally enables or disabled activity tracking based on the `enabled` option.
+*This Command is supposed to be admin-only. Please configure accordingly.*
 
 ---
 
