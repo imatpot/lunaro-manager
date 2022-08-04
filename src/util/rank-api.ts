@@ -31,13 +31,14 @@ export const rankToLeagueName = (rank: number): string => {
 
 /**
  * Fetches all players.
- * @returns the list of players or `null` if an error occured
+ * @returns the list of players
+ * @throws if the request results in an error
  */
-export const getAllPlayers = async (): Promise<LunaroPlayer[] | null> => {
+export const getAllPlayers = async (): Promise<LunaroPlayer[]> => {
     const resource = RANK_API_URL + '/api/players';
     const response = await fetch(resource);
 
-    if (response.status !== 200) return [];
+    if (response.status !== 200) throw new Error(await response.text());
 
     const players: LunaroPlayer[] = JSON.parse(await response.text());
 
@@ -48,13 +49,14 @@ export const getAllPlayers = async (): Promise<LunaroPlayer[] | null> => {
  * Fetches the player with the given username or ID.
  *
  * @param nameOrId username or ID of the player
- * @returns the requested player or `null` if an error occured
+ * @returns the requested player
+ * @throws if the request results in an error
  */
-export const getPlayerByNameOrId = async (nameOrId: string): Promise<LunaroPlayer | null> => {
+export const getPlayerByNameOrId = async (nameOrId: string): Promise<LunaroPlayer> => {
     const resource = RANK_API_URL + '/api/players/' + nameOrId;
     const response = await fetch(resource);
 
-    if (response.status !== 200) return null;
+    if (response.status !== 200) throw new Error(await response.text());
 
     const player: LunaroPlayer = JSON.parse(await response.text());
 
@@ -63,13 +65,14 @@ export const getPlayerByNameOrId = async (nameOrId: string): Promise<LunaroPlaye
 
 /**
  * Fetches all matches.
- * @returns the list of matches or `null` if an error occured
+ * @returns the list of matches
+ * @throws if the request results in an error
  */
-export const getAllMatches = async (): Promise<LunaroMatch[] | null> => {
+export const getAllMatches = async (): Promise<LunaroMatch[]> => {
     const resource = RANK_API_URL + '/api/matches';
     const response = await fetch(resource);
 
-    if (response.status !== 200) return null;
+    if (response.status !== 200) throw new Error(await response.text());
 
     const matches: LunaroMatch[] = JSON.parse(await response.text());
 
@@ -80,13 +83,14 @@ export const getAllMatches = async (): Promise<LunaroMatch[] | null> => {
  * Fetches the match with the given username or ID.
  *
  * @param id ID of the match
- * @returns the requested match or `null` if an error occured
+ * @returns the requested match
+ * @throws if the request results in an error
  */
-export const getMatchById = async (id: string): Promise<LunaroMatch | null> => {
+export const getMatchById = async (id: string): Promise<LunaroMatch> => {
     const resource = RANK_API_URL + '/api/matches/' + id;
     const response = await fetch(resource);
 
-    if (response.status !== 200) return null;
+    if (response.status !== 200) throw new Error(await response.text());
 
     const match: LunaroMatch = JSON.parse(await response.text());
 
@@ -98,6 +102,7 @@ export const getMatchById = async (id: string): Promise<LunaroMatch | null> => {
  *
  * @param player player to be created
  * @returns whether the creation was a success
+ * @throws if the request results in an error
  */
 export const createPlayer = async (player: NewLunaroPlayer): Promise<boolean> => {
     const resource = RANK_API_URL + '/api/players/add';
@@ -109,7 +114,7 @@ export const createPlayer = async (player: NewLunaroPlayer): Promise<boolean> =>
         body: JSON.stringify(body),
     });
 
-    if (response.status !== 201) return false;
+    if (response.status !== 201) throw new Error(await response.text());
 
     return true;
 };
@@ -119,6 +124,7 @@ export const createPlayer = async (player: NewLunaroPlayer): Promise<boolean> =>
  *
  * @param match match to be created
  * @returns whether the creation was a success
+ * @throws if the request results in an error
  */
 export const createMatch = async (match: NewLunaroMatch): Promise<boolean> => {
     const resource = RANK_API_URL + '/api/matches/add';
@@ -130,7 +136,7 @@ export const createMatch = async (match: NewLunaroMatch): Promise<boolean> => {
         body: JSON.stringify(body),
     });
 
-    if (response.status !== 201) return false;
+    if (response.status !== 201) throw new Error(await response.text());
 
     return true;
 };

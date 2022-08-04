@@ -23,7 +23,7 @@ createCommand({
                 {
                     name: 'player',
                     description: 'The player whose ranking you want to view. Defaults to yourself',
-                    type: ApplicationCommandOptionTypes.User,
+                    type: ApplicationCommandOptionTypes.String,
                     required: false,
                 },
             ],
@@ -33,6 +33,20 @@ createCommand({
             description: '🏆 View the top rankings',
             type: ApplicationCommandOptionTypes.SubCommand,
             required: false,
+            options: [
+                {
+                    name: 'players',
+                    description: 'The amount of players to show. Defaults to 5, maxes out at 30',
+                    type: ApplicationCommandOptionTypes.Number,
+                    required: false,
+                },
+                {
+                    name: 'offset',
+                    description: 'The amount of players to skip. Defaults to 0',
+                    type: ApplicationCommandOptionTypes.Number,
+                    required: false,
+                },
+            ],
         },
         {
             name: 'register',
@@ -66,64 +80,103 @@ createCommand({
     },
 });
 
+const generatePlacementString = (placement: number, spaces = 1): string => {
+    const medals: {
+        [place: number]: string;
+    } = {
+        1: '🥇',
+        2: '🥈',
+        3: '🥉',
+    };
+
+    let gap = '';
+
+    for (let i = 0; i < spaces; i++) {
+        gap += ' ';
+    }
+
+    const medal: string = medals[placement] || '🏅';
+    const placementString = [1, 2, 3].includes(placement)
+        ? `${medal}`
+        : `${medal}${gap}#${placement}`;
+
+    return placementString;
+};
+
 /** Function for `/ranked view`. */
 const rankedView = async (interaction: Interaction) => {
-    let userIdAsString = interaction.data?.options
+    let username = interaction.data?.options
         ?.find((option) => option.name === 'view')
         ?.options?.find((option) => option.name === 'player')?.value as string;
 
-    if (userIdAsString === undefined) {
-        userIdAsString = interaction.user.id.toString();
+    if (username === undefined) {
+        const player = await bot.helpers.getMember(HOME_GUILD_ID, interaction.user.id);
+        const nick = player.nick;
+        const user = DiscordUser.parse(nick);
+
+        username = user.username;
     }
 
-    const userId = BigInt(userIdAsString);
-    const player = await bot.helpers.getMember(HOME_GUILD_ID, userId);
-    const name = player.nick;
-    const user = DiscordUser.parse(name);
-
-    if (!user) {
-        return await replyToInteraction(interaction, {
-            content: '❌  Sorry, I failed to infer the in-game name from the Discord alias.',
-            ephemeral: true,
-        });
-    }
-
-    const playerData = await getPlayerByNameOrId(user.username);
-
-    if (!playerData) {
-        return await replyToInteraction(interaction, {
-            content:
-                "❌  Sorry, looks like you aren't signed up to ranked gameplay. Please run `/ranked register`.",
-            ephemeral: true,
-        });
-    }
-
+    const playerData = await getPlayerByNameOrId(username);
     const allPlayerData = await getAllPlayers();
-    let place: string;
 
-    if (allPlayerData) {
-        const locationInAllPlayerData = allPlayerData.find((a) => a.name == playerData.name)!;
-        const index = allPlayerData.indexOf(locationInAllPlayerData);
+    const locationInAllPlayerData = allPlayerData.find((a) => a.name == playerData.name)!;
+    const index = allPlayerData.indexOf(locationInAllPlayerData);
 
-        place = index == -1 ? '?' : (index + 1).toString();
-    } else {
-        place = '?';
-    }
+    const placement = generatePlacementString(index + 1, 2);
+    placement.replace('#0', '#?');
 
     await replyToInteraction(interaction, {
         content: [
-            `👤  <@${player.id}>`,
-            `🏅  ${rankToLeagueName(playerData.rank)}`,
-            `🏆  #${place} with ${playerData.rank} points`,
+            `👤  \`${playerData.name}\``,
+            `🏆  ${rankToLeagueName(playerData.rank)}`,
+            `${placement} with ${playerData.rank} points`,
         ].join('\n'),
     });
 };
 
 /** Function for `/ranked top`. */
 const rankedTop = async (interaction: Interaction) => {
+    const playerCount =
+        (interaction.data?.options
+            ?.find((option) => option.name === 'top')
+            ?.options?.find((option) => option.name === 'players')?.value as number) || 10;
+
+    const offset =
+        (interaction.data?.options
+            ?.find((option) => option.name === 'top')
+            ?.options?.find((option) => option.name === 'offset')?.value as number) || 0;
+
+    if (playerCount < 1) {
+        throw new Error('Parameter `players` must be at least 1');
+    }
+
+    if (playerCount > 30) {
+        throw new Error('Parameter `players` must be less than 30');
+    }
+
+    if (offset < 0) {
+        throw new Error('Offset cannot be negative');
+    }
+
+    const allPlayers = await getAllPlayers();
+
+    allPlayers.splice(0, offset);
+
+    const topPlayers = allPlayers.splice(0, playerCount);
+    const output: string[] = [];
+
+    for (const [index, player] of topPlayers.entries()) {
+        const placement = index + offset + 1;
+        const placementString = generatePlacementString(placement);
+
+        output.push(`${placementString} \`${player.name}\` with ${player.rank} points`);
+
+        if (placement === 3) output.push('');
+    }
+
     await replyToInteraction(interaction, {
-        content: '/ranked top',
-        ephemeral: true,
+        content: output.join('\n'),
     });
 };
 

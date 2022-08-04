@@ -22,13 +22,14 @@ export class DiscordUser {
      *
      * @param discordName the name to be parsed
      * @returns the corresponding user or null if the name cannot be parsed
+     * @throws if the name cannot be parsed
      */
-    static parse = (discordName?: string): DiscordUser | null => {
+    static parse = (discordName?: string): DiscordUser => {
         const matchGroups = discordName?.match(usernamePattern);
         const username = matchGroups?.[1];
         const platform = matchGroups?.[2];
 
-        if (!username || !platform) return null;
+        if (!username || !platform) throw new Error(`Could not parse name ${discordName}`);
 
         return new DiscordUser(username, platform as Platform);
     };
