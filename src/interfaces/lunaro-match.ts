@@ -27,8 +27,8 @@ export interface LunaroMatch {
 
 /** Request body for creating a new ranked Lunaro player in the rank API. */
 export class NewLunaroMatch {
-    /** Unique identifier of player A. */
-    player_a: number;
+    /** Username of player A. */
+    player_a: string;
 
     /** Final score of player A. */
     a_score: number;
@@ -36,8 +36,8 @@ export class NewLunaroMatch {
     /** Ping of player A. A ping of `0` means the player was the host of the match. */
     a_ping: number;
 
-    /** Unique identifier of player B. */
-    player_b: number;
+    /** Username of player B. */
+    player_b: string;
 
     /** Final score of player B. */
     b_score: number;
@@ -46,17 +46,17 @@ export class NewLunaroMatch {
     b_ping: number;
 
     constructor(
-        player_a: number,
+        player_a: string,
         a_score: number,
         a_ping: number,
-        player_b: number,
+        player_b: string,
         b_score: number,
         b_ping: number
     ) {
-        this.player_a = player_a;
+        this.player_a = player_a.toLocaleLowerCase();
         this.a_score = a_score;
         this.a_ping = a_ping;
-        this.player_b = player_b;
+        this.player_b = player_b.toLocaleLowerCase();
         this.b_score = b_score;
         this.b_ping = b_ping;
     }

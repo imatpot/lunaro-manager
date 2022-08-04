@@ -18,8 +18,8 @@ export class NewLunaroPlayer {
     /** The rank. */
     rank: number;
 
-    constructor(name: string, rank: number) {
-        this.name = name;
+    constructor(name: string, rank: number = 1250) {
+        this.name = name.toLocaleLowerCase();
         this.rank = rank;
     }
 }
