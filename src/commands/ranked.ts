@@ -1,12 +1,20 @@
+import { HttpError } from ':error/http-error.ts';
 import { InvocationError } from ':error/invocation-error.ts';
 import { SubcommandMap } from ':interfaces/command.ts';
 import { DiscordUser } from ':interfaces/discord-user.ts';
+import { NewLunaroPlayer } from ':interfaces/lunaro-player.ts';
 import { bot } from ':src/bot.ts';
 import { HOME_GUILD_ID } from ':src/env.ts';
 import { getSubcommand } from ':util/commands.ts';
 import { createCommand } from ':util/creators.ts';
 import { replyToInteraction } from ':util/interactions.ts';
-import { getAllPlayers, getPlayerByNameOrId, rankToLeagueName } from ':util/rank-api.ts';
+import {
+    createPlayer,
+    getAllPlayers,
+    getPlayerByNameOrId,
+    leagueNameToRank,
+    rankToLeagueName
+} from ':util/rank-api.ts';
 import { ApplicationCommandOptionTypes, ApplicationCommandTypes, Interaction } from 'discordeno';
 
 createCommand({
@@ -188,9 +196,51 @@ const rankedTop = async (interaction: Interaction) => {
 
 /** Function for `/ranked register`. */
 const rankedRegister = async (interaction: Interaction) => {
+    const user = await bot.helpers.getMember(HOME_GUILD_ID, interaction.user.id);
+    const discordUser = DiscordUser.parse(user.nick || interaction.user.username);
+    const username = discordUser.username;
+
+    let exists = true;
+
+    try {
+        await getPlayerByNameOrId(username);
+    } catch (error) {
+        if (error instanceof HttpError && error.code === 404) {
+            exists = false;
+        } else {
+            throw new InvocationError(
+                `Failed to check for existing players with the name "${username}"`
+            );
+        }
+    }
+
+    if (exists) {
+        await replyToInteraction(interaction, {
+            content: '🏆  You are already signed up for ranked gameplay',
+            ephemeral: true,
+        });
+
+        return;
+    }
+
+    let points = -1;
+
+    const guild = await bot.helpers.getGuild(HOME_GUILD_ID);
+
+    for (const roleId of user.roles) {
+        const role = guild.roles.get(roleId);
+        const rolePoints = leagueNameToRank(role?.name || '');
+        if (rolePoints > points) points = rolePoints;
+    }
+
+    if (points === -1) points = leagueNameToRank('neophyte');
+
+    const newPlayer = new NewLunaroPlayer(username, points);
+
+    await createPlayer(newPlayer);
+
     await replyToInteraction(interaction, {
-        content: '/ranked register',
-        ephemeral: true,
+        content: '🏆  Successfully signed you up to ranked gameplay',
     });
 };
 
