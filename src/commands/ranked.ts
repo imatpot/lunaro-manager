@@ -46,7 +46,7 @@ createCommand({
             options: [
                 {
                     name: 'players',
-                    description: 'The amount of players to show. Defaults to 5, maxes out at 30',
+                    description: 'The amount of players to show. Defaults to 10, maxes out at 30',
                     type: ApplicationCommandOptionTypes.Number,
                     required: false,
                 },
