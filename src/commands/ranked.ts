@@ -1,5 +1,6 @@
 import { HttpError } from ':error/http-error.ts';
 import { InvocationError } from ':error/invocation-error.ts';
+import { UnimplementedError } from ':error/unimplemented-error.ts';
 import { SubcommandMap } from ':interfaces/command.ts';
 import { DiscordUser } from ':interfaces/discord-user.ts';
 import { NewLunaroPlayer } from ':interfaces/lunaro-player.ts';
@@ -246,8 +247,5 @@ const rankedRegister = async (interaction: Interaction) => {
 
 /** Function for `/ranked submit`. */
 const rankedSubmit = async (interaction: Interaction) => {
-    await replyToInteraction(interaction, {
-        content: '/ranked submit',
-        ephemeral: true,
-    });
+    throw new UnimplementedError('Command `/ranked submit` is not yet ready');
 };
