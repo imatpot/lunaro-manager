@@ -1,3 +1,4 @@
+import { HttpError } from ':error/http-error.ts';
 import { LunaroMatch, NewLunaroMatch } from ':interfaces/lunaro-match.ts';
 import { LunaroPlayer, NewLunaroPlayer } from ':interfaces/lunaro-player.ts';
 import { RANK_API_TOKEN, RANK_API_URL } from ':src/env.ts';
@@ -25,8 +26,9 @@ export const rankToLeagueName = (rank: number): string => {
     if (rank < 2000) return 'Amateur';
     if (rank < 2250) return 'Skilled';
     if (rank < 2500) return 'Pro';
+    if (rank < 2750) return 'Master';
 
-    return 'Master';
+    return 'Champion';
 };
 
 /**
@@ -38,7 +40,9 @@ export const getAllPlayers = async (): Promise<LunaroPlayer[]> => {
     const resource = RANK_API_URL + '/api/players';
     const response = await fetch(resource);
 
-    if (response.status !== 200) throw new Error(await response.text());
+    if (response.status !== 200) {
+        throw new HttpError(response.status, await response.text());
+    }
 
     const players: LunaroPlayer[] = JSON.parse(await response.text());
 
@@ -56,7 +60,9 @@ export const getPlayerByNameOrId = async (nameOrId: string): Promise<LunaroPlaye
     const resource = RANK_API_URL + '/api/players/' + nameOrId;
     const response = await fetch(resource);
 
-    if (response.status !== 200) throw new Error(await response.text());
+    if (response.status !== 200) {
+        throw new HttpError(response.status, await response.text());
+    }
 
     const player: LunaroPlayer = JSON.parse(await response.text());
 
@@ -72,7 +78,9 @@ export const getAllMatches = async (): Promise<LunaroMatch[]> => {
     const resource = RANK_API_URL + '/api/matches';
     const response = await fetch(resource);
 
-    if (response.status !== 200) throw new Error(await response.text());
+    if (response.status !== 200) {
+        throw new HttpError(response.status, await response.text());
+    }
 
     const matches: LunaroMatch[] = JSON.parse(await response.text());
 
@@ -90,7 +98,9 @@ export const getMatchById = async (id: string): Promise<LunaroMatch> => {
     const resource = RANK_API_URL + '/api/matches/' + id;
     const response = await fetch(resource);
 
-    if (response.status !== 200) throw new Error(await response.text());
+    if (response.status !== 200) {
+        throw new HttpError(response.status, await response.text());
+    }
 
     const match: LunaroMatch = JSON.parse(await response.text());
 
@@ -114,7 +124,9 @@ export const createPlayer = async (player: NewLunaroPlayer): Promise<boolean> =>
         body: JSON.stringify(body),
     });
 
-    if (response.status !== 201) throw new Error(await response.text());
+    if (response.status !== 201) {
+        throw new HttpError(response.status, await response.text());
+    }
 
     return true;
 };
@@ -136,7 +148,9 @@ export const createMatch = async (match: NewLunaroMatch): Promise<boolean> => {
         body: JSON.stringify(body),
     });
 
-    if (response.status !== 201) throw new Error(await response.text());
+    if (response.status !== 201) {
+        throw new HttpError(response.status, await response.text());
+    }
 
     return true;
 };

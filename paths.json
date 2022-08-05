@@ -8,6 +8,7 @@
     ":events/": "./src/events/",
     ":interfaces/": "./src/interfaces/",
     ":util/": "./src/util/",
+    ":error/": "./src/error/",
 
     "discordeno": "https://deno.land/x/discordeno@13.0.0-rc39/mod.ts",
     "dotenv": "https://deno.land/x/dotenv@v3.2.0/mod.ts",

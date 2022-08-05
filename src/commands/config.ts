@@ -1,3 +1,4 @@
+import { InvocationError } from ':error/invocation-error.ts';
 import { SubcommandMap } from ':interfaces/command.ts';
 import { disableActivityTracking, enableActivityTracking } from ':util/activity-tracking.ts';
 import { getSubcommand } from ':util/commands.ts';
@@ -31,7 +32,7 @@ createCommand({
         const subcommand = getSubcommand(interaction);
 
         if (!subcommand) {
-            throw new Error('Cannot execute /config without a subcommand');
+            throw new InvocationError('Cannot execute /config without a subcommand');
         }
 
         const subcommands: SubcommandMap = {
@@ -49,7 +50,7 @@ const configActivityTracking = async (interaction: Interaction) => {
         ?.options?.find((option) => option.name === 'enabled')?.value as boolean;
 
     if (shouldEnable === undefined) {
-        throw new Error('Missing option `enabled`');
+        throw new InvocationError('Missing option `enabled`');
     }
 
     if (shouldEnable) {

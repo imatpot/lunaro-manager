@@ -1,3 +1,4 @@
+import { InvocationError } from ':error/invocation-error.ts';
 import { SubcommandMap } from ':interfaces/command.ts';
 import { DiscordUser } from ':interfaces/discord-user.ts';
 import { bot } from ':src/bot.ts';
@@ -66,7 +67,7 @@ createCommand({
         const subcommand = getSubcommand(interaction);
 
         if (!subcommand) {
-            throw new Error('Cannot execute /rtp without a subcommand');
+            throw new InvocationError('Cannot execute /rtp without a subcommand');
         }
 
         const subcommands: SubcommandMap = {
@@ -111,7 +112,7 @@ const rankedView = async (interaction: Interaction) => {
 
     if (username === undefined) {
         const player = await bot.helpers.getMember(HOME_GUILD_ID, interaction.user.id);
-        const nick = player.nick;
+        const nick = player.nick || interaction.user.username;
         const user = DiscordUser.parse(nick);
 
         username = user.username;
@@ -124,7 +125,7 @@ const rankedView = async (interaction: Interaction) => {
     const index = allPlayerData.indexOf(locationInAllPlayerData);
 
     const placement = generatePlacementString(index + 1, 2);
-    placement.replace('#0', '#?');
+    placement.replace('#0', 'Unknown placement');
 
     await replyToInteraction(interaction, {
         content: [
@@ -148,15 +149,15 @@ const rankedTop = async (interaction: Interaction) => {
             ?.options?.find((option) => option.name === 'offset')?.value as number) || 0;
 
     if (playerCount < 1) {
-        throw new Error('Parameter `players` must be at least 1');
+        throw new RangeError('Parameter `players` must be at least 1');
     }
 
     if (playerCount > 30) {
-        throw new Error('Parameter `players` must be less than 30');
+        throw new RangeError('Parameter `players` must be less than 30');
     }
 
     if (offset < 0) {
-        throw new Error('Offset cannot be negative');
+        throw new RangeError('Parameter `offset` cannot be negative');
     }
 
     const allPlayers = await getAllPlayers();
@@ -164,6 +165,11 @@ const rankedTop = async (interaction: Interaction) => {
     allPlayers.splice(0, offset);
 
     const topPlayers = allPlayers.splice(0, playerCount);
+
+    if (!allPlayers) {
+        throw new InvocationError('No list of players match given criteria');
+    }
+
     const output: string[] = [];
 
     for (const [index, player] of topPlayers.entries()) {

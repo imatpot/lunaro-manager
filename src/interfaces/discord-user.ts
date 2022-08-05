@@ -1,3 +1,5 @@
+import { PatternError } from ':error/pattern-error.ts';
+
 /** Regex matching a Lunaro Revival Server username (formatted as `<username> [<platform>]`). */
 const usernamePattern = /([A-Za-z0-9_.-]{4,24})\s\[(PC|XB1|PS4|SWI)\]/;
 
@@ -29,7 +31,9 @@ export class DiscordUser {
         const username = matchGroups?.[1];
         const platform = matchGroups?.[2];
 
-        if (!username || !platform) throw new Error(`Could not parse name ${discordName}`);
+        if (!username || !platform) {
+            throw new PatternError(`Could not infer in-game username from display name "${discordName}"`);
+        }
 
         return new DiscordUser(username, platform as Platform);
     };

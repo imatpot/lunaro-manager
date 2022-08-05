@@ -1,3 +1,4 @@
+import { InvocationError } from ':error/invocation-error.ts';
 import { SubcommandMap } from ':interfaces/command.ts';
 import { getSubcommand } from ':util/commands.ts';
 import { createCommand } from ':util/creators.ts';
@@ -36,7 +37,7 @@ createCommand({
         const subcommand = getSubcommand(interaction);
 
         if (!subcommand) {
-            throw new Error('Cannot execute /rtp without a subcommand');
+            throw new InvocationError('Cannot execute /rtp without a subcommand');
         }
 
         const subcommands: SubcommandMap = {
