@@ -11,22 +11,40 @@ import { RANK_API_TOKEN, RANK_API_URL } from ':src/env.ts';
  */
 const sortByRankAndName = (players: LunaroPlayer[]): LunaroPlayer[] => {
     const compareRank = (a: LunaroPlayer, b: LunaroPlayer) => (a.rank < b.rank ? 1 : -1);
-    const compareName = (a: LunaroPlayer, b: LunaroPlayer) => (a.name > b.name ? 1 : -1);
+
+    const compareName = (a: LunaroPlayer, b: LunaroPlayer) =>
+        a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1;
 
     return players.sort((a, b) => {
-        if (a.rank == b.rank) return compareName(a, b);
-        else return compareRank(a, b);
+        return a.rank == b.rank ? compareName(a, b) : compareRank(a, b);
     });
 };
 
 /** Converts a number to a league name. */
 export const rankToLeagueName = (rank: number): string => {
-    if (rank < 1500) return 'Neophyte';
-    if (rank < 1750) return 'Padawan';
-    if (rank < 2000) return 'Amateur';
-    if (rank < 2250) return 'Skilled';
-    if (rank < 2500) return 'Pro';
-    if (rank < 2750) return 'Master';
+    if (rank < 1500) {
+        return 'Neophyte';
+    }
+
+    if (rank < 1750) {
+        return 'Padawan';
+    }
+
+    if (rank < 2000) {
+        return 'Amateur';
+    }
+
+    if (rank < 2250) {
+        return 'Skilled';
+    }
+
+    if (rank < 2500) {
+        return 'Pro';
+    }
+
+    if (rank < 2750) {
+        return 'Master';
+    }
 
     return 'Champion';
 };

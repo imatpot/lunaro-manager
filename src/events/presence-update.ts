@@ -8,7 +8,9 @@ import { addMemberToRTP, removeMemberFromRTP } from ':util/rtp.ts';
 bot.events.presenceUpdate = async (_, presence) => {
     const activityTrackerData = readActivityTrackingConfig();
 
-    if (!activityTrackerData.enabled) return;
+    if (!activityTrackerData.enabled) {
+        return;
+    }
 
     if (activityTrackerData.blocklist.includes(presence.user.id.toString())) {
         return;

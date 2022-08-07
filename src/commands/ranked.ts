@@ -16,7 +16,12 @@ import {
     leagueNameToRank,
     rankToLeagueName
 } from ':util/rank-api.ts';
-import { ApplicationCommandOptionTypes, ApplicationCommandTypes, Interaction } from 'discordeno';
+import {
+    ApplicationCommandOptionTypes,
+    ApplicationCommandTypes,
+    Attachment,
+    Interaction
+} from 'discordeno';
 
 createCommand({
     name: 'ranked',
@@ -69,6 +74,50 @@ createCommand({
             description: '🥍 Submit a ranked match',
             type: ApplicationCommandOptionTypes.SubCommand,
             required: false,
+            options: [
+                {
+                    name: 'player-a',
+                    description: 'Player A',
+                    type: ApplicationCommandOptionTypes.User,
+                    required: true,
+                },
+                {
+                    name: 'player-b',
+                    description: 'Player B',
+                    type: ApplicationCommandOptionTypes.User,
+                    required: true,
+                },
+                {
+                    name: 'player-a-ping',
+                    description: 'Average ping of player A. For host, input 0',
+                    type: ApplicationCommandOptionTypes.Number,
+                    required: true,
+                },
+                {
+                    name: 'player-b-ping',
+                    description: 'Average ping of player B. For host, input 0',
+                    type: ApplicationCommandOptionTypes.Number,
+                    required: true,
+                },
+                {
+                    name: 'player-a-score',
+                    description: 'Scored points of the host',
+                    type: ApplicationCommandOptionTypes.Number,
+                    required: true,
+                },
+                {
+                    name: 'player-b-score',
+                    description: 'Scored points of the client',
+                    type: ApplicationCommandOptionTypes.Number,
+                    required: true,
+                },
+                {
+                    name: 'evidence',
+                    description: 'Screenshot of the match result',
+                    type: ApplicationCommandOptionTypes.Attachment,
+                    required: false,
+                },
+            ],
         },
     ],
 
@@ -187,7 +236,9 @@ const rankedTop = async (interaction: Interaction) => {
 
         output.push(`${placementString} \`${player.name}\` with ${player.rank} points`);
 
-        if (placement === 3) output.push('');
+        if (placement === 3) {
+            output.push('');
+        }
     }
 
     await replyToInteraction(interaction, {
@@ -231,10 +282,15 @@ const rankedRegister = async (interaction: Interaction) => {
     for (const roleId of user.roles) {
         const role = guild.roles.get(roleId);
         const rolePoints = leagueNameToRank(role?.name || '');
-        if (rolePoints > points) points = rolePoints;
+
+        if (rolePoints > points) {
+            points = rolePoints;
+        }
     }
 
-    if (points === -1) points = leagueNameToRank('neophyte');
+    if (points === -1) {
+        points = leagueNameToRank('neophyte');
+    }
 
     const newPlayer = new NewLunaroPlayer(username, points);
 
@@ -247,5 +303,81 @@ const rankedRegister = async (interaction: Interaction) => {
 
 /** Function for `/ranked submit`. */
 const rankedSubmit = async (interaction: Interaction) => {
+    const playerAId = interaction.data?.options
+        ?.find((option) => option.name === 'submit')
+        ?.options?.find((option) => option.name === 'player-a')?.value as string;
+
+    const playerBId = interaction.data?.options
+        ?.find((option) => option.name === 'submit')
+        ?.options?.find((option) => option.name === 'player-b')?.value as string;
+
+    const playerAPing = interaction.data?.options
+        ?.find((option) => option.name === 'submit')
+        ?.options?.find((option) => option.name === 'player-a-ping')?.value as number;
+
+    const playerBPing = interaction.data?.options
+        ?.find((option) => option.name === 'submit')
+        ?.options?.find((option) => option.name === 'player-b-ping')?.value as number;
+
+    const playerAScore = interaction.data?.options
+        ?.find((option) => option.name === 'submit')
+        ?.options?.find((option) => option.name === 'player-a-score')?.value as number;
+
+    const playerBScore = interaction.data?.options
+        ?.find((option) => option.name === 'submit')
+        ?.options?.find((option) => option.name === 'player-b-score')?.value as number;
+
+    const evidenceId = interaction.data?.options
+        ?.find((option) => option.name === 'submit')
+        ?.options?.find((option) => option.name === 'evidence')?.value as string;
+
+    if (playerAId === undefined) {
+        throw new InvocationError('Missing option `player-a`');
+    }
+
+    if (playerBId === undefined) {
+        throw new InvocationError('Missing option `player-b`');
+    }
+
+    if (playerAPing === undefined) {
+        throw new InvocationError('Missing option `player-a-ping`');
+    }
+
+    if (playerBPing === undefined) {
+        throw new InvocationError('Missing option `player-b-ping`');
+    }
+
+    if (playerAScore === undefined) {
+        throw new InvocationError('Missing option `player-a-score`');
+    }
+
+    if (playerBScore === undefined) {
+        throw new InvocationError('Missing option `player-b-score`');
+    }
+
+    if (playerAId === playerBId) {
+        throw new InvocationError('A match must be played between two distinct players');
+    }
+
+    if (playerAPing === 0 && playerBPing === 0) {
+        throw new RangeError('A match cannot have two hosts (ping == 0)');
+    }
+
+    if (playerAScore === 0 || playerBScore === 0) {
+        throw new RangeError(
+            'Due to limitations of the way ranking is calculates, you cannot submit a match result where either player scored 0 points'
+        );
+    }
+
+    let evidence: Attachment | undefined;
+
+    if (evidenceId !== undefined) {
+        evidence = interaction.data?.resolved?.attachments?.get(BigInt(evidenceId));
+
+        if (evidence === undefined) {
+            throw new InvocationError('Failed to fetch submitted attachment');
+        }
+    }
+
     throw new UnimplementedError('Command `/ranked submit` is not yet ready');
 };

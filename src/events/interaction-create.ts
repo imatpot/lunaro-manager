@@ -5,7 +5,9 @@ import { error, event } from ':util/logger.ts';
 import { InteractionTypes } from 'discordeno';
 
 bot.events.interactionCreate = async (_, interaction) => {
-    if (!interaction.data) return;
+    if (!interaction.data) {
+        return;
+    }
 
     if (interaction.type === InteractionTypes.ApplicationCommand) {
         const commandName = interaction.data.name;
