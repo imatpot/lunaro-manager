@@ -109,10 +109,10 @@ Displays details about Lunaro Manager, including
 Displays a link to this GitHub page, encouraging the creation of issues and
 pull requests.
 
-### `🔎 /config activity-tracking [enabled: boolean]`
+### `🔎 /config`
 
-Globally enables or disabled activity tracking based on the `enabled` option.
-*This Command is supposed to be admin-only. Please configure accordingly.*
+Allows you to change runtime settings of the bot.
+*This is intended to be admin-only, so configure the server permissions accordingly.*
 
 ---
 
