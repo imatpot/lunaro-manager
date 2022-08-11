@@ -193,7 +193,7 @@ const rankedView = async (interaction: Interaction) => {
 
     await replyToInteraction(interaction, {
         content: [
-            `👤  \`${playerData.name}\``,
+            `👤  ${playerData.name}`,
             `🏆  ${rankToLeagueName(playerData.rank)}`,
             `${placement} with ${playerData.rank} points`,
         ].join('\n'),
@@ -240,7 +240,7 @@ const rankedTop = async (interaction: Interaction) => {
         const placement = index + offset + 1;
         const placementString = generatePlacementString(placement);
 
-        output.push(`${placementString} \`${player.name}\` with ${player.rank} points`);
+        output.push(`${placementString} ${player.name} with ${player.rank} points`);
 
         if (placement === 3) {
             output.push('');
