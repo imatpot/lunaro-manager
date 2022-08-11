@@ -6,7 +6,7 @@ import { Collection } from 'discordeno';
 export const bot = createDiscordBot({
     botId: BOT_ID,
     token: DISCORD_TOKEN,
-    intents: ['Guilds', 'GuildMembers', 'GuildPresences'],
+    intents: ['Guilds', 'GuildMembers', 'GuildPresences', 'GuildMessageReactions'],
 
     commands: new Collection(),
     events: {},
