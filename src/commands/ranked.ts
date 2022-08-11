@@ -1,14 +1,16 @@
 import { HttpError } from ':error/http-error.ts';
 import { InvocationError } from ':error/invocation-error.ts';
-import { UnimplementedError } from ':error/unimplemented-error.ts';
 import { SubcommandMap } from ':interfaces/command.ts';
 import { DiscordUser } from ':interfaces/discord-user.ts';
+import { NewLunaroMatch } from ':interfaces/lunaro-match.ts';
 import { NewLunaroPlayer } from ':interfaces/lunaro-player.ts';
+import { PendingMatch } from ':interfaces/pending-match.ts';
 import { bot } from ':src/bot.ts';
 import { HOME_GUILD_ID } from ':src/env.ts';
 import { getSubcommand } from ':util/commands.ts';
 import { createCommand } from ':util/creators.ts';
 import { replyToInteraction } from ':util/interactions.ts';
+import { sendMessageInChannel } from ':util/messages.ts';
 import {
     createPlayer,
     getAllPlayers,
@@ -22,6 +24,10 @@ import {
     Attachment,
     Interaction
 } from 'discordeno';
+
+export const matchApprovedMessage = '✅   This match has been approved';
+export const pendingMatchApprovalMessage =
+    '⏳  This match is pending approval. Both players are requested to react with  ✅  to confirm this and finalize this match submission, or ract with  ❌  to boycott or cancel it';
 
 createCommand({
     name: 'ranked',
@@ -89,13 +95,13 @@ createCommand({
                 },
                 {
                     name: 'player-a-ping',
-                    description: 'Average ping of player A. For host, input 0',
+                    description: 'Average ping of player A. For host, enter 0',
                     type: ApplicationCommandOptionTypes.Number,
                     required: true,
                 },
                 {
                     name: 'player-b-ping',
-                    description: 'Average ping of player B. For host, input 0',
+                    description: 'Average ping of player B. For host, enter 0',
                     type: ApplicationCommandOptionTypes.Number,
                     required: true,
                 },
@@ -360,13 +366,21 @@ const rankedSubmit = async (interaction: Interaction) => {
     }
 
     if (playerAPing === 0 && playerBPing === 0) {
-        throw new RangeError('A match cannot have two hosts (ping == 0)');
+        throw new RangeError('A match cannot have two hosts (ping = 0)');
+    }
+
+    if (playerAPing < 0 || playerAPing < 0) {
+        throw new RangeError('A player cannot negative ping');
     }
 
     if (playerAScore === 0 || playerBScore === 0) {
         throw new RangeError(
-            'Due to limitations of the way ranking is calculates, you cannot submit a match result where either player scored 0 points'
+            'Due to limitations of the way ranking is calculated, you unfortunately cannot submit a match result where either player scored zero points'
         );
+    }
+
+    if (playerAScore < 0 || playerAScore < 0) {
+        throw new RangeError('A player cannot score a negative amount of points');
     }
 
     let evidence: Attachment | undefined;
@@ -379,5 +393,68 @@ const rankedSubmit = async (interaction: Interaction) => {
         }
     }
 
-    throw new UnimplementedError('Command `/ranked submit` is not yet ready');
+    await replyToInteraction(interaction, {
+        content: '⏳  Preparing data for approval, please wait...',
+        ephemeral: true,
+    });
+
+    const userA = await bot.helpers.getMember(HOME_GUILD_ID, BigInt(playerAId));
+    const userB = await bot.helpers.getMember(HOME_GUILD_ID, BigInt(playerBId));
+
+    const playerA = DiscordUser.parse(userA.nick);
+    const playerB = DiscordUser.parse(userB.nick);
+
+    const match: NewLunaroMatch = {
+        player_a: playerA.username,
+        a_ping: playerAPing,
+        a_score: playerAScore,
+
+        player_b: playerB.username,
+        b_ping: playerBPing,
+        b_score: playerBScore,
+    };
+
+    const playerAPingMessage =
+        match.a_ping === 0 ? 'as host' : `with around ${match.a_ping}ms ping`;
+    const playerBPingMessage =
+        match.b_ping === 0 ? 'as host' : `with around ${match.b_ping}ms ping`;
+
+    const message = await sendMessageInChannel(interaction.channelId!, {
+        content: [
+            '🏆   Ranked match summary',
+            '',
+            `<@${userA.id}> scored ${match.a_score} points ${playerAPingMessage}`,
+            `<@${userB.id}> scored ${match.b_score} points ${playerBPingMessage}`,
+            '',
+            pendingMatchApprovalMessage,
+        ].join('\n'),
+
+        file: !evidence
+            ? undefined
+            : {
+                  name: evidence.filename,
+                  blob: await fetch(evidence.url).then((res) => res.blob()),
+              },
+    });
+
+    if (!message) {
+        throw new InvocationError('Failed to save message to pending match');
+    }
+
+    await bot.helpers.addReaction(message.channelId, message.id, '✅');
+    await bot.helpers.addReaction(message.channelId, message.id, '❌');
+
+    const pendingMatch: PendingMatch = {
+        approval: {
+            required: [playerAId, playerBId],
+            approved: [],
+            boycotted: [],
+        },
+        message: {
+            id: message.id.toString(),
+            channelId: message.channelId.toString(),
+        },
+        submitter: interaction.user.id.toString(),
+        match,
+    };
 };

@@ -6,6 +6,7 @@ import { Interaction, InteractionResponseTypes, Message } from 'discordeno';
  * Replies to an interaction with a text message.
  * @param interaction to be replied to
  * @param reply to be replied with
+ * @returns the sent message
  */
 export const replyToInteraction = async (interaction: Interaction, reply: InteractionReply): Promise<Message | undefined> => {
     return await bot.helpers.sendInteractionResponse(interaction.id, interaction.token, {

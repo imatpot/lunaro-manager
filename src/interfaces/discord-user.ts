@@ -20,7 +20,7 @@ export class DiscordUser {
     }
 
     /**
-     * Parses a Lunaro Revival Server username .
+     * Parses a Lunaro Revival Server username.
      *
      * @param discordName the name to be parsed
      * @returns the corresponding user or null if the name cannot be parsed

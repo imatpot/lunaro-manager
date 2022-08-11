@@ -18,10 +18,20 @@ bot.events.interactionCreate = async (_, interaction) => {
         try {
             await bot.commands.get(commandName)?.run(interaction);
         } catch (err) {
-            await replyToInteraction(interaction, {
-                content: '❌  Sorry, something went wrong.\n```\n' + err + '\n```',
-                ephemeral: true,
-            });
+            try {
+                const response = await bot.helpers.getOriginalInteractionResponse(
+                    interaction.token
+                );
+                await bot.helpers.editInteractionResponse(interaction.token, {
+                    messageId: response.id,
+                    content: '❌  Sorry, something went wrong.\n```\n' + err + '\n```',
+                });
+            } catch (_) {
+                await replyToInteraction(interaction, {
+                    content: '❌  Sorry, something went wrong.\n```\n' + err + '\n```',
+                    ephemeral: true,
+                });
+            }
 
             error(err.stack || err.message);
         }
