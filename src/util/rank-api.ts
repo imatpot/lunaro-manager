@@ -151,10 +151,10 @@ export const getMatchById = async (id: string): Promise<LunaroMatch> => {
  * Creates a player in the database.
  *
  * @param player player to be created
- * @returns whether the creation was a success
+ * @returns the created player
  * @throws if the request results in an error
  */
-export const createPlayer = async (player: NewLunaroPlayer): Promise<boolean> => {
+export const createPlayer = async (player: NewLunaroPlayer): Promise<LunaroPlayer> => {
     const resource = RANK_API_URL + '/api/players/add';
 
     const body = { ...player, token: RANK_API_TOKEN };
@@ -168,17 +168,19 @@ export const createPlayer = async (player: NewLunaroPlayer): Promise<boolean> =>
         throw new HttpError(response.status, await response.text());
     }
 
-    return true;
+    const createdPlayer: LunaroPlayer = JSON.parse(await response.text());
+
+    return createdPlayer;
 };
 
 /**
  * Creates a match in the database.
  *
  * @param match match to be created
- * @returns whether the creation was a success
+ * @returns the created match
  * @throws if the request results in an error
  */
-export const createMatch = async (match: NewLunaroMatch): Promise<boolean> => {
+export const createMatch = async (match: NewLunaroMatch): Promise<LunaroMatch> => {
     const resource = RANK_API_URL + '/api/matches/add';
 
     const body = { ...match, token: RANK_API_TOKEN };
@@ -192,5 +194,7 @@ export const createMatch = async (match: NewLunaroMatch): Promise<boolean> => {
         throw new HttpError(response.status, await response.text());
     }
 
-    return true;
+    const createdMatch: LunaroMatch = JSON.parse(await response.text());
+
+    return createdMatch;
 };

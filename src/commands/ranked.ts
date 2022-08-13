@@ -1,7 +1,7 @@
 import { HttpError } from ':error/http-error.ts';
 import { InvocationError } from ':error/invocation-error.ts';
 import { SubcommandMap } from ':interfaces/command.ts';
-import { DiscordUser } from ':interfaces/discord-user.ts';
+import { parseDiscordUsername } from ':interfaces/discord-user.ts';
 import { NewLunaroMatch } from ':interfaces/lunaro-match.ts';
 import { NewLunaroPlayer } from ':interfaces/lunaro-player.ts';
 import { PendingMatch } from ':interfaces/pending-match.ts';
@@ -177,7 +177,7 @@ const rankedView = async (interaction: Interaction) => {
     if (username === undefined) {
         const player = await bot.helpers.getMember(HOME_GUILD_ID, interaction.user.id);
         const nick = player.nick || interaction.user.username;
-        const user = DiscordUser.parse(nick);
+        const user = parseDiscordUsername(nick);
 
         username = user.username;
     }
@@ -255,7 +255,7 @@ const rankedTop = async (interaction: Interaction) => {
 /** Function for `/ranked register`. */
 const rankedRegister = async (interaction: Interaction) => {
     const user = await bot.helpers.getMember(HOME_GUILD_ID, interaction.user.id);
-    const discordUser = DiscordUser.parse(user.nick || interaction.user.username);
+    const discordUser = parseDiscordUsername(user.nick || interaction.user.username);
     const username = discordUser.username;
 
     let exists = true;
@@ -298,7 +298,10 @@ const rankedRegister = async (interaction: Interaction) => {
         points = leagueNameToRank('neophyte');
     }
 
-    const newPlayer = new NewLunaroPlayer(username, points);
+    const newPlayer: NewLunaroPlayer = {
+        name: username,
+        rank: points,
+    };
 
     await createPlayer(newPlayer);
 
@@ -401,17 +404,17 @@ const rankedSubmit = async (interaction: Interaction) => {
     const userA = await bot.helpers.getMember(HOME_GUILD_ID, BigInt(playerAId));
     const userB = await bot.helpers.getMember(HOME_GUILD_ID, BigInt(playerBId));
 
-    const playerA = DiscordUser.parse(userA.nick);
-    const playerB = DiscordUser.parse(userB.nick);
+    const playerA = parseDiscordUsername(userA.nick);
+    const playerB = parseDiscordUsername(userB.nick);
 
     const match: NewLunaroMatch = {
         player_a: playerA.username,
         a_ping: playerAPing,
-        a_score: playerAScore,
+        score_a: playerAScore,
 
         player_b: playerB.username,
         b_ping: playerBPing,
-        b_score: playerBScore,
+        score_b: playerBScore,
     };
 
     const playerAPingMessage =
@@ -423,8 +426,8 @@ const rankedSubmit = async (interaction: Interaction) => {
         content: [
             '🏆   Ranked match summary',
             '',
-            `<@${userA.id}> scored ${match.a_score} points ${playerAPingMessage}`,
-            `<@${userB.id}> scored ${match.b_score} points ${playerBPingMessage}`,
+            `<@${userA.id}> scored ${match.score_a} points ${playerAPingMessage}`,
+            `<@${userB.id}> scored ${match.score_b} points ${playerBPingMessage}`,
             '',
             pendingMatchApprovalMessage,
         ].join('\n'),
