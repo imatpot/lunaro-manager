@@ -5,15 +5,15 @@ import { startBot } from 'discordeno';
 
 for await (const entry of Deno.readDir('src/events')) {
     if (entry.isFile && entry.name.endsWith('.ts')) {
-        log('Loading file src/events/' + entry.name);
-        await import(':events/' + entry.name);
+        log(`Loading file src/events/${entry.name}`);
+        await import(`:events/${entry.name}`);
     }
 }
 
 for await (const entry of Deno.readDir('src/commands')) {
     if (entry.isFile && entry.name.endsWith('.ts')) {
-        log('Loading file src/commands/' + entry.name);
-        await import(':commands/' + entry.name);
+        log(`Loading file src/commands/${entry.name}`);
+        await import(`:commands/${entry.name}`);
     }
 }
 

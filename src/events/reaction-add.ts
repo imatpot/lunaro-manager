@@ -17,6 +17,8 @@ bot.events.reactionAdd = async (_, reaction) => {
         return;
     }
 
+    event(`Reaction ${reaction.emoji.name} added to ${reaction.messageId}`);
+
     const linkedMatch = pendingMatchOfMessage(
         reaction.channelId.toString(),
         reaction.messageId.toString()
@@ -35,6 +37,5 @@ bot.events.reactionAdd = async (_, reaction) => {
         // TODO: check if cancelled
     }
 
-    event(`Reaction ${reaction.emoji.name} added to ${reaction.messageId}`);
     await null;
 };

@@ -23,31 +23,27 @@ createCommand({
             : '🛑  Activity tracking disabled';
 
         const engineString =
-            '⚙  Deno v' +
-            Deno.version.deno +
-            ' + TypeScript v' +
-            Deno.version.typescript +
-            ' + discordeno v' +
-            DISCORDENO_VERSION;
+            `⚙  Deno v${Deno.version.deno}` +
+            ` + TypeScript v${Deno.version.typescript}` +
+            ` + discordeno v${DISCORDENO_VERSION}`;
 
         const commits = await fetch(
             'https://api.github.com/repos/imatpot/lunaro-manager/commits?per_page=1'
         ).then((commits) => commits.json());
 
-        const lastUpdatedString =
-            '🛠  Last updated ' +
-            formatDistanceToNow(Date.parse(commits[0].commit.committer.date), {
+        const lastUpdatedString = `🛠  Last updated ${formatDistanceToNow(
+            Date.parse(commits[0].commit.committer.date),
+            {
                 addSuffix: true,
-            });
+            }
+        )}`;
 
-        const uptimeString =
-            '⏱  Running for ' +
-            formatDuration(
-                intervalToDuration({
-                    start: readyTimestamp,
-                    end: Date.now(),
-                })
-            );
+        const uptimeString = `⏱  Running for ${formatDuration(
+            intervalToDuration({
+                start: readyTimestamp,
+                end: Date.now(),
+            })
+        )}`;
 
         const aboutString = [
             trackingString,

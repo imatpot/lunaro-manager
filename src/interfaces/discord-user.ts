@@ -1,4 +1,5 @@
 import { PatternError } from ':error/pattern-error.ts';
+import { log } from ':util/logger.ts';
 
 /** Regex matching a Lunaro Revival Server username (formatted as `<username> [<platform>]`). */
 const usernamePattern = /([A-Za-z0-9_.-]{4,24})\s\[(PC|XB1|PS4|SWI)\]/;
@@ -23,6 +24,8 @@ export interface DiscordUser {
  * @throws if the name cannot be parsed
  */
 export const parseDiscordUsername = (name?: string): DiscordUser => {
+    log(`Parsing username "${name}"`);
+
     const matchGroups = name?.match(usernamePattern);
     const username = matchGroups?.[1];
     const platform = matchGroups?.[2];

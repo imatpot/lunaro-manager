@@ -146,6 +146,13 @@ createCommand({
     },
 });
 
+/**
+ * Generates a string containing a medal and a placement number.
+ *
+ * @param placement to be generated
+ * @param spaces between the medal and the placement
+ * @returns the genenerated string
+ */
 const generatePlacementString = (placement: number, spaces = 1): string => {
     const medals: {
         [place: number]: string;

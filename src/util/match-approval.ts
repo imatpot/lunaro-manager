@@ -1,5 +1,5 @@
 import { PendingMatch } from ':interfaces/pending-match.ts';
-import { readPendingMatches } from ':util/data.ts';
+import { readPendingMatches, updatePendingMatch } from ':util/data.ts';
 
 /**
  * Checks for a pending match linked to a given message.
@@ -26,10 +26,11 @@ export const pendingMatchOfMessage = (
  * @param approverId who approved the match
  */
 export const addApproval = (match: PendingMatch, approverId: string): PendingMatch => {
-    const deboycottedMatch = removeBoycott(match, approverId);
+    match.approval.approved.push(approverId);
 
-    deboycottedMatch.approval.approved.push(approverId);
-    return deboycottedMatch;
+    updatePendingMatch(match);
+
+    return match;
 };
 
 /**
@@ -40,6 +41,9 @@ export const addApproval = (match: PendingMatch, approverId: string): PendingMat
  */
 export const removeApproval = (match: PendingMatch, approverId: string): PendingMatch => {
     match.approval.approved = match.approval.approved.filter((approver) => approver !== approverId);
+
+    updatePendingMatch(match);
+
     return match;
 };
 
@@ -50,10 +54,11 @@ export const removeApproval = (match: PendingMatch, approverId: string): Pending
  * @param boycotterId who boycotted the match
  */
 export const addBoycott = (match: PendingMatch, boycotterId: string): PendingMatch => {
-    const disapprovedMatch = removeApproval(match, boycotterId);
+    match.approval.boycotted.push(boycotterId);
 
-    disapprovedMatch.approval.boycotted.push(boycotterId);
-    return disapprovedMatch;
+    updatePendingMatch(match);
+
+    return match;
 };
 
 /**
@@ -66,6 +71,8 @@ export const removeBoycott = (match: PendingMatch, boycotterId: string): Pending
     match.approval.boycotted = match.approval.boycotted.filter(
         (boycotter) => boycotter !== boycotterId
     );
+
+    updatePendingMatch(match);
 
     return match;
 };

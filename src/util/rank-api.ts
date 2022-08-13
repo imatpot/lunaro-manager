@@ -2,6 +2,7 @@ import { HttpError } from ':error/http-error.ts';
 import { LunaroMatch, NewLunaroMatch } from ':interfaces/lunaro-match.ts';
 import { LunaroPlayer, NewLunaroPlayer } from ':interfaces/lunaro-player.ts';
 import { RANK_API_TOKEN, RANK_API_URL } from ':src/env.ts';
+import { log } from ':util/logger.ts';
 
 /**
  * Sorts a list of players first by their rank, and then by their name.
@@ -78,6 +79,8 @@ export const leagueNameToRank = (league: string): number => {
  */
 export const getAllPlayers = async (): Promise<LunaroPlayer[]> => {
     const resource = RANK_API_URL + '/api/players';
+    log(`GET ${resource}`);
+
     const response = await fetch(resource);
 
     if (response.status !== 200) {
@@ -97,7 +100,9 @@ export const getAllPlayers = async (): Promise<LunaroPlayer[]> => {
  * @throws if the request results in an error
  */
 export const getPlayerByNameOrId = async (nameOrId: string): Promise<LunaroPlayer> => {
-    const resource = RANK_API_URL + '/api/players/' + nameOrId;
+    const resource = `${RANK_API_URL}/api/players/${nameOrId}`;
+    log(`GET ${resource}`);
+
     const response = await fetch(resource);
 
     if (response.status !== 200) {
@@ -116,6 +121,8 @@ export const getPlayerByNameOrId = async (nameOrId: string): Promise<LunaroPlaye
  */
 export const getAllMatches = async (): Promise<LunaroMatch[]> => {
     const resource = RANK_API_URL + '/api/matches';
+    log(`GET ${resource}`);
+
     const response = await fetch(resource);
 
     if (response.status !== 200) {
@@ -135,7 +142,9 @@ export const getAllMatches = async (): Promise<LunaroMatch[]> => {
  * @throws if the request results in an error
  */
 export const getMatchById = async (id: string): Promise<LunaroMatch> => {
-    const resource = RANK_API_URL + '/api/matches/' + id;
+    const resource = `${RANK_API_URL}/api/matches/${id}`;
+    log(`GET ${resource}`);
+
     const response = await fetch(resource);
 
     if (response.status !== 200) {
@@ -156,6 +165,7 @@ export const getMatchById = async (id: string): Promise<LunaroMatch> => {
  */
 export const createPlayer = async (player: NewLunaroPlayer): Promise<LunaroPlayer> => {
     const resource = RANK_API_URL + '/api/players/add';
+    log(`POST ${resource} ${{ ...player, token: '***' }}`);
 
     const body = { ...player, token: RANK_API_TOKEN };
 
@@ -182,6 +192,7 @@ export const createPlayer = async (player: NewLunaroPlayer): Promise<LunaroPlaye
  */
 export const createMatch = async (match: NewLunaroMatch): Promise<LunaroMatch> => {
     const resource = RANK_API_URL + '/api/matches/add';
+    log(`POST ${resource} ${{ ...match, token: '***' }}`);
 
     const body = { ...match, token: RANK_API_TOKEN };
 

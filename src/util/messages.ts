@@ -1,4 +1,5 @@
 import { bot } from ':src/bot.ts';
+import { log } from ':util/logger.ts';
 import { CreateMessage, Message } from 'discordeno';
 
 /**
@@ -8,5 +9,7 @@ import { CreateMessage, Message } from 'discordeno';
  * @returns the sent message
  */
 export const sendMessageInChannel = async (channelId: string | bigint, message: CreateMessage): Promise<Message> => {
+    log(`Sending message in channel ${channelId}`);
+
     return await bot.helpers.sendMessage(BigInt(channelId), message);
 };

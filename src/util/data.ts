@@ -11,7 +11,7 @@ const createDataDirIfNotExists = () => {
     try {
         Deno.statSync(dataDirPath);
     } catch {
-        log('Creating directory ' + dataDirPath);
+        log(`Creating directory ${dataDirPath}`);
         Deno.mkdirSync(dataDirPath);
         Deno.chmod(dataDirPath, 0o777);
     }
@@ -27,7 +27,7 @@ const createActivityTrackerConfigIfNotExists = () => {
             blocklist: [],
         };
 
-        log('Creating file ' + activityTrackerDataFile);
+        log(`Creating file ${activityTrackerDataFile}`);
 
         Deno.writeTextFileSync(activityTrackerDataFile, JSON.stringify(emptyData, null, 2));
     }
@@ -40,7 +40,7 @@ const createPendingMatchesIfNotExists = () => {
     } catch {
         const emptyData: PendingMatch[] = [];
 
-        log('Creating file ' + pendingMatchesFile);
+        log(`Creating file ${pendingMatchesFile}`);
 
         Deno.writeTextFileSync(pendingMatchesFile, JSON.stringify(emptyData, null, 2));
     }
@@ -60,6 +60,8 @@ const initializeData = () => {
 export const readActivityTrackingConfig = (): ActivityTrackingConfig => {
     initializeData();
 
+    log(`Reading file ${activityTrackerDataFile}`);
+
     const fileContents = Deno.readTextFileSync(activityTrackerDataFile);
     const activityTrackerData: ActivityTrackingConfig = JSON.parse(fileContents);
 
@@ -73,7 +75,7 @@ export const readActivityTrackingConfig = (): ActivityTrackingConfig => {
 export const writeActivityTrackingConfig = (config: ActivityTrackingConfig) => {
     initializeData();
 
-    log('Writing file ' + activityTrackerDataFile);
+    log(`Writing file ${activityTrackerDataFile}`);
 
     Deno.writeTextFileSync(activityTrackerDataFile, JSON.stringify(config, null, 2));
 };
@@ -84,6 +86,8 @@ export const writeActivityTrackingConfig = (config: ActivityTrackingConfig) => {
  */
 export const readPendingMatches = (): PendingMatch[] => {
     initializeData();
+
+    log(`Reading file ${pendingMatchesFile}`);
 
     const fileContents = Deno.readTextFileSync(pendingMatchesFile);
     const pendingMatches: PendingMatch[] = JSON.parse(fileContents);
@@ -98,7 +102,7 @@ export const readPendingMatches = (): PendingMatch[] => {
 const writePendingMatches = (matches: PendingMatch[]) => {
     initializeData();
 
-    log('Writing file ' + pendingMatchesFile);
+    log(`Writing file ${pendingMatchesFile}`);
 
     Deno.writeTextFileSync(pendingMatchesFile, JSON.stringify(matches, null, 2));
 };
@@ -123,6 +127,29 @@ export const addPendingMatch = (match: PendingMatch) => {
     if (!exists) {
         pendingMatches.push(match);
         writePendingMatches(pendingMatches);
+    }
+};
+
+/**
+ * Updates a pending match.
+ * @param match to be updated
+ */
+export const updatePendingMatch = (match: PendingMatch) => {
+    const pendingMatches = readPendingMatches();
+    let exists = false;
+
+    for (const pendingMatch of pendingMatches) {
+        if (
+            pendingMatch.message.channelId === match.message.channelId &&
+            pendingMatch.message.id === match.message.id
+        ) {
+            exists = true;
+        }
+    }
+
+    if (exists) {
+        removePendingMatch(match);
+        addPendingMatch(match);
     }
 };
 

@@ -17,6 +17,8 @@ bot.events.reactionRemove = async (_, reaction) => {
         return;
     }
 
+    event(`Reaction ${reaction.emoji.name} removed from ${reaction.messageId}`);
+
     const linkedMatch = pendingMatchOfMessage(
         reaction.channelId.toString(),
         reaction.messageId.toString()
@@ -33,6 +35,5 @@ bot.events.reactionRemove = async (_, reaction) => {
         removeBoycott(linkedMatch, reaction.userId.toString());
     }
 
-    event(`Reaction ${reaction.emoji.name} removed from ${reaction.messageId}`);
     await null;
 };
