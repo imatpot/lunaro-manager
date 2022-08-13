@@ -1,5 +1,6 @@
 import { HttpError } from ':error/http-error.ts';
 import { InvocationError } from ':error/invocation-error.ts';
+import { UnimplementedError } from ':error/unimplemented-error.ts';
 import { SubcommandMap } from ':interfaces/command.ts';
 import { parseDiscordUsername } from ':interfaces/discord-user.ts';
 import { NewLunaroMatch } from ':interfaces/lunaro-match.ts';
@@ -460,4 +461,6 @@ const rankedSubmit = async (interaction: Interaction) => {
         submitter: interaction.user.id.toString(),
         match,
     };
+
+    throw new UnimplementedError('Command not yet finished');
 };
