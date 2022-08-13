@@ -95,10 +95,49 @@ export const readPendingMatches = (): PendingMatch[] => {
  * Saves the pending matches to the disk.
  * @param matches to be saved
  */
-export const writePendingMatches = (matches: PendingMatch[]) => {
+const writePendingMatches = (matches: PendingMatch[]) => {
     initializeData();
 
     log('Writing file ' + pendingMatchesFile);
 
     Deno.writeTextFileSync(pendingMatchesFile, JSON.stringify(matches, null, 2));
+};
+
+/**
+ * Add a pending match.
+ * @param match to be added
+ */
+export const addPendingMatch = (match: PendingMatch) => {
+    const pendingMatches = readPendingMatches();
+    let exists = false;
+
+    for (const pendingMatch of pendingMatches) {
+        if (
+            pendingMatch.message.channelId === match.message.channelId &&
+            pendingMatch.message.id === match.message.id
+        ) {
+            exists = true;
+        }
+    }
+
+    if (!exists) {
+        pendingMatches.push(match);
+        writePendingMatches(pendingMatches);
+    }
+};
+
+/**
+ * Remove a pending match.
+ * @param match to be removed
+ */
+export const removePendingMatch = (match: PendingMatch) => {
+    const pendingMatches = readPendingMatches();
+
+    const newMatches = pendingMatches.filter(
+        (pendingMatch) =>
+            pendingMatch.message.channelId !== match.message.channelId &&
+            pendingMatch.message.id !== match.message.id
+    );
+
+    writePendingMatches(newMatches);
 };

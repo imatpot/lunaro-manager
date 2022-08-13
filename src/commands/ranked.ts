@@ -1,6 +1,5 @@
 import { HttpError } from ':error/http-error.ts';
 import { InvocationError } from ':error/invocation-error.ts';
-import { UnimplementedError } from ':error/unimplemented-error.ts';
 import { SubcommandMap } from ':interfaces/command.ts';
 import { parseDiscordUsername } from ':interfaces/discord-user.ts';
 import { NewLunaroMatch } from ':interfaces/lunaro-match.ts';
@@ -10,6 +9,7 @@ import { bot } from ':src/bot.ts';
 import { HOME_GUILD_ID } from ':src/env.ts';
 import { getSubcommand } from ':util/commands.ts';
 import { createCommand } from ':util/creators.ts';
+import { addPendingMatch } from ':util/data.ts';
 import { replyToInteraction } from ':util/interactions.ts';
 import { sendMessageInChannel } from ':util/messages.ts';
 import {
@@ -441,10 +441,6 @@ const rankedSubmit = async (interaction: Interaction) => {
               },
     });
 
-    if (!message) {
-        throw new InvocationError('Failed to save message to pending match');
-    }
-
     await bot.helpers.addReaction(message.channelId, message.id, '✅');
     await bot.helpers.addReaction(message.channelId, message.id, '❌');
 
@@ -462,5 +458,7 @@ const rankedSubmit = async (interaction: Interaction) => {
         match,
     };
 
-    throw new UnimplementedError('Command not yet finished');
+    addPendingMatch(pendingMatch);
+
+    // throw new UnimplementedError('Command not yet finished');
 };
