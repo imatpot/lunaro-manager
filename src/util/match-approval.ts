@@ -7,7 +7,7 @@ import { createMatch } from ':util/rank-api.ts';
 export const matchApprovedMessage = '✅  This match has been approved';
 export const matchCancelledMessage = '❌  This match has been cancelled';
 export const pendingMatchApprovalMessage =
-    '⏳  This match is pending approval. Both players are requested to react with  ✅  to confirm this and finalize this match submission, or ract with  ❌  to boycott or cancel it';
+    '⏳  This match is pending approval. Both players are requested to react with  ✅  to approve and finalize this match submission, or ract with  ❌  to boycott or cancel it';
 
 /**
  * Checks for a pending match linked to a given message.
