@@ -165,7 +165,7 @@ export const getMatchById = async (id: string): Promise<LunaroMatch> => {
  */
 export const createPlayer = async (player: NewLunaroPlayer): Promise<LunaroPlayer> => {
     const resource = RANK_API_URL + '/api/players/add';
-    log(`POST ${resource} ${{ ...player, token: '***' }}`);
+    log(`POST ${resource} ${JSON.stringify({ ...player, token: '***' }, null, 2)}`);
 
     const body = { ...player, token: RANK_API_TOKEN };
 
@@ -173,6 +173,8 @@ export const createPlayer = async (player: NewLunaroPlayer): Promise<LunaroPlaye
         method: 'POST',
         body: JSON.stringify(body),
     });
+
+    log(JSON.stringify(response, null, 2))
 
     if (response.status !== 201) {
         throw new HttpError(response.status, await response.text());
@@ -192,7 +194,7 @@ export const createPlayer = async (player: NewLunaroPlayer): Promise<LunaroPlaye
  */
 export const createMatch = async (match: NewLunaroMatch): Promise<LunaroMatch> => {
     const resource = RANK_API_URL + '/api/matches/add';
-    log(`POST ${resource} ${{ ...match, token: '***' }}`);
+    log(`POST ${resource} ${JSON.stringify({ ...match, token: '***' }, null, 2)}`);
 
     const body = { ...match, token: RANK_API_TOKEN };
 

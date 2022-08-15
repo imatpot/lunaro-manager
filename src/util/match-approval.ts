@@ -1,9 +1,8 @@
-import { UnimplementedError } from ':error/unimplemented-error.ts';
-import { LunaroMatch } from ':interfaces/lunaro-match.ts';
 import { PendingMatch } from ':interfaces/pending-match.ts';
 import { bot } from ':src/bot.ts';
 import { readPendingMatches, removePendingMatch, updatePendingMatch } from ':util/data.ts';
 import { editMessageInChannel } from ':util/messages.ts';
+import { createMatch } from ':util/rank-api.ts';
 
 export const matchApprovedMessage = '✅  This match has been approved';
 export const matchCancelledMessage = '❌  This match has been cancelled';
@@ -92,13 +91,27 @@ export const removeBoycott = (match: PendingMatch, boycotterId: string): Pending
  *
  * @param match to be submitted
  */
-export const finalizeSubmission = async (match: PendingMatch): Promise<LunaroMatch> => {
-    // TODO: upload match
+export const finalizeSubmission = async (match: PendingMatch): Promise<void> => {
+    const createdMatch = await createMatch(match.match);
 
-    // TODO: edit original message
+    const message = await bot.helpers.getMessage(
+        BigInt(match.message.channelId),
+        BigInt(match.message.id)
+    );
 
-    await null;
-    throw new UnimplementedError('Cannot finalize submission');
+    let content = message.content.replace(pendingMatchApprovalMessage, matchApprovedMessage);
+
+    content += [
+        '\n',
+        generateDeltaString(match.match.player_a, createdMatch.delta_a),
+        generateDeltaString(match.match.player_b, createdMatch.delta_b),
+    ].join('\n');
+
+    await editMessageInChannel(BigInt(match.message.channelId), BigInt(match.message.id), {
+        content,
+    });
+
+    removePendingMatch(match);
 };
 
 /**
@@ -118,4 +131,15 @@ export const cancelSubmission = async (match: PendingMatch): Promise<void> => {
     });
 
     removePendingMatch(match);
+};
+
+const generateDeltaString = (player: string, delta: number): string => {
+    if (delta > 0) {
+        return `🔺  ${player} gained ${delta} points`;
+    } else if (delta < 0) {
+        return `🔻  ${player} lost ${-delta} points`;
+    } else {
+        const possessiveS = player.endsWith('s') ? "'" : "'s";
+        return `🔸  ${player}${possessiveS} rank did not change`;
+    }
 };

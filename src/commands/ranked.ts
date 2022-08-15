@@ -414,18 +414,18 @@ const rankedSubmit = async (interaction: Interaction) => {
 
     const match: NewLunaroMatch = {
         player_a: playerA.username,
-        a_ping: playerAPing,
+        ping_a: playerAPing,
         score_a: playerAScore,
 
         player_b: playerB.username,
-        b_ping: playerBPing,
+        ping_b: playerBPing,
         score_b: playerBScore,
     };
 
     const playerAPingMessage =
-        match.a_ping === 0 ? 'as host' : `with around ${match.a_ping}ms ping`;
+        match.ping_a === 0 ? 'as host' : `with around ${match.ping_a}ms ping`;
     const playerBPingMessage =
-        match.b_ping === 0 ? 'as host' : `with around ${match.b_ping}ms ping`;
+        match.ping_b === 0 ? 'as host' : `with around ${match.ping_b}ms ping`;
 
     const message = await sendMessageInChannel(interaction.channelId!, {
         content: [

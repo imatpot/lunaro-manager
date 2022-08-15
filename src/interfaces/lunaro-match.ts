@@ -34,7 +34,7 @@ export interface NewLunaroMatch {
     score_a: number;
 
     /** Ping of player A. A ping of `0` means the player was the host of the match. */
-    a_ping: number;
+    ping_a: number;
 
     /** Username of player B. */
     player_b: string;
@@ -43,5 +43,5 @@ export interface NewLunaroMatch {
     score_b: number;
 
     /** Ping of player B. A ping of `0` means the player was the host of the match. */
-    b_ping: number;
+    ping_b: number;
 }
