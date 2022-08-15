@@ -9,8 +9,3 @@ services:
     restart: "unless-stopped"
     volumes:
       - "./data:/mnt/app/data"
-    environment:
-      DISCORD_TOKEN: "${DISCORD_TOKEN}"
-      BOT_ID: "${BOT_ID}"
-      HOME_GUILD_ID: "${HOME_GUILD_ID}"
-      RTP_ROLE_ID: "${RTP_ROLE_ID}"
