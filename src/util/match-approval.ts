@@ -1,5 +1,14 @@
+import { UnimplementedError } from ':error/unimplemented-error.ts';
+import { LunaroMatch } from ':interfaces/lunaro-match.ts';
 import { PendingMatch } from ':interfaces/pending-match.ts';
-import { readPendingMatches, updatePendingMatch } from ':util/data.ts';
+import { bot } from ':src/bot.ts';
+import { readPendingMatches, removePendingMatch, updatePendingMatch } from ':util/data.ts';
+import { editMessageInChannel } from ':util/messages.ts';
+
+export const matchApprovedMessage = '✅  This match has been approved';
+export const matchCancelledMessage = '❌  This match has been cancelled';
+export const pendingMatchApprovalMessage =
+    '⏳  This match is pending approval. Both players are requested to react with  ✅  to confirm this and finalize this match submission, or ract with  ❌  to boycott or cancel it';
 
 /**
  * Checks for a pending match linked to a given message.
@@ -26,7 +35,7 @@ export const pendingMatchOfMessage = (
  * @param approverId who approved the match
  */
 export const addApproval = (match: PendingMatch, approverId: string): PendingMatch => {
-    match.approval.approved.push(approverId);
+    match.status.approved.push(approverId);
 
     updatePendingMatch(match);
 
@@ -40,7 +49,7 @@ export const addApproval = (match: PendingMatch, approverId: string): PendingMat
  * @param approverId who approved the match
  */
 export const removeApproval = (match: PendingMatch, approverId: string): PendingMatch => {
-    match.approval.approved = match.approval.approved.filter((approver) => approver !== approverId);
+    match.status.approved = match.status.approved.filter((approver) => approver !== approverId);
 
     updatePendingMatch(match);
 
@@ -54,7 +63,7 @@ export const removeApproval = (match: PendingMatch, approverId: string): Pending
  * @param boycotterId who boycotted the match
  */
 export const addBoycott = (match: PendingMatch, boycotterId: string): PendingMatch => {
-    match.approval.boycotted.push(boycotterId);
+    match.status.boycotted.push(boycotterId);
 
     updatePendingMatch(match);
 
@@ -68,11 +77,45 @@ export const addBoycott = (match: PendingMatch, boycotterId: string): PendingMat
  * @param boycotterId who approved the match
  */
 export const removeBoycott = (match: PendingMatch, boycotterId: string): PendingMatch => {
-    match.approval.boycotted = match.approval.boycotted.filter(
+    match.status.boycotted = match.status.boycotted.filter(
         (boycotter) => boycotter !== boycotterId
     );
 
     updatePendingMatch(match);
 
     return match;
+};
+
+/**
+ * Finalized a submission and uploads the match to the API when all players
+ * approve the match.
+ *
+ * @param match to be submitted
+ */
+export const finalizeSubmission = async (match: PendingMatch): Promise<LunaroMatch> => {
+    // TODO: upload match
+
+    // TODO: edit original message
+
+    await null;
+    throw new UnimplementedError('Cannot finalize submission');
+};
+
+/**
+ * Cancel a submission.
+ * @param match to be cancelled
+ */
+export const cancelSubmission = async (match: PendingMatch): Promise<void> => {
+    const message = await bot.helpers.getMessage(
+        BigInt(match.message.channelId),
+        BigInt(match.message.id)
+    );
+
+    const content = message.content.replace(pendingMatchApprovalMessage, matchCancelledMessage);
+
+    await editMessageInChannel(BigInt(match.message.channelId), BigInt(match.message.id), {
+        content,
+    });
+
+    removePendingMatch(match);
 };

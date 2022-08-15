@@ -11,6 +11,7 @@ import { getSubcommand } from ':util/commands.ts';
 import { createCommand } from ':util/creators.ts';
 import { addPendingMatch } from ':util/data.ts';
 import { replyToInteraction } from ':util/interactions.ts';
+import { pendingMatchApprovalMessage } from ':util/match-approval.ts';
 import { sendMessageInChannel } from ':util/messages.ts';
 import {
     createPlayer,
@@ -25,10 +26,6 @@ import {
     Attachment,
     Interaction
 } from 'discordeno';
-
-export const matchApprovedMessage = '✅   This match has been approved';
-export const pendingMatchApprovalMessage =
-    '⏳  This match is pending approval. Both players are requested to react with  ✅  to confirm this and finalize this match submission, or ract with  ❌  to boycott or cancel it';
 
 createCommand({
     name: 'ranked',
@@ -452,7 +449,7 @@ const rankedSubmit = async (interaction: Interaction) => {
     await bot.helpers.addReaction(message.channelId, message.id, '❌');
 
     const pendingMatch: PendingMatch = {
-        approval: {
+        status: {
             required: [playerAId, playerBId],
             approved: [],
             boycotted: [],
@@ -467,5 +464,5 @@ const rankedSubmit = async (interaction: Interaction) => {
 
     addPendingMatch(pendingMatch);
 
-    // throw new UnimplementedError('Command not yet finished');
+    // TODO: delete ephemeral info about preparing data
 };

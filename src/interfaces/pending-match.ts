@@ -10,7 +10,7 @@ interface MessageReference {
 }
 
 /** Tracks the approval of users. */
-interface UserApproval {
+interface ApprovalStatus {
     /** User IDs which must approve. */
     required: string[];
 
@@ -27,7 +27,7 @@ export interface PendingMatch {
     message: MessageReference;
 
     /** The approval progress. */
-    approval: UserApproval;
+    status: ApprovalStatus;
 
     /** The pending match. */
     match: NewLunaroMatch;
