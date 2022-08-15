@@ -35,6 +35,18 @@ bot.events.reactionAdd = async (_, reaction) => {
         return;
     }
 
+    if (
+        !linkedMatch.status.required.includes(reaction.userId.toString()) &&
+        reaction.userId.toString() !== linkedMatch.submitter
+    ) {
+        // Remove and ignore all reactions from people who are not involved
+        bot.helpers.removeReaction(reaction.channelId, reaction.messageId, reaction.emoji.name!, {
+            userId: reaction.userId,
+        });
+
+        return;
+    }
+
     if (reaction.emoji.name === '✅') {
         const approvedMatch = addApproval(linkedMatch, reaction.userId.toString());
 
