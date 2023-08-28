@@ -16,20 +16,18 @@
 
   outputs = { self, nixpkgs, utils, rust }: utils.lib.eachDefaultSystem (system:
     let
-      pkgs = nixpkgs.legacyPackages.${system}.appendOverlays [
-        rust.overlays.default
-      ];
+      pkgs = import nixpkgs {
+        inherit system;
+        overlays = [ (import rust) ];
+      };
       rust-toolchain = with pkgs; [
         (rust-bin.stable.latest.default.override {
           extensions = [ "rust-src" ];
         })
-
-        sqlx-cli
-        postgresql
       ];
     in
-    {
-      devShells.default = pkgs.mkShell {
+    with pkgs; {
+      devShells.default = mkShell {
         buildInputs = rust-toolchain;
         shellHook = ''
           echo
