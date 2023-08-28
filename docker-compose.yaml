@@ -1,0 +1,10 @@
+version: '3'
+services:
+  lunaro-manager:
+    image: lunaro-manager
+    hostname: lunaro-manager
+    container_name: lunaro-manager
+    restart: unless-stopped
+    build: .
+    environment:
+      LOREM: ${LOREM:-ipsum}
