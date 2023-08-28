@@ -1,0 +1,29 @@
+appenders:
+  stdout:
+    kind: console
+    encoder:
+      pattern: "{h({d(%Y-%m-%d %H:%M:%S)(utc)} | {({l}):5.5} | {f}:{L} — {m}{n})}"
+  logfile:
+    kind: rolling_file
+    path: "log/lunaro_manager.log"
+    encoder:
+      pattern: "{h({d(%Y-%m-%d %H:%M:%S)(utc)} | {({l}):5.5} | {f}:{L} — {m}{n})}"
+    policy:
+      trigger:
+        kind: size
+        limit: 1mib
+      roller:
+        kind: fixed_window
+        pattern: log/lunaro_manager_{}.log
+        count: 5
+        base: 1
+
+root:
+  level: off
+
+loggers:
+  lunaro_manager:
+    level: debug
+    appenders:
+      - stdout
+      - logfile
