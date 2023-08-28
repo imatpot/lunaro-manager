@@ -1,0 +1,23 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug Lunaro Manager",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=lunaro_manager",
+                    "--package=lunaro_manager"
+                ],
+                "filter": {
+                    "name": "lunaro_manager",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}
