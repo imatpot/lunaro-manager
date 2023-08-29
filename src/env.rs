@@ -1,8 +1,8 @@
 use std::env;
 
 use dotenv::dotenv;
+use poise::serenity_prelude::utils::validate_token;
 use regex::Regex;
-use serenity::utils::validate_token;
 
 /// Contains read & validated environment variables.
 #[derive(Debug)]
