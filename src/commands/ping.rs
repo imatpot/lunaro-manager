@@ -5,7 +5,7 @@ use crate::types::{error::Error, poise::PoiseContext};
 
 /// 🏓 Check the bot's connection latency
 #[command(slash_command, rename = "ping")]
-pub async fn execute(context: PoiseContext<'_>) -> Result<(), Error> {
+pub async fn run(context: PoiseContext<'_>) -> Result<(), Error> {
     let now = Utc::now();
     let interaction_created =
         DateTime::parse_from_rfc3339(&context.created_at().to_rfc3339())?.with_timezone(&Utc);

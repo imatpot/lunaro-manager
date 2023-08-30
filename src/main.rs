@@ -31,6 +31,7 @@ async fn main() {
     }
 }
 
+/// Initialize & start the bot.
 async fn run() {
     log::debug!("Loading environment");
     let env = match Environment::load() {
@@ -47,7 +48,7 @@ async fn run() {
         pre_command: |context| Box::pin(log_invocation(context)),
         on_error: |error| Box::pin(on_error(error)),
 
-        commands: vec![commands::ping::execute()],
+        commands: vec![commands::ping::run(), commands::contribute::run()],
 
         ..Default::default()
     };
@@ -63,7 +64,7 @@ async fn run() {
 
     match framework.run().await {
         Ok(_) => log::error!("Bot shut down unexpectedly"),
-        Err(error) => log::error!("Failed to start: {error}"),
+        Err(error) => log::error!("Bot failed to start: {error}"),
     }
 }
 
@@ -88,7 +89,7 @@ async fn on_error(framework_error: FrameworkError<'_, (), Error>) {
 
         log::error!("{user} ran [{command}] in {guild} and got a {error:?}: {error} ({trace_id})",);
 
-        let error_message = "❌ An error occurred while executing this command.";
+        let error_message = "❌ An error occurred while running this command";
         let traced_error_message = format!("{error_message}\n🔍 `{error:?}: {error} ({trace_id})`");
 
         let trace_button = CreateButton::default()
