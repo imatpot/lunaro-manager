@@ -5,8 +5,10 @@ mod events;
 mod types;
 mod util;
 
+use std::panic;
 use std::time::Duration;
 
+use futures::executor::block_on;
 use poise::serenity_prelude::{
     Activity, ButtonStyle, Context, CreateActionRow, CreateButton, GatewayIntents, Ready,
 };
@@ -22,6 +24,14 @@ use crate::types::poise::PoiseContext;
 async fn main() {
     log4rs::init_file("log4rs.yaml", Default::default()).unwrap();
 
+    // Catch panics and log them
+    match panic::catch_unwind(|| block_on(run())) {
+        Ok(_) => log::info!("Bot shut down gracefully"),
+        Err(_) => log::error!("Bot shut down unexpectedly"),
+    }
+}
+
+async fn run() {
     log::debug!("Loading environment");
     let env = match Environment::load() {
         Ok(env) => env,
