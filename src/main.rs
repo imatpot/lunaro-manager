@@ -75,8 +75,25 @@ async fn run() {
 /// Log a command's invocation.
 async fn log_invocation(context: PoiseContext<'_>) {
     let author = &context.author().tag();
-    let command = &context.command().name;
     let guild = &context.partial_guild().await.unwrap().name;
+    let parent_commands =
+        context
+            .parent_commands()
+            .iter()
+            .map(|c| &c.name)
+            .fold(String::new(), |mut acc, name| {
+                if !acc.is_empty() {
+                    acc.push(' ');
+                }
+                acc.push_str(name);
+                acc
+            });
+
+    let command = if parent_commands.is_empty() {
+        context.command().name.to_string()
+    } else {
+        format!("{} {}", parent_commands, context.command().name)
+    };
 
     log::info!("{author} ran [{command}] in {guild}");
 }
