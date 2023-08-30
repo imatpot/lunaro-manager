@@ -3,8 +3,8 @@ use poise::command;
 
 use crate::types::{error::Error, poise::PoiseContext};
 
-/// Check whether the bot is responsive.
-#[command(rename = "ping", slash_command, prefix_command)]
+/// 🏓 Check the bot's connection latency
+#[command(slash_command, rename = "ping")]
 pub async fn execute(context: PoiseContext<'_>) -> Result<(), Error> {
     let now = Utc::now();
     let interaction_created =
@@ -18,7 +18,7 @@ pub async fn execute(context: PoiseContext<'_>) -> Result<(), Error> {
     log::debug!("Latency: {latency}ms");
 
     context
-        .send(|reply| reply.content(format!("🏓 Current ping is about {latency}ms")))
+        .send(|reply| reply.content(format!("🏓 Current ping is around {latency}ms")))
         .await?;
 
     Ok(())
