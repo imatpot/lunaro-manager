@@ -48,7 +48,11 @@ async fn run() {
         pre_command: |context| Box::pin(log_invocation(context)),
         on_error: |error| Box::pin(on_error(error)),
 
-        commands: vec![commands::ping::run(), commands::contribute::run()],
+        commands: vec![
+            commands::ping::run(),
+            commands::contribute::run(),
+            commands::help::run(),
+        ],
 
         ..Default::default()
     };
