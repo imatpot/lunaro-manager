@@ -8,15 +8,14 @@ mod util;
 use std::time::Duration;
 
 use poise::serenity_prelude::{
-    ActionRow, ButtonStyle, Context, CreateActionRow, CreateButton, GatewayIntents, Ready,
+    Activity, ButtonStyle, Context, CreateActionRow, CreateButton, GatewayIntents, Ready,
 };
-use poise::{CreateReply, Framework, FrameworkError, FrameworkOptions};
+use poise::{Framework, FrameworkError, FrameworkOptions};
 use types::error::Error;
 use uuid::Uuid;
 
 use crate::env::Environment;
 use crate::events::EventHandlers;
-use crate::types::error;
 use crate::types::poise::PoiseContext;
 
 #[tokio::main]
@@ -68,7 +67,7 @@ async fn log_invocation(context: PoiseContext<'_>) {
 }
 
 /// Log an error and reply with a generic response and a button to show the
-/// debug trace ID.
+/// debug trace.
 async fn on_error(framework_error: FrameworkError<'_, (), Error>) {
     if let FrameworkError::Command { error, ctx } = framework_error {
         let user = &ctx.author().tag();
@@ -77,12 +76,10 @@ async fn on_error(framework_error: FrameworkError<'_, (), Error>) {
 
         let trace_id = Uuid::new_v4();
 
-        log::error!(
-            "{user} ran [{command}] in {guild} and got an error {error:?}: {error} ({trace_id})",
-        );
+        log::error!("{user} ran [{command}] in {guild} and got a {error:?}: {error} ({trace_id})",);
 
-        let error_message = "❌  An error occurred while executing this command.";
-        let traced_error_message = format!("{error_message}\n🔍  `{error:?}: {error} ({trace_id})`");
+        let error_message = "❌ An error occurred while executing this command.";
+        let traced_error_message = format!("{error_message}\n🔍 `{error:?}: {error} ({trace_id})`");
 
         let trace_button = CreateButton::default()
             .custom_id(trace_id)
@@ -104,15 +101,16 @@ async fn on_error(framework_error: FrameworkError<'_, (), Error>) {
             .await
             .unwrap();
 
-        let message = response.message().await.unwrap();
-
-        match message
+        match response
+            .message()
+            .await
+            .unwrap()
             .await_component_interaction(ctx)
             .timeout(Duration::from_secs(60))
             .await
         {
             Some(_) => {
-                // Updates the messahe, removes the button
+                // Updates the message & removes the button
                 response
                     .edit(ctx, |msg| {
                         msg.content(traced_error_message).components(|c| c)
@@ -132,10 +130,6 @@ async fn on_error(framework_error: FrameworkError<'_, (), Error>) {
 }
 
 /// Update the bot's slash commands.
-///
-/// # Errors
-///
-/// Panics if the bot is unable to update in any guild.
 async fn update_commands(
     ready: &Ready,
     context: &Context,
@@ -156,6 +150,7 @@ async fn update_commands(
 
     log::info!("Successfully updated commands");
     context.online().await;
+    context.set_activity(Activity::playing("Lunaro")).await;
 
     Ok(())
 }

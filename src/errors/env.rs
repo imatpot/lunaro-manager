@@ -1,10 +1,11 @@
 use thiserror::Error;
 
 #[derive(Error, Debug)]
+/// Represents an issue with environment variables.
 pub enum EnvironmentError {
     #[error("Missing environment variable: {0}")]
-    MissingEnvironmentVariable(String),
+    Missing(String),
 
     #[error("Invalid environment variable: {0}")]
-    InvalidEnvironmentVariable(String),
+    Invalid(String),
 }
