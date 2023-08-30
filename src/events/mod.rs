@@ -7,8 +7,8 @@ pub struct EventHandlers;
 #[async_trait]
 impl RawEventHandler for EventHandlers {
     async fn raw_event(&self, context: Context, event: Event) {
-        if let Event::Ready(ready_event) = event {
-            ready::handle(context, ready_event.ready).await;
+        if let Event::Ready(evt) = event {
+            ready::handle(context, evt.ready).await;
         }
     }
 }

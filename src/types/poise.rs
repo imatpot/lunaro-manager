@@ -1,3 +1,4 @@
-pub type Data = ();
-pub type Error = Box<dyn std::error::Error + Send + Sync>;
-pub type PoiseContext<'a> = poise::Context<'a, Data, Error>;
+use super::error::Error;
+
+pub type PoiseData = ();
+pub type PoiseContext<'a> = poise::Context<'a, PoiseData, Error>;
