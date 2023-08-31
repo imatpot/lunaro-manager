@@ -54,6 +54,7 @@ async fn run() {
             commands::contribute::run(),
             commands::help::run(),
             commands::tracking::run(),
+            commands::ready::run(),
         ],
 
         ..Default::default()
