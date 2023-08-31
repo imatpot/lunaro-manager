@@ -79,18 +79,13 @@ async fn run() {
 async fn log_invocation(context: PoiseContext<'_>) {
     let author = &context.author().tag();
     let guild = &context.partial_guild().await.unwrap().name;
-    let parent_commands =
-        context
-            .parent_commands()
-            .iter()
-            .map(|c| &c.name)
-            .fold(String::new(), |mut acc, name| {
-                if !acc.is_empty() {
-                    acc.push(' ');
-                }
-                acc.push_str(name);
-                acc
-            });
+    let parent_commands = context
+        .parent_commands()
+        .iter()
+        .map(|c| &c.name)
+        .fold(String::new(), |acc, name| {
+            format!("{acc} {name}").trim().to_string()
+        });
 
     let command = if parent_commands.is_empty() {
         context.command().name.to_string()

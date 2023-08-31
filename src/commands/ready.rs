@@ -6,7 +6,7 @@ use crate::{
 };
 
 /// 🥍 Manage your ready status
-#[command(slash_command, rename = "rtp", subcommands("join", "leave"))]
+#[command(slash_command, rename = "rtp", subcommands("join", "leave", "check"))]
 pub async fn run(_context: PoiseContext<'_>) -> Result<(), Error> {
     // Handled in subcommands
     Ok(())
@@ -29,11 +29,7 @@ async fn join(context: PoiseContext<'_>) -> Result<(), Error> {
     };
 
     context
-        .send(|message| {
-            message.content(format!(
-                "🟢  {display_name} is now available for Lunaro"
-            ))
-        })
+        .send(|message| message.content(format!("🟢  {display_name} is now available for Lunaro")))
         .await?;
 
     Ok(())
@@ -62,6 +58,27 @@ async fn leave(context: PoiseContext<'_>) -> Result<(), Error> {
         .await?;
 
     ready::remove(member, context).await?;
+
+    Ok(())
+}
+
+/// 👀 Check who's whipped out their Arcata
+#[command(slash_command)]
+async fn check(context: PoiseContext<'_>) -> Result<(), Error> {
+    let ready_member_count = ready::count(context).await?;
+
+    let verb = match ready_member_count {
+        1 => "is",
+        _ => "are",
+    };
+
+    context
+        .send(|message| {
+            message.content(format!(
+                "👀  There {verb} {ready_member_count} Tenno available for Lunaro"
+            ))
+        })
+        .await?;
 
     Ok(())
 }
