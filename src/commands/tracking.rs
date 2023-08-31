@@ -17,7 +17,7 @@ pub async fn run(_context: PoiseContext<'_>) -> Result<(), Error> {
 async fn pause(context: PoiseContext<'_>) -> Result<(), Error> {
     let member_id = context.author().id.as_u64();
 
-    activity_tracking::block_tracking_for(member_id)?;
+    activity_tracking::deny_tracking_for(member_id)?;
 
     context
         .send(|message| {

@@ -51,7 +51,7 @@ pub fn allow_tracking_for(member_id: &u64) -> Result<(), Error> {
 }
 
 /// Add a user to the tracking blocklist.
-pub fn block_tracking_for(member_id: &u64) -> Result<(), Error> {
+pub fn deny_tracking_for(member_id: &u64) -> Result<(), Error> {
     let mut config = Config::load()?;
 
     config.blocklist.insert(*member_id);
