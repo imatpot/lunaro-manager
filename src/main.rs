@@ -47,7 +47,7 @@ async fn run() {
 
     let framework_options = FrameworkOptions {
         pre_command: |context| Box::pin(log_invocation(context)),
-        on_error: |error| Box::pin(on_error(error)),
+        on_error: |error| Box::pin(on_framework_error(error)),
 
         commands: vec![
             commands::ping::run(),
@@ -96,67 +96,79 @@ async fn log_invocation(context: PoiseContext<'_>) {
     log::info!("{author} ran [{command}] in {guild}");
 }
 
+/// Create an error message according to the type of error and log it.
+async fn on_framework_error(framework_error: FrameworkError<'_, (), Error>) {
+    match framework_error {
+        FrameworkError::Command { error, ctx } => {
+            log_error(&format!("{error:?}: {error}"), ctx).await;
+        }
+        FrameworkError::CommandPanic { payload, ctx } => match payload {
+            Some(payload) => log_error(&payload, ctx).await,
+            None => log_error("Generic panic", ctx).await,
+        },
+        _ => {}
+    }
+}
+
 /// Log an error and reply with a generic response and a button to show the
 /// debug trace.
-async fn on_error(framework_error: FrameworkError<'_, (), Error>) {
-    if let FrameworkError::Command { error, ctx } = framework_error {
-        let user = &ctx.author().tag();
-        let command = &ctx.command().name;
-        let guild = &ctx.partial_guild().await.unwrap().name;
+async fn log_error(message: &str, context: PoiseContext<'_>) {
+    let user = &context.author().tag();
+    let command = &context.command().name;
+    let guild = &context.partial_guild().await.unwrap().name;
 
-        let trace_id = Uuid::new_v4();
+    let trace_id = Uuid::new_v4();
 
-        log::error!("{user} ran [{command}] in {guild} and got a {error:?}: {error} ({trace_id})",);
+    log::error!("{user} ran [{command}] in {guild} and got an error: {message} ({trace_id})",);
 
-        let error_message = "❌ An error occurred while running this command";
-        let traced_error_message = format!("{error_message}\n🔍 `{error:?}: {error} ({trace_id})`");
+    let error_message = "❌  An error occurred while running this command";
+    let traced_error_message = format!("{error_message}\n🔍  `{trace_id}`\n\n```{message}```");
 
-        let trace_button = CreateButton::default()
-            .custom_id(trace_id)
-            .label("Show debug trace")
-            .style(ButtonStyle::Secondary)
-            .to_owned();
+    let trace_button = CreateButton::default()
+        .custom_id(trace_id)
+        .label("Show debug trace")
+        .style(ButtonStyle::Secondary)
+        .to_owned();
 
-        let action_row = CreateActionRow::default()
-            .add_button(trace_button)
-            .to_owned();
+    let action_row = CreateActionRow::default()
+        .add_button(trace_button)
+        .to_owned();
 
-        let response = ctx
-            .send(|reply| {
-                reply
-                    .ephemeral(true)
-                    .content(error_message)
-                    .components(|components| components.add_action_row(action_row))
-            })
-            .await
-            .unwrap();
+    let response = context
+        .send(|reply| {
+            reply
+                .ephemeral(true)
+                .content(error_message)
+                .components(|components| components.add_action_row(action_row))
+        })
+        .await
+        .unwrap();
 
-        match response
-            .message()
-            .await
-            .unwrap()
-            .await_component_interaction(ctx)
-            .timeout(Duration::from_secs(60))
-            .await
-        {
-            Some(_) => {
-                // Updates the message & removes the button
-                response
-                    .edit(ctx, |msg| {
-                        msg.content(traced_error_message).components(|c| c)
-                    })
-                    .await
-                    .unwrap();
-            }
-            None => {
-                // Removes the button
-                response
-                    .edit(ctx, |msg| msg.components(|c| c))
-                    .await
-                    .unwrap();
-            }
-        };
-    }
+    match response
+        .message()
+        .await
+        .unwrap()
+        .await_component_interaction(context)
+        .timeout(Duration::from_secs(60))
+        .await
+    {
+        Some(_) => {
+            // Updates the message & removes the button
+            response
+                .edit(context, |msg| {
+                    msg.content(traced_error_message).components(|c| c)
+                })
+                .await
+                .unwrap();
+        }
+        None => {
+            // Removes the button
+            response
+                .edit(context, |msg| msg.components(|c| c))
+                .await
+                .unwrap();
+        }
+    };
 }
 
 /// Update the bot's slash commands.
