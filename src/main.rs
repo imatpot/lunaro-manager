@@ -2,6 +2,7 @@ mod commands;
 mod env;
 mod errors;
 mod events;
+mod traits;
 mod types;
 mod util;
 
@@ -52,6 +53,7 @@ async fn run() {
             commands::ping::run(),
             commands::contribute::run(),
             commands::help::run(),
+            commands::tracking::run(),
         ],
 
         ..Default::default()
