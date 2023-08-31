@@ -18,7 +18,7 @@ pub async fn run(context: PoiseContext<'_>) -> Result<(), Error> {
     log::debug!("Latency: {latency}ms");
 
     context
-        .send(|reply| reply.content(format!("🏓 My ping is around {latency}ms")))
+        .send(|reply| reply.content(format!("🏓  My ping is around {latency}ms")))
         .await?;
 
     Ok(())

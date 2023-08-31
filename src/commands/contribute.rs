@@ -9,7 +9,7 @@ pub async fn run(context: PoiseContext<'_>) -> Result<(), Error> {
         .send(|reply| {
             reply.content(
                 [
-                    "🤝 Feel like helping out? Create an issue or pull request on GitHub:",
+                    "🤝  Feel like helping out? Create an issue or pull request on GitHub:",
                     "https://github.com/imatpot/lunaro-manager",
                 ]
                 .join("\n"),

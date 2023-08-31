@@ -1,5 +1,6 @@
 use std::collections::HashSet;
 
+use poise::serenity_prelude::User;
 use serde::{Deserialize, Serialize};
 
 use crate::{errors::data::DataError, traits::config_file::ConfigFile, types::error::Error};
@@ -40,23 +41,27 @@ impl ConfigFile for Config {
 }
 
 /// Remove a user from the tracking blocklist, if present.
-pub fn allow_tracking_for(member_id: &u64) -> Result<(), Error> {
+pub fn allow_tracking_for(user: &User) -> Result<(), Error> {
     let mut config = Config::load()?;
 
-    config.blocklist.retain(|id| *id != *member_id);
+    config.blocklist.retain(|id| *id != user.id.0);
     config.save()?;
 
-    log::debug!("Removed {} from tracking blocklist", member_id);
+    log::debug!(
+        "Removed {} ({}) from tracking blocklist",
+        user.tag(),
+        user.id
+    );
     Ok(())
 }
 
 /// Add a user to the tracking blocklist.
-pub fn deny_tracking_for(member_id: &u64) -> Result<(), Error> {
+pub fn deny_tracking_for(user: &User) -> Result<(), Error> {
     let mut config = Config::load()?;
 
-    config.blocklist.insert(*member_id);
+    config.blocklist.insert(user.id.into());
     config.save()?;
 
-    log::debug!("Added {} to tracking blocklist", member_id);
+    log::debug!("Added {} ({}) to tracking blocklist", user.tag(), user.id);
     Ok(())
 }

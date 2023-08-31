@@ -15,9 +15,9 @@ pub async fn run(_context: PoiseContext<'_>) -> Result<(), Error> {
 /// ⛔ Pause activity tracking on your account
 #[command(slash_command)]
 async fn pause(context: PoiseContext<'_>) -> Result<(), Error> {
-    let member_id = context.author().id.as_u64();
+    let member = context.author();
 
-    activity_tracking::deny_tracking_for(member_id)?;
+    activity_tracking::deny_tracking_for(member)?;
 
     context
         .send(|message| {
@@ -33,9 +33,9 @@ async fn pause(context: PoiseContext<'_>) -> Result<(), Error> {
 /// ⚡ Resume activity tracking on your account
 #[command(slash_command)]
 async fn resume(context: PoiseContext<'_>) -> Result<(), Error> {
-    let member_id = context.author().id.as_u64();
+    let member = context.author();
 
-    activity_tracking::allow_tracking_for(member_id)?;
+    activity_tracking::allow_tracking_for(member)?;
 
     context
         .send(|message| {

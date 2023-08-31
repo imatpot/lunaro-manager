@@ -9,7 +9,7 @@ pub async fn run(context: PoiseContext<'_>) -> Result<(), Error> {
         .send(|reply| {
             reply.content(
                 [
-                    "Swazdo-lah, surah!",
+                    "👋  Swazdo-lah, surah!",
                     "",
                     "I'm the Lunaro Manager, and my job is to help you with all things Lunaro.",
                     "",
