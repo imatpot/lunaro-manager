@@ -2,10 +2,10 @@ use poise::command;
 
 use crate::{
     types::{error::Error, poise::PoiseContext},
-    util::ready,
+    util::rtp,
 };
 
-/// 🥍 Manage your ready status
+/// 🥍 Manage your RTP status
 #[command(slash_command, rename = "rtp", subcommands("join", "leave", "check"))]
 pub async fn run(_context: PoiseContext<'_>) -> Result<(), Error> {
     // Handled in subcommands
@@ -21,7 +21,7 @@ async fn join(context: PoiseContext<'_>) -> Result<(), Error> {
         .get_member(context.guild_id().unwrap().0, context.author().id.0)
         .await?;
 
-    ready::add(member, context).await?;
+    rtp::add(member, context).await?;
 
     let display_name = match &member.nick {
         Some(nick) => nick,
@@ -57,15 +57,15 @@ async fn leave(context: PoiseContext<'_>) -> Result<(), Error> {
         })
         .await?;
 
-    ready::remove(member, context).await?;
+    rtp::remove(member, context).await?;
 
     Ok(())
 }
 
-/// 👀 Check who's whipped out their Arcata
+/// 👀 Check who's equipped their Arcata
 #[command(slash_command)]
 async fn check(context: PoiseContext<'_>) -> Result<(), Error> {
-    let ready_member_count = ready::count(context).await?;
+    let ready_member_count = rtp::count(context).await?;
 
     let verb = match ready_member_count {
         1 => "is",

@@ -41,7 +41,7 @@ impl ConfigFile for Config {
 }
 
 /// Remove a user from the tracking blocklist, if present.
-pub fn allow_tracking_for(user: &User) -> Result<(), Error> {
+pub fn allow_for(user: &User) -> Result<(), Error> {
     let mut config = Config::load()?;
 
     config.blocklist.retain(|id| *id != user.id.0);
@@ -56,7 +56,7 @@ pub fn allow_tracking_for(user: &User) -> Result<(), Error> {
 }
 
 /// Add a user to the tracking blocklist.
-pub fn deny_tracking_for(user: &User) -> Result<(), Error> {
+pub fn deny_for(user: &User) -> Result<(), Error> {
     let mut config = Config::load()?;
 
     config.blocklist.insert(user.id.into());

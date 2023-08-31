@@ -17,7 +17,7 @@ pub async fn run(_context: PoiseContext<'_>) -> Result<(), Error> {
 async fn pause(context: PoiseContext<'_>) -> Result<(), Error> {
     let member = context.author();
 
-    activity_tracking::deny_tracking_for(member)?;
+    activity_tracking::deny_for(member)?;
 
     context
         .send(|message| {
@@ -35,7 +35,7 @@ async fn pause(context: PoiseContext<'_>) -> Result<(), Error> {
 async fn resume(context: PoiseContext<'_>) -> Result<(), Error> {
     let member = context.author();
 
-    activity_tracking::allow_tracking_for(member)?;
+    activity_tracking::allow_for(member)?;
 
     context
         .send(|message| {
