@@ -8,7 +8,7 @@ use crate::{
 
 /// Handles the presence update event.
 pub async fn handle(context: Context, presence: Presence) {
-    let env = Environment::load().unwrap();
+    let env = Environment::instance();
     let tracking_config = activity_tracking::Config::load().unwrap();
 
     if tracking_config.blocklist.contains(&presence.user.id.0) {

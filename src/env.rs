@@ -1,12 +1,14 @@
-use std::env;
+use std::{env, sync::OnceLock};
 
 use dotenv::dotenv;
 use regex::Regex;
 
 use crate::{errors::env::EnvironmentError, types::error::Error};
 
+static ENV: OnceLock<Environment> = OnceLock::new();
+
 /// Contains read & validated environment variables.
-#[derive(Debug)]
+#[derive(Default, Debug)]
 pub struct Environment {
     /// The bot's Discord user ID.
     pub client_id: u64,
@@ -22,10 +24,15 @@ pub struct Environment {
 }
 
 impl Environment {
+    /// Returns a reference to the `Environment` singleton.
+    pub fn instance() -> &'static Environment {
+        ENV.get_or_init(|| Environment::load().unwrap_or_default())
+    }
+
     /// Fetches and validates required environment variables and returns them in
     /// an `Environment` struct.
-    pub fn load() -> Result<Environment, Error> {
-        dotenv().ok();
+    fn load() -> Result<Environment, Error> {
+        dotenv()?;
 
         Ok(Environment {
             client_id: get_client_id()?,

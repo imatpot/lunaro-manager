@@ -9,7 +9,6 @@ mod util;
 use std::panic;
 use std::time::Duration;
 
-use futures::executor::block_on;
 use poise::serenity_prelude::{
     Activity, ButtonStyle, Context, CreateActionRow, CreateButton, GatewayIntents, Ready,
 };
@@ -28,19 +27,14 @@ async fn main() {
 
     let default_panic = panic::take_hook();
 
+    log::debug!("Setting up panic hook");
     panic::set_hook(Box::new(move |info| {
-        log::error!("Bot shut down unexpectedly due to panic: {info}");
+        log::error!("Bot shut down unexpectedly: {info}");
         default_panic(info);
     }));
 
     log::debug!("Loading environment");
-    let env = match Environment::load() {
-        Ok(env) => env,
-        Err(error) => {
-            log::error!("Failed to load environment: {error}");
-            return;
-        }
-    };
+    let env = Environment::instance();
 
     log::debug!("Setting up");
 
@@ -60,7 +54,7 @@ async fn main() {
     };
 
     let framework = Framework::builder()
-        .token(env.client_token)
+        .token(&env.client_token)
         .options(framework_options)
         .intents(GatewayIntents::GUILD_MEMBERS | GatewayIntents::GUILD_PRESENCES)
         .client_settings(|client| client.raw_event_handler(EventHandlers))

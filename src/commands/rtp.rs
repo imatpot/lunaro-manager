@@ -16,7 +16,7 @@ pub async fn run(_context: PoiseContext<'_>) -> Result<(), Error> {
 /// 🟢 Equip your Arcata
 #[command(slash_command)]
 async fn join(context: PoiseContext<'_>) -> Result<(), Error> {
-    let env = Environment::load()?;
+    let env = Environment::instance();
 
     let member = &mut context
         .serenity_context()
@@ -41,7 +41,7 @@ async fn join(context: PoiseContext<'_>) -> Result<(), Error> {
 /// ⭕ Unequip your Arcata
 #[command(slash_command)]
 async fn leave(context: PoiseContext<'_>) -> Result<(), Error> {
-    let env = Environment::load()?;
+    let env = Environment::instance();
 
     let member = &mut context
         .serenity_context()
