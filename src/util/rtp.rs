@@ -1,17 +1,13 @@
-use poise::serenity_prelude::Member;
+use poise::serenity_prelude::{Context, Member};
 
-use crate::{
-    env::Environment,
-    types::{error::Error, poise::PoiseContext},
-};
+use crate::{env::Environment, types::error::Error};
 
-pub async fn count(context: PoiseContext<'_>) -> Result<i32, Error> {
-    let ready_role_id = Environment::load()?.ready_role_id;
+pub async fn count(context: &Context) -> Result<i32, Error> {
+    let env = Environment::load()?;
 
     let members = context
-        .serenity_context()
         .http
-        .get_guild_members(context.guild_id().unwrap().0, None, None)
+        .get_guild_members(env.home_guild_id, None, None)
         .await?;
 
     let ready_member_count = members
@@ -20,7 +16,7 @@ pub async fn count(context: PoiseContext<'_>) -> Result<i32, Error> {
             member
                 .roles
                 .iter()
-                .any(|role_id| role_id.0 == ready_role_id)
+                .any(|role_id| role_id.0 == env.ready_role_id)
         })
         .fold(0, |acc, _| acc + 1);
 
@@ -28,7 +24,7 @@ pub async fn count(context: PoiseContext<'_>) -> Result<i32, Error> {
 }
 
 /// Add the ready role to a member.
-pub async fn add(member: &mut Member, context: PoiseContext<'_>) -> Result<(), Error> {
+pub async fn add(member: &mut Member, context: &Context) -> Result<(), Error> {
     member
         .add_role(context, Environment::load()?.ready_role_id)
         .await?;
@@ -39,7 +35,7 @@ pub async fn add(member: &mut Member, context: PoiseContext<'_>) -> Result<(), E
 }
 
 /// Remove the ready role from a member.
-pub async fn remove(member: &mut Member, context: PoiseContext<'_>) -> Result<(), Error> {
+pub async fn remove(member: &mut Member, context: &Context) -> Result<(), Error> {
     member
         .remove_role(context, Environment::load()?.ready_role_id)
         .await?;

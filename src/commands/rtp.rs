@@ -1,6 +1,7 @@
 use poise::command;
 
 use crate::{
+    env::Environment,
     types::{error::Error, poise::PoiseContext},
     util::rtp,
 };
@@ -15,13 +16,15 @@ pub async fn run(_context: PoiseContext<'_>) -> Result<(), Error> {
 /// 🟢 Equip your Arcata
 #[command(slash_command)]
 async fn join(context: PoiseContext<'_>) -> Result<(), Error> {
+    let env = Environment::load()?;
+
     let member = &mut context
         .serenity_context()
         .http
-        .get_member(context.guild_id().unwrap().0, context.author().id.0)
+        .get_member(env.home_guild_id, context.author().id.0)
         .await?;
 
-    rtp::add(member, context).await?;
+    rtp::add(member, context.serenity_context()).await?;
 
     let display_name = match &member.nick {
         Some(nick) => nick,
@@ -38,10 +41,12 @@ async fn join(context: PoiseContext<'_>) -> Result<(), Error> {
 /// ⭕ Unequip your Arcata
 #[command(slash_command)]
 async fn leave(context: PoiseContext<'_>) -> Result<(), Error> {
+    let env = Environment::load()?;
+
     let member = &mut context
         .serenity_context()
         .http
-        .get_member(context.guild_id().unwrap().0, context.author().id.0)
+        .get_member(env.home_guild_id, context.author().id.0)
         .await?;
 
     let display_name = match &member.nick {
@@ -57,7 +62,7 @@ async fn leave(context: PoiseContext<'_>) -> Result<(), Error> {
         })
         .await?;
 
-    rtp::remove(member, context).await?;
+    rtp::remove(member, context.serenity_context()).await?;
 
     Ok(())
 }
@@ -65,7 +70,7 @@ async fn leave(context: PoiseContext<'_>) -> Result<(), Error> {
 /// 👀 Check who's equipped their Arcata
 #[command(slash_command)]
 async fn check(context: PoiseContext<'_>) -> Result<(), Error> {
-    let ready_member_count = rtp::count(context).await?;
+    let ready_member_count = rtp::count(context.serenity_context()).await?;
 
     let verb = match ready_member_count {
         1 => "is",
