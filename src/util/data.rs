@@ -34,7 +34,7 @@ fn read_file(path: &str) -> std::io::Result<String> {
 pub fn write_config<T: Serialize>(file_name: &str, config: &T) -> Result<(), Error> {
     let content = serde_json::to_string_pretty(config)?;
 
-    match write_file(&file_name, &content) {
+    match write_file(file_name, &content) {
         Ok(_) => Ok(()),
         Err(error) => Err(error.into()),
     }
@@ -42,7 +42,7 @@ pub fn write_config<T: Serialize>(file_name: &str, config: &T) -> Result<(), Err
 
 /// Read a configuration from a configuration file in the data directory.
 pub fn read_config<T: DeserializeOwned>(file_name: &str) -> Result<T, Error> {
-    match read_file(&file_name) {
+    match read_file(file_name) {
         Ok(content) => {
             let config: T = serde_json::from_str(&content)?;
             Ok(config)
