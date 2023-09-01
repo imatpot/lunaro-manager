@@ -12,11 +12,9 @@ pub async fn handle(context: Context, presence: &Presence) -> Result<(), Error> 
     let env = Environment::instance();
     let tracking_config = activity_tracking::Config::instance().await;
 
-    if tracking_config.blocklist.contains(&presence.user.id.0) {
+    if tracking_config.is_blocked(presence.user.id.0) {
         return Ok(());
     }
-
-    drop(tracking_config);
 
     let member = &mut context
         .http
@@ -28,8 +26,7 @@ pub async fn handle(context: Context, presence: &Presence) -> Result<(), Error> 
         .has_role(&context, env.home_guild_id, env.ready_role_id)
         .await?;
 
-    let is_playing_lunaro =
-        activity_tracking::is_playing_lunaro(presence).is_ok_and(|value| value);
+    let is_playing_lunaro = activity_tracking::is_playing_lunaro(presence).is_ok_and(|value| value);
 
     if is_playing_lunaro && !is_ready {
         rtp::add(member, &context).await?;

@@ -16,7 +16,26 @@ const CONFIG_FILE: &str = "activity_tracking.json";
 #[derive(Serialize, Deserialize, Default, Debug)]
 pub struct Config {
     /// List of user IDs to ignore activity updates from.
-    pub blocklist: HashSet<u64>,
+    blocklist: HashSet<u64>,
+}
+
+impl Config {
+    /// Check if a user is on the tracking blocklist.
+    pub fn is_blocked(&self, user_id: u64) -> bool {
+        self.blocklist.contains(&user_id)
+    }
+
+    /// Add a user to the tracking blocklist.
+    fn add_to_blocklist(&mut self, user_id: u64) -> Result<(), Error> {
+        self.blocklist.insert(user_id);
+        self.save()
+    }
+
+    /// Remove a user from the tracking blocklist.
+    fn remove_from_blocklist(&mut self, user_id: u64) -> Result<(), Error> {
+        self.blocklist.remove(&user_id);
+        self.save()
+    }
 }
 
 #[async_trait]
@@ -51,10 +70,7 @@ impl ConfigFile for Config {
 pub async fn allow_for(user: &User) -> Result<(), Error> {
     let mut config = Config::instance().await;
 
-    config.blocklist.retain(|id| *id != user.id.0);
-    config.save()?;
-
-    drop(config);
+    config.remove_from_blocklist(user.id.0)?;
 
     log::debug!(
         "Removed {} ({}) from tracking blocklist",
@@ -69,10 +85,7 @@ pub async fn allow_for(user: &User) -> Result<(), Error> {
 pub async fn deny_for(user: &User) -> Result<(), Error> {
     let mut config = Config::instance().await;
 
-    config.blocklist.insert(user.id.into());
-    config.save()?;
-
-    drop(config);
+    config.add_to_blocklist(user.id.0)?;
 
     log::debug!("Added {} ({}) to tracking blocklist", user.tag(), user.id);
     Ok(())
