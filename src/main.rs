@@ -101,7 +101,7 @@ async fn on_framework_error(framework_error: FrameworkError<'_, (), Error>) {
         },
 
         error => {
-            log::error!("Framework error: {error:?}: {error}");
+            log::warn!("Framework error: {error:?}: {error}");
         }
     }
 }
