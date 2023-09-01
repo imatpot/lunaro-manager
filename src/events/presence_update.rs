@@ -29,7 +29,7 @@ pub async fn handle(context: Context, presence: &Presence) -> Result<(), Error> 
         .await?;
 
     let is_playing_lunaro =
-        activity_tracking::is_playing_lunaro(&presence).is_ok_and(|value| value);
+        activity_tracking::is_playing_lunaro(presence).is_ok_and(|value| value);
 
     if is_playing_lunaro && !is_ready {
         rtp::add(member, &context).await?;
