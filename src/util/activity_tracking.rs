@@ -1,5 +1,10 @@
-use std::collections::HashSet;
+use std::{
+    collections::HashSet,
+    sync::{OnceLock, RwLock, RwLockReadGuard, RwLockWriteGuard},
+};
 
+use async_trait::async_trait;
+use futures::lock::{Mutex, MutexGuard};
 use poise::serenity_prelude::{Presence, User};
 use serde::{Deserialize, Serialize};
 
@@ -7,25 +12,24 @@ use crate::{errors::data::DataError, traits::config_file::ConfigFile, types::err
 
 use super::data;
 
+static CONFIG: OnceLock<Mutex<Config>> = OnceLock::new();
 const CONFIG_FILE: &str = "activity_tracking.json";
 
 /// Configures the activity tracker's behaviour.
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Default, Debug)]
 pub struct Config {
     /// List of user IDs to ignore activity updates from.
     pub blocklist: HashSet<u64>,
 }
 
+#[async_trait]
 impl ConfigFile for Config {
-    /// Load the config from the config file.
     fn load() -> Result<Box<Self>, Error> {
         match data::read_config(CONFIG_FILE) {
             Ok(config) => Ok(config),
             Err(error) => match error.downcast_ref::<DataError>() {
                 Some(DataError::MissingConfigFile(_)) => {
-                    let config = Config {
-                        blocklist: HashSet::new(),
-                    };
+                    let config = Config::default();
                     config.save()?;
                     Ok(config.into())
                 }
@@ -34,33 +38,44 @@ impl ConfigFile for Config {
         }
     }
 
-    /// Save the config to the config file.
     fn save(&self) -> Result<(), Error> {
         data::write_config(CONFIG_FILE, self)
+    }
+
+    async fn instance<'a>() -> MutexGuard<'a, Self> {
+        CONFIG
+            .get_or_init(|| Mutex::new(*Config::load().unwrap_or_default()))
+            .lock()
+            .await
     }
 }
 
 /// Remove a user from the tracking blocklist, if present.
-pub fn allow_for(user: &User) -> Result<(), Error> {
-    let mut config = Config::load()?;
+pub async fn allow_for(user: &User) -> Result<(), Error> {
+    let mut config = Config::instance().await;
 
     config.blocklist.retain(|id| *id != user.id.0);
     config.save()?;
+
+    drop(config);
 
     log::debug!(
         "Removed {} ({}) from tracking blocklist",
         user.tag(),
         user.id
     );
+
     Ok(())
 }
 
 /// Add a user to the tracking blocklist.
-pub fn deny_for(user: &User) -> Result<(), Error> {
-    let mut config = Config::load()?;
+pub async fn deny_for(user: &User) -> Result<(), Error> {
+    let mut config = Config::instance().await;
 
     config.blocklist.insert(user.id.into());
     config.save()?;
+
+    drop(config);
 
     log::debug!("Added {} ({}) to tracking blocklist", user.tag(), user.id);
     Ok(())

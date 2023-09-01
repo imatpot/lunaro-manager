@@ -4,6 +4,7 @@ version = "2.0.0"
 edition = "2021"
 
 [dependencies]
+async-trait = "0.1.73"
 chrono = "0.4.26"
 dotenv = "0.15.0"
 futures = "0.3.28"
