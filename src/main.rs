@@ -21,19 +21,18 @@ use crate::env::Environment;
 use crate::events::EventHandlers;
 use crate::types::poise::PoiseContext;
 
+/// Initialize & start the bot.
 #[tokio::main]
 async fn main() {
     log4rs::init_file("log4rs.yaml", Default::default()).unwrap();
 
-    // Catch panics and log them
-    match panic::catch_unwind(|| block_on(run())) {
-        Ok(_) => log::info!("Bot shut down gracefully"),
-        Err(_) => log::error!("Bot shut down unexpectedly"),
-    }
-}
+    let default_panic = panic::take_hook();
 
-/// Initialize & start the bot.
-async fn run() {
+    panic::set_hook(Box::new(move |info| {
+        log::error!("Bot shut down unexpectedly due to panic: {info}");
+        default_panic(info);
+    }));
+
     log::debug!("Loading environment");
     let env = match Environment::load() {
         Ok(env) => env,
@@ -106,7 +105,10 @@ async fn on_framework_error(framework_error: FrameworkError<'_, (), Error>) {
             Some(payload) => log_error(&payload, ctx).await,
             None => log_error("Generic panic", ctx).await,
         },
-        _ => {}
+
+        error => {
+            log::error!("Framework error: {error:?}: {error}");
+        }
     }
 }
 
