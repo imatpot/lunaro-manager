@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 
-use poise::serenity_prelude::User;
+use poise::serenity_prelude::{Presence, User};
 use serde::{Deserialize, Serialize};
 
 use crate::{errors::data::DataError, traits::config_file::ConfigFile, types::error::Error};
@@ -64,4 +64,27 @@ pub fn deny_for(user: &User) -> Result<(), Error> {
 
     log::debug!("Added {} ({}) to tracking blocklist", user.tag(), user.id);
     Ok(())
+}
+
+/// Check if a presence update includes Lunaro activity.
+pub fn is_playing_lunaro(presence: &Presence) -> Result<bool, Error> {
+    let localized_lunaro = ["lunaro", "лунаро", "루나로"];
+
+    let is_lunaro = presence.activities.iter().any(|activity| {
+        if let Some(mission) = &activity.details {
+            activity.name.to_lowercase() == "warframe"
+                && localized_lunaro.contains(&mission.to_lowercase().as_ref())
+        } else {
+            false
+        }
+    });
+
+    // https://github.com/kozabrada123/PyLunaroRPC
+    // https://github.com/imatpot/lunaro-manager/pull/1
+    let is_py_lunaro_rpc = presence
+        .activities
+        .iter()
+        .any(|activity| activity.name.to_lowercase() == "warframe: lunaro");
+
+    Ok(is_lunaro || is_py_lunaro_rpc)
 }
