@@ -1,6 +1,6 @@
 FROM rust
 
-WORKDIR /app
+WORKDIR /mnt/app
 COPY . .
 
 RUN cargo install --path .

@@ -6,5 +6,11 @@ services:
     container_name: lunaro-manager
     restart: unless-stopped
     build: .
+    volumes:
+      - "./data:/mnt/app/data"
+      - "./log:/mnt/app/log"
     environment:
-      LOREM: ${LOREM:-ipsum}
+      CLIENT_ID: ${CLIENT_ID:-example}
+      CLIENT_TOKEN: ${CLIENT_TOKEN:-example}
+      HOME_GUILD_ID: ${HOME_GUILD_ID:-example}
+      READY_ROLE_ID: ${READY_ROLE_ID:-example}
