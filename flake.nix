@@ -21,6 +21,8 @@
         overlays = [ (import rust) ];
       };
       rust-toolchain = with pkgs; [
+        openssl.dev
+        pkg-config
         (rust-bin.stable.latest.default.override {
           extensions = [ "rust-src" ];
         })
