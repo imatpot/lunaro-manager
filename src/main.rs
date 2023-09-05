@@ -9,6 +9,7 @@ mod util;
 use std::panic;
 use std::time::Duration;
 
+use chrono::Utc;
 use poise::serenity_prelude::{
     Activity, ButtonStyle, Context, CreateActionRow, CreateButton, GatewayIntents, Ready,
 };
@@ -18,7 +19,7 @@ use uuid::Uuid;
 
 use crate::env::Environment;
 use crate::events::EventHandlers;
-use crate::types::poise::PoiseContext;
+use crate::types::poise::{PoiseContext, PoiseData};
 
 /// Initialize & start the bot.
 #[tokio::main]
@@ -43,11 +44,12 @@ async fn main() {
         on_error: |error| Box::pin(on_framework_error(error)),
 
         commands: vec![
-            commands::ping::run(),
+            commands::about::run(),
             commands::contribute::run(),
             commands::help::run(),
-            commands::tracking::run(),
+            commands::ping::run(),
             commands::rtp::run(),
+            commands::tracking::run(),
         ],
 
         ..Default::default()
@@ -90,7 +92,7 @@ async fn log_invocation(context: PoiseContext<'_>) {
 }
 
 /// Create an error message according to the type of error and log it.
-async fn on_framework_error(framework_error: FrameworkError<'_, (), Error>) {
+async fn on_framework_error(framework_error: FrameworkError<'_, PoiseData, Error>) {
     match framework_error {
         FrameworkError::Command { error, ctx } => {
             log_error(&format!("{error:?}: {error}"), ctx).await;
@@ -171,8 +173,8 @@ async fn log_error(message: &str, context: PoiseContext<'_>) {
 async fn update_commands(
     ready: &Ready,
     context: &Context,
-    framework: &Framework<(), Error>,
-) -> Result<(), Error> {
+    framework: &Framework<PoiseData, Error>,
+) -> Result<PoiseData, Error> {
     log::debug!("Updating commands");
 
     if let Ok(guilds) = ready.user.guilds(&context.http).await {
@@ -190,5 +192,7 @@ async fn update_commands(
     context.online().await;
     context.set_activity(Activity::playing("Lunaro")).await;
 
-    Ok(())
+    Ok(PoiseData {
+        started_at: Utc::now(),
+    })
 }

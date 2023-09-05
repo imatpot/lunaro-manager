@@ -16,7 +16,7 @@ const CONFIG_FILE: &str = "activity_tracking.json";
 #[derive(Serialize, Deserialize, Default, Debug)]
 pub struct Config {
     /// List of user IDs to ignore activity updates from.
-    blocklist: HashSet<u64>,
+    pub blocklist: HashSet<u64>,
 }
 
 impl Config {

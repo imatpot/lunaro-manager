@@ -2,10 +2,12 @@ use std::{env, sync::OnceLock};
 
 use dotenv::dotenv;
 use regex::Regex;
+use serde::Deserialize;
 
 use crate::{errors::env::EnvironmentError, types::error::Error};
 
 static ENV: OnceLock<Environment> = OnceLock::new();
+static CARGO_LOCK_PATH: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/Cargo.lock"));
 
 /// Contains read & validated environment variables.
 #[derive(Default, Debug)]
@@ -21,6 +23,36 @@ pub struct Environment {
 
     /// The role ID of the role to be given to users playing Lunaro.
     pub ready_role_id: u64,
+
+    /// The bot's Cargo package information.
+    pub cargo: Cargo,
+}
+
+/// Contains the bot's Cargo package information.
+#[derive(Default, Deserialize, Debug)]
+pub struct Cargo {
+    /// List of packages contained in the binary.
+    package: Vec<Package>,
+}
+
+impl Cargo {
+    /// Returns a reference to the `Package` with the given `name`.
+    pub fn get(&self, name: &str) -> Option<&Package> {
+        match &self.package.iter().find(|p| p.name == name) {
+            Some(pkg) => Some(pkg),
+            None => None,
+        }
+    }
+}
+
+/// Contains information about a Cargo package.
+#[derive(Default, Deserialize, Debug)]
+pub struct Package {
+    /// The name of the package.
+    pub name: String,
+
+    /// The version of the package. Usually follows Semantic Versioning.
+    pub version: String,
 }
 
 impl Environment {
@@ -39,6 +71,7 @@ impl Environment {
             client_token: get_client_token()?,
             home_guild_id: get_home_guild_id()?,
             ready_role_id: get_ready_role_id()?,
+            cargo: get_cargo()?,
         })
     }
 }
@@ -102,4 +135,10 @@ fn get_ready_role_id() -> Result<u64, Error> {
     let ready_role_id_string = read_variable(env_name)?;
 
     parse_id(&ready_role_id_string, env_name)
+}
+
+/// Fetches and validates the Cargo package information.
+fn get_cargo() -> Result<Cargo, Error> {
+    let cargo: Cargo = toml::from_str(CARGO_LOCK_PATH)?;
+    Ok(cargo)
 }
