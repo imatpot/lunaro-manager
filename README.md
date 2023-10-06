@@ -12,8 +12,8 @@
 </p>
 
 <p align="center">
-  <a href="https://deno.land" style="text-decoration: none">
-    <img src="https://img.shields.io/badge/built%20with-deno-black?logo=deno&style=flat-square">
+  <a href="https://rust-lang.org" style="text-decoration: none">
+    <img src="https://img.shields.io/badge/built%20with-Rust-orange?logo=rust&style=flat-square">
   </a>
   <a href="LICENSE.md" style="text-decoration: none">
     <img src="https://img.shields.io/github/license/imatpot/lunaro-manager?color=blue&style=flat-square">
@@ -27,7 +27,7 @@
 This bot is readily available in the [Lunaro Revival Discord Server](https://discord.gg/mUjGHEw).
 
 <a href="https://discord.gg/mUjGHEw" style="text-decoration: none">
-  <img src="https://img.shields.io/badge/join-Lunaro%20Revival%20Server-%237289da?logo=discord&style=flat-square">
+  <img src="https://img.shields.io/badge/Join-Lunaro%20Revival%20Server-%237289da?logo=discord&style=flat-square">
 </a>
 
 <br />
@@ -39,7 +39,7 @@ https://discord.com/api/oauth2/authorize?permissions=277293894656&scope=bot%20ap
 while inserting your client ID and keeping the scopes. Remember that the bot is
 designed to *only be active in 1 server at a time.*
 
-Please also make sure the bot's personal role is ranked *above* the managed RTP role!
+Please also make sure the bot's personal role is ranked *above* the managed ready role!
 
 ---
 
@@ -60,59 +60,30 @@ value is calculated from the system time, and may thus be inaccurate.
 
 ### `🟢 /rtp join`
 
-Adds the configured RTP role to your profile.
+Adds the configured ready role to your profile.
 
 ### `⭕ /rtp leave`
 
-Removes the configured RTP role from your profile.
+Removes the configured ready role from your profile.
 
-### `👀 /rtp info`
+### `👀 /rtp check`
 
-Lists the number of members with the RTP role.
+Lists the number of members with the ready role.
 
 ### `⛔ /tracking pause`
 
 Disables activity tracking for your account. This is useful because the activity
-tracker will otherwise override your manually set RTP status.
-
-### `⚡ /tracking resume`
-
-Resumes activity tracking for your account.
-
-### `🏅 /ranked view`
-
-Displays the ranking data of a specific player.
-
-### `🏆 /ranked top`
-
-Displays a certain number of top-ranked players.
-
-### `✍ /ranked register`
-
-Signs you up to the ranking system.
-
-### `🥍 /ranked submit`
-
-Lets you submit a ranked match. Requires approval from the opponent.
+tracker will otherwise override your manually set ready status.
 
 ### `💡 /about`
 
-Displays details about Lunaro Manager, including
-
-- Number of members whose activity is being tracked
-- Deno, TypeScript and discordeno versions
-- Time of last update (based on last commit to `main` branch)
-- Current uptime
+Displays details about Lunaro Manager, including amount of actively tracked
+members as well as stats and metadata about the bot.
 
 ### `🤝 /contribute`
 
 Displays a link to this GitHub page, encouraging the creation of issues and
 pull requests.
-
-### `🔎 /config`
-
-Allows you to change runtime settings of the bot.
-*This is intended to be admin-only, so configure the server permissions accordingly.*
 
 ---
 
@@ -130,19 +101,35 @@ Allows you to change runtime settings of the bot.
 
 ### Run locally
 
-You need to have [Deno](https://deno.land) installed. Cache the dependencies to
-make compilation faster later on.
+You need to have [Rust](https://rust-lang.org) installed.
 
 ```sh
-$ deno cache src/**/*.ts   # deno task does not currently support globs
-$ deno task start
+$ cargo run
 ```
 
-During development, installing [`denon`](https://deno.land/x/denon) is highly
-recommended for convenience.
+### Run using Nix
+
+If you have the [Nix](https://nixos.org) package manager installed, and enabled
+[Flakes](https://nixos.wiki/wiki/Flakes), you have several ways to build and run
+this bot.
+
+As a reminder:
+
+- `nix build` builds the package binary
+- `nix run` builds the package binary and immediately executes it
+- `nix shell` builds the package binary and makes it available in your shell
+
+I will use `nix run` as the example, but you can use any of the above.
 
 ```sh
-$ deno task start:watch
+# run from local repository. make sure Cargo.lock is available!
+$ nix run
+
+# run latest using remote repository
+$ nix run github:imatpot/lunaro-manager
+
+# run specific version using remote repository
+$ nix run github:imatpot/lunaro-manager/2.0.0
 ```
 
 ### Run in Docker
