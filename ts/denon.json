@@ -1,6 +1,0 @@
-{
-  "watcher": {
-    "legacy": true,
-    "exts": ["ts"]
-  }
-}
