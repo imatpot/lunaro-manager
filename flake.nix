@@ -20,17 +20,33 @@
         inherit system;
         overlays = [ (import rust) ];
       };
-      rust-toolchain = with pkgs; [
+      ssl-toolchain = with pkgs; [
         openssl.dev
         pkg-config
+      ];
+      rust-toolchain = with pkgs; [
         (rust-bin.stable.latest.default.override {
           extensions = [ "rust-src" ];
         })
       ];
+      cargoToml = builtins.fromTOML (builtins.readFile ./Cargo.toml);
     in
     with pkgs; {
+      packages.default = rustPlatform.buildRustPackage {
+        inherit (cargoToml.package) name version;
+
+        src = ./.;
+        cargoLock.lockFile = ./Cargo.lock;
+
+        # https://github.com/sfackler/rust-openssl/issues/1663#issuecomment-1541050597
+        nativeBuildInputs = lib.optionals stdenv.isLinux [ pkg-config ];
+        buildInputs = lib.optionals stdenv.isLinux [ openssl openssl.dev ];
+        OPENSSL_NO_VENDOR = 1;
+      };
+
       devShells.default = mkShell {
-        buildInputs = rust-toolchain;
+        name = "${cargoToml.package.name}-${cargoToml.package.version}";
+        buildInputs = rust-toolchain ++ ssl-toolchain;
         shellHook = ''
           echo
           echo "The near Moon eclipses the far Sun."
