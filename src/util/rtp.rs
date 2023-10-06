@@ -2,6 +2,7 @@ use poise::serenity_prelude::{Context, Member};
 
 use crate::{env::Environment, types::error::Error};
 
+/// Count how many members have the ready role.
 pub async fn count(context: &Context) -> Result<i32, Error> {
     let env = Environment::instance();
 

@@ -21,7 +21,7 @@ use crate::env::Environment;
 use crate::events::EventHandlers;
 use crate::types::poise::{PoiseContext, PoiseData};
 
-/// Initialize & start the bot.
+/// Entry point. Initializes the logger & environment, then runs the bot.
 #[tokio::main]
 async fn main() {
     log4rs::init_file("log4rs.yaml", Default::default()).unwrap();
@@ -70,7 +70,7 @@ async fn main() {
     }
 }
 
-/// Log a command's invocation.
+/// Logs command invocations.
 async fn log_invocation(context: PoiseContext<'_>) {
     let author = &context.author().tag();
     let guild = &context.partial_guild().await.unwrap().name;
@@ -91,9 +91,9 @@ async fn log_invocation(context: PoiseContext<'_>) {
     log::info!("{author} ran [{command}] in {guild}");
 }
 
-/// Create an error message according to the type of error and log it.
-async fn on_framework_error(framework_error: FrameworkError<'_, PoiseData, Error>) {
-    match framework_error {
+/// Handles framework errors according to their severity.
+async fn on_framework_error(error: FrameworkError<'_, PoiseData, Error>) {
+    match error {
         FrameworkError::Command { error, ctx } => {
             log_error(&format!("{error:?}: {error}"), ctx).await;
         }
@@ -108,8 +108,7 @@ async fn on_framework_error(framework_error: FrameworkError<'_, PoiseData, Error
     }
 }
 
-/// Log an error and reply with a generic response and a button to show the
-/// debug trace.
+/// Logs the error and notifies the affected guild.
 async fn log_error(message: &str, context: PoiseContext<'_>) {
     let user = &context.author().tag();
     let command = &context.command().name;
@@ -119,6 +118,12 @@ async fn log_error(message: &str, context: PoiseContext<'_>) {
 
     log::error!("{user} ran [{command}] in {guild} and got an error: {message} ({trace_id})",);
 
+    send_error_to_chat(message, trace_id, context).await;
+}
+
+/// Sends the error message to the affected guild and offers to show the ID of
+/// the error trace for debugging and error reporting.
+async fn send_error_to_chat(message: &str, trace_id: Uuid, context: PoiseContext<'_>) {
     let error_message = "❌  An error occurred while running this command";
     let traced_error_message = format!("{error_message}\n🔍  `{trace_id}`\n\n```{message}```");
 
@@ -151,7 +156,7 @@ async fn log_error(message: &str, context: PoiseContext<'_>) {
         .await
     {
         Some(_) => {
-            // Updates the message & removes the button
+            // Updates the message & removes the trace button if clicked
             response
                 .edit(context, |msg| {
                     msg.content(traced_error_message).components(|c| c)
@@ -160,7 +165,7 @@ async fn log_error(message: &str, context: PoiseContext<'_>) {
                 .unwrap();
         }
         None => {
-            // Removes the button
+            // Removes the trace button if 60 seconds passed
             response
                 .edit(context, |msg| msg.components(|c| c))
                 .await
@@ -169,7 +174,7 @@ async fn log_error(message: &str, context: PoiseContext<'_>) {
     };
 }
 
-/// Update the bot's slash commands.
+/// Updates the slash commands for all guilds the bot is a member of.
 async fn update_commands(
     ready: &Ready,
     context: &Context,

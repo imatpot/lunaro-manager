@@ -9,16 +9,24 @@ use crate::{
     util::activity_tracking,
 };
 
+/// Commit data from GitHub's API.
 #[derive(Deserialize)]
 struct GitHubCommit {
+    /// The actual commit.
     commit: Commit,
 }
+
+/// A Git commit.
 #[derive(Deserialize)]
 struct Commit {
+    /// The commit's author.
     committer: Committer,
 }
+
+/// Git commit author information.
 #[derive(Deserialize)]
 struct Committer {
+    /// The timestamp at which the commit was made.
     date: DateTime<Utc>,
 }
 
