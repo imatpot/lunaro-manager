@@ -13,4 +13,4 @@ services:
       CLIENT_ID: ${CLIENT_ID:-example}
       CLIENT_TOKEN: ${CLIENT_TOKEN:-example}
       HOME_GUILD_ID: ${HOME_GUILD_ID:-example}
-      READY_ROLE_ID: ${READY_ROLE_ID:-example}
+      PLAYING_ROLE_ID: ${PLAYING_ROLE_ID:-example}

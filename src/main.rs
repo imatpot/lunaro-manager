@@ -49,7 +49,7 @@ async fn main() {
             commands::contribute::run(),
             commands::help::run(),
             commands::ping::run(),
-            commands::rtp::run(),
+            commands::play::run(),
             commands::tracking::run(),
         ],
 

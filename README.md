@@ -39,7 +39,7 @@ https://discord.com/api/oauth2/authorize?permissions=277293894656&scope=bot%20ap
 while inserting your client ID and keeping the scopes. Remember that the bot is
 designed to *only be active in 1 server at a time.*
 
-Please also make sure the bot's personal role is ranked *above* the managed ready role!
+Please also make sure the bot's personal role is ranked *above* the managed playing role!
 
 ---
 
@@ -58,22 +58,22 @@ to this GitHub section.
 Check if Lunaro Manager is online and how long it took to receive the ping. This
 value is calculated from the system time, and may thus be inaccurate.
 
-### `🟢 /rtp join`
+### `🟢 /play now`
 
-Adds the configured ready role to your profile.
+Adds the configured playing role to your profile.
 
-### `⭕ /rtp leave`
+### `⭕ /play later`
 
-Removes the configured ready role from your profile.
+Removes the configured playing role from your profile.
 
-### `👀 /rtp check`
+### `👀 /play info`
 
-Lists the number of members with the ready role.
+Lists the number of members with the playing role.
 
 ### `⛔ /tracking pause`
 
 Disables activity tracking for your account. This is useful because the activity
-tracker will otherwise override your manually set ready status.
+tracker will otherwise override your manually set playing status.
 
 ### `💡 /about`
 

@@ -25,7 +25,7 @@ pub struct Environment {
     pub home_guild_id: GuildId,
 
     /// The role ID of the role to be given to users playing Lunaro.
-    pub ready_role_id: RoleId,
+    pub playing_role_id: RoleId,
 
     /// The bot's Cargo package information.
     pub cargo: Cargo,
@@ -73,7 +73,7 @@ impl Environment {
             client_id: get_client_id()?.into(),
             client_token: get_client_token()?,
             home_guild_id: get_home_guild_id()?.into(),
-            ready_role_id: get_ready_role_id()?.into(),
+            playing_role_id: get_playing_role_id()?.into(),
             cargo: get_cargo()?,
         })
     }
@@ -132,12 +132,12 @@ fn get_home_guild_id() -> Result<u64, Error> {
     parse_id(&home_guild_id_string, env_name)
 }
 
-/// Fetches and validates the ready role ID environment variable.
-fn get_ready_role_id() -> Result<u64, Error> {
-    let env_name = "READY_ROLE_ID";
-    let ready_role_id_string = read_variable(env_name)?;
+/// Fetches and validates the playing role ID environment variable.
+fn get_playing_role_id() -> Result<u64, Error> {
+    let env_name = "PLAYING_ROLE_ID";
+    let playing_role_id_string = read_variable(env_name)?;
 
-    parse_id(&ready_role_id_string, env_name)
+    parse_id(&playing_role_id_string, env_name)
 }
 
 /// Fetches and validates the Cargo package information.
