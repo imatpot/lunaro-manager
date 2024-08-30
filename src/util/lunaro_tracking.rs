@@ -10,12 +10,12 @@ use crate::{errors::data::DataError, traits::config_file::ConfigFile, types::err
 use super::data;
 
 static CONFIG: OnceLock<Mutex<Config>> = OnceLock::new();
-const CONFIG_FILE: &str = "activity_tracking.json";
+const CONFIG_FILE: &str = "lunaro_tracking.json";
 
-/// Configures the activity tracker's behaviour.
+/// Configures the Lunaro tracker's behaviour.
 #[derive(Serialize, Deserialize, Default, Debug)]
 pub struct Config {
-    /// List of user IDs to ignore activity updates from.
+    /// List of user IDs to ignore Lunaro updates from.
     pub blocklist: HashSet<UserId>,
 }
 
@@ -91,7 +91,7 @@ pub async fn deny_for(user: &User) -> Result<(), Error> {
     Ok(())
 }
 
-/// Check if a presence update includes Lunaro activity.
+/// Check if a presence update includes Lunaro.
 pub fn is_playing_lunaro(presence: &Presence) -> Result<bool, Error> {
     let localized_lunaro = ["lunaro", "лунаро", "루나로"];
 

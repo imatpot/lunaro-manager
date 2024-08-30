@@ -1,3 +1,3 @@
-pub mod activity_tracking;
+pub mod lunaro_tracking;
 pub mod data;
 pub mod play;

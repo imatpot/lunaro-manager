@@ -70,10 +70,15 @@ Removes the configured playing role from your profile.
 
 Lists the number of members with the playing role.
 
-### `⛔ /tracking pause`
+### `💤 /tracking pause`
 
-Disables activity tracking for your account. This is useful because the activity
+Disables Lunaro tracking for your account. This is useful because the Lunaro
 tracker will otherwise override your manually set playing status.
+
+### `👁️ /tracking resume`
+
+Enables Lunaro tracking for your account. Now you don't have to manually set
+your playing status anymore.
 
 ### `💡 /about`
 

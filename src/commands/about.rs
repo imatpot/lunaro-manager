@@ -6,7 +6,7 @@ use crate::{
     env::Environment,
     traits::config_file::ConfigFile,
     types::{error::Error, poise::PoiseContext},
-    util::activity_tracking,
+    util::lunaro_tracking,
 };
 
 /// Commit data from GitHub's API.
@@ -38,7 +38,7 @@ struct Committer {
 pub async fn run(context: PoiseContext<'_>) -> Result<(), Error> {
     let env = Environment::instance();
 
-    let tracking_config = activity_tracking::Config::instance().await;
+    let tracking_config = lunaro_tracking::Config::instance().await;
     let member_count = context
         .partial_guild()
         .await
@@ -92,7 +92,7 @@ pub async fn run(context: PoiseContext<'_>) -> Result<(), Error> {
         .send(
             CreateReply::default().content(
                 [
-                    format!("🔎  Tracking activity of {tracked_member_count} members"),
+                    format!("🔎  Tracking Lunaro activity for {tracked_member_count} members"),
                     String::new(),
                     format!("📦  [Bot](<https://github.com/imatpot/lunaro-manager>) {bot_version}"),
                     format!("🦀  [Rust](<https://www.rust-lang.org/>) v{rustc_version}"),
