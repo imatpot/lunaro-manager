@@ -1,6 +1,7 @@
 use std::{env, sync::OnceLock};
 
 use dotenv::dotenv;
+use poise::serenity_prelude::{GuildId, RoleId, UserId};
 use regex::Regex;
 use serde::Deserialize;
 
@@ -12,17 +13,19 @@ static CARGO_LOCK_PATH: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), 
 /// Contains read & validated environment variables.
 #[derive(Default, Debug)]
 pub struct Environment {
+    #[allow(unused)]
+
     /// The bot's Discord user ID.
-    pub client_id: u64,
+    pub client_id: UserId,
 
     /// Token to connect to the Discord API.
     pub client_token: String,
 
     /// The guild ID of the guild the bot will be used in.
-    pub home_guild_id: u64,
+    pub home_guild_id: GuildId,
 
     /// The role ID of the role to be given to users playing Lunaro.
-    pub ready_role_id: u64,
+    pub ready_role_id: RoleId,
 
     /// The bot's Cargo package information.
     pub cargo: Cargo,
@@ -67,10 +70,10 @@ impl Environment {
         dotenv()?;
 
         Ok(Environment {
-            client_id: get_client_id()?,
+            client_id: get_client_id()?.into(),
             client_token: get_client_token()?,
-            home_guild_id: get_home_guild_id()?,
-            ready_role_id: get_ready_role_id()?,
+            home_guild_id: get_home_guild_id()?.into(),
+            ready_role_id: get_ready_role_id()?.into(),
             cargo: get_cargo()?,
         })
     }

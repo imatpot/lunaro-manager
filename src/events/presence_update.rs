@@ -12,13 +12,13 @@ pub async fn handle(context: Context, presence: &Presence) -> Result<(), Error> 
     let env = Environment::instance();
     let tracking_config = activity_tracking::Config::instance().await;
 
-    if tracking_config.is_blocked(presence.user.id.0) {
+    if tracking_config.is_blocked(&presence.user.id) {
         return Ok(());
     }
 
     let member = &mut context
         .http
-        .get_member(presence.guild_id.unwrap().0, presence.user.id.0)
+        .get_member(presence.guild_id.unwrap(), presence.user.id)
         .await?;
 
     let is_ready = member

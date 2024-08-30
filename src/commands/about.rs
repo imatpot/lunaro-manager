@@ -1,5 +1,5 @@
 use chrono::{DateTime, Utc};
-use poise::command;
+use poise::{command, CreateReply};
 use serde::Deserialize;
 
 use crate::{
@@ -14,6 +14,9 @@ use crate::{
 struct GitHubCommit {
     /// The actual commit.
     commit: Commit,
+
+    /// The URL to the commit on GitHub.
+    html_url: String,
 }
 
 /// A Git commit.
@@ -75,28 +78,32 @@ pub async fn run(context: PoiseContext<'_>) -> Result<(), Error> {
 
     let latest_commits: Vec<GitHubCommit> = serde_json::from_str(&latest_commit)?;
 
-    let latest_commit_date = match latest_commits.first() {
-        Some(commit) => format!("<t:{}:R>", commit.commit.committer.date.timestamp()),
-        None => "[unknown date]".to_string(),
+    let latest_commit = match latest_commits.first() {
+        Some(commit) => commit,
+        None => return Err("No commits found".into()),
     };
+
+    let commit_date = format!("<t:{}:R>", latest_commit.commit.committer.date.timestamp());
+    let commit_url = &latest_commit.html_url;
 
     let uptime = format!("<t:{}:R>", context.data().started_at.timestamp());
 
     context
-        .send(|reply| {
-            reply.content(
+        .send(
+            CreateReply::default().content(
                 [
                     format!("🔎  Tracking activity of {tracked_member_count} members"),
                     String::new(),
-                    format!("📦  Bot {bot_version}"),
-                    format!("🦀  Rust Compiler {rustc_version}"),
-                    format!("⚙️  Serenity {serenity_version} + Poise {poise_version}"),
-                    format!("🚧  Last updated {latest_commit_date}",),
-                    format!("⏱️  Instance went online {uptime}"),
+                    format!("📦  [Bot](<https://github.com/imatpot/lunaro-manager>) {bot_version}"),
+                    format!("🦀  [Rust](<https://www.rust-lang.org/>) v{rustc_version}"),
+                    format!("⚙️  [Serenity](<https://github.com/serenity-rs/serenity>) {serenity_version} / [Poise](<https://github.com/serenity-rs/poise>) {poise_version}"),
+                    format!("🚧  [Last updated](<{commit_url}>) {commit_date}",),
+                    String::new(),
+                    format!("⏱️  Started online {uptime}"),
                 ]
                 .join("\n"),
-            )
-        })
+            ),
+        )
         .await?;
 
     Ok(())

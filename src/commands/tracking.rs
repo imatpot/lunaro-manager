@@ -1,4 +1,4 @@
-use poise::command;
+use poise::{command, CreateReply};
 
 use crate::{
     types::{error::Error, poise::PoiseContext},
@@ -20,11 +20,11 @@ async fn pause(context: PoiseContext<'_>) -> Result<(), Error> {
     activity_tracking::deny_for(member).await?;
 
     context
-        .send(|message| {
-            message
-                .content("⛔ Paused activity tracking for your account")
-                .ephemeral(true)
-        })
+        .send(
+            CreateReply::default()
+                .content("⛔  Paused activity tracking for your account")
+                .ephemeral(true),
+        )
         .await?;
 
     Ok(())
@@ -38,11 +38,11 @@ async fn resume(context: PoiseContext<'_>) -> Result<(), Error> {
     activity_tracking::allow_for(member).await?;
 
     context
-        .send(|message| {
-            message
-                .content("⚡ Resumed activity tracking for your account")
-                .ephemeral(true)
-        })
+        .send(
+            CreateReply::default()
+                .content("⚡️  Resumed activity tracking for your account")
+                .ephemeral(true),
+        )
         .await?;
 
     Ok(())

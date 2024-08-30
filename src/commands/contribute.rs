@@ -1,4 +1,4 @@
-use poise::command;
+use poise::{command, CreateReply};
 
 use crate::types::{error::Error, poise::PoiseContext};
 
@@ -6,15 +6,15 @@ use crate::types::{error::Error, poise::PoiseContext};
 #[command(slash_command, rename = "contribute")]
 pub async fn run(context: PoiseContext<'_>) -> Result<(), Error> {
     context
-        .send(|reply| {
-            reply.content(
+        .send(
+            CreateReply::default().content(
                 [
                     "🤝  Feel like helping out? Create an issue or pull request on GitHub:",
                     "https://github.com/imatpot/lunaro-manager",
                 ]
                 .join("\n"),
-            )
-        })
+            ),
+        )
         .await?;
 
     Ok(())

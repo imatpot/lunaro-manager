@@ -1,4 +1,4 @@
-use poise::command;
+use poise::{command, CreateReply};
 
 use crate::{
     env::Environment,
@@ -21,7 +21,7 @@ async fn join(context: PoiseContext<'_>) -> Result<(), Error> {
     let member = &mut context
         .serenity_context()
         .http
-        .get_member(env.home_guild_id, context.author().id.0)
+        .get_member(env.home_guild_id.into(), context.author().id)
         .await?;
 
     rtp::add(member, context.serenity_context()).await?;
@@ -32,7 +32,10 @@ async fn join(context: PoiseContext<'_>) -> Result<(), Error> {
     };
 
     context
-        .send(|message| message.content(format!("🟢  {display_name} is now available for Lunaro")))
+        .send(
+            CreateReply::default()
+                .content(format!("🟢  {display_name} is now available for Lunaro")),
+        )
         .await?;
 
     Ok(())
@@ -46,7 +49,7 @@ async fn leave(context: PoiseContext<'_>) -> Result<(), Error> {
     let member = &mut context
         .serenity_context()
         .http
-        .get_member(env.home_guild_id, context.author().id.0)
+        .get_member(env.home_guild_id, context.author().id)
         .await?;
 
     let display_name = match &member.nick {
@@ -55,11 +58,9 @@ async fn leave(context: PoiseContext<'_>) -> Result<(), Error> {
     };
 
     context
-        .send(|message| {
-            message.content(format!(
-                "⭕  {display_name} is no longer available for Lunaro"
-            ))
-        })
+        .send(CreateReply::default().content(format!(
+            "⭕  {display_name} is no longer available for Lunaro"
+        )))
         .await?;
 
     rtp::remove(member, context.serenity_context()).await?;
@@ -78,11 +79,9 @@ async fn check(context: PoiseContext<'_>) -> Result<(), Error> {
     };
 
     context
-        .send(|message| {
-            message.content(format!(
-                "👀  There {verb} {ready_member_count} Tenno available for Lunaro"
-            ))
-        })
+        .send(CreateReply::default().content(format!(
+            "👀  There {verb} {ready_member_count} Tenno available for Lunaro"
+        )))
         .await?;
 
     Ok(())

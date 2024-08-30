@@ -15,10 +15,7 @@ impl RawEventHandler for EventHandlers {
         };
 
         if let Err(error) = handler {
-            log::warn!(
-                "Error while handling {:?}: {error:?}: {error}",
-                raw_event.event_type()
-            );
+            log::warn!("Error while handling {:?}: {error:?}: {error}", raw_event);
         }
     }
 }

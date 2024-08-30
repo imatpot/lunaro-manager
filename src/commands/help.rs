@@ -1,4 +1,4 @@
-use poise::command;
+use poise::{command, CreateReply};
 
 use crate::types::{error::Error, poise::PoiseContext};
 
@@ -6,8 +6,8 @@ use crate::types::{error::Error, poise::PoiseContext};
 #[command(slash_command, rename = "help")]
 pub async fn run(context: PoiseContext<'_>) -> Result<(), Error> {
     context
-        .send(|reply| {
-            reply.content(
+        .send(
+            CreateReply::default().content(
                 [
                     "👋  Swazdo-lah, surah!",
                     "",
@@ -18,7 +18,7 @@ pub async fn run(context: PoiseContext<'_>) -> Result<(), Error> {
                 ]
                 .join("\n"),
             )
-        })
+        )
         .await?;
 
     Ok(())
