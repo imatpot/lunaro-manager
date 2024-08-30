@@ -63,7 +63,8 @@ async fn main() {
 
     let intents = GatewayIntents::GUILD_PRESENCES;
 
-    let client_builder = Client::builder(&env.client_token, intents)
+    let client_builder = Client::builder(&env.client_token.trim(), intents)
+        .application_id(env.client_id)
         .framework(framework)
         .await;
 

@@ -1,7 +1,7 @@
 use std::{env, sync::OnceLock};
 
 use dotenv::dotenv;
-use poise::serenity_prelude::{GuildId, RoleId, UserId};
+use poise::serenity_prelude::{ApplicationId, GuildId, RoleId};
 use regex::Regex;
 use serde::Deserialize;
 
@@ -13,10 +13,8 @@ static CARGO_LOCK_PATH: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), 
 /// Contains read & validated environment variables.
 #[derive(Default, Debug)]
 pub struct Environment {
-    #[allow(unused)]
-
     /// The bot's Discord user ID.
-    pub client_id: UserId,
+    pub client_id: ApplicationId,
 
     /// Token to connect to the Discord API.
     pub client_token: String,
@@ -115,11 +113,6 @@ fn get_client_id() -> Result<u64, Error> {
 fn get_client_token() -> Result<String, Error> {
     let env_name = "CLIENT_TOKEN";
     let client_token = read_variable(env_name)?;
-
-    // FIXME Discord changed their tokens again, so this check no longer works
-    // if validate_token(&client_token).is_err() {
-    //     return Err(EnvironmentError::InvalidEnvironmentVariable(env_name.to_string()).into());
-    // }
 
     Ok(client_token)
 }

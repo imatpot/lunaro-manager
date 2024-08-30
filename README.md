@@ -61,10 +61,12 @@ value is calculated from the system time, and may thus be inaccurate.
 ### `🟢 /play now`
 
 Adds the configured playing role to your profile.
+You can optionally disable Lunaro tracking for your account at the same time.
 
 ### `⭕ /play later`
 
 Removes the configured playing role from your profile.
+You can optionally re-enable Lunaro tracking for your account at the same time.
 
 ### `👀 /play info`
 

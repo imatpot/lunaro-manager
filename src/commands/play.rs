@@ -3,7 +3,7 @@ use poise::{command, CreateReply};
 use crate::{
     env::Environment,
     types::{error::Error, poise::PoiseContext},
-    util::play,
+    util::{lunaro_tracking, play},
 };
 
 /// 🥍 Manage your Lunaro status
@@ -15,7 +15,12 @@ pub async fn run(_context: PoiseContext<'_>) -> Result<(), Error> {
 
 /// 🟢 Equip your Arcata
 #[command(slash_command)]
-async fn now(context: PoiseContext<'_>) -> Result<(), Error> {
+async fn now(
+    context: PoiseContext<'_>,
+    #[rename = "disable-tracking"]
+    #[description = "Whether you also want to disable Lunaro tracking for the time being"]
+    disable_lunaro_tracking: Option<bool>,
+) -> Result<(), Error> {
     let env = Environment::instance();
 
     let member = &mut context
@@ -23,6 +28,10 @@ async fn now(context: PoiseContext<'_>) -> Result<(), Error> {
         .http
         .get_member(env.home_guild_id.into(), context.author().id)
         .await?;
+
+    if let Some(true) = disable_lunaro_tracking {
+        lunaro_tracking::deny_for(&member.user).await?;
+    }
 
     play::add(member, context.serenity_context()).await?;
 
@@ -32,10 +41,7 @@ async fn now(context: PoiseContext<'_>) -> Result<(), Error> {
     };
 
     context
-        .send(
-            CreateReply::default()
-                .content(format!("🟢  {display_name} is now available for Lunaro")),
-        )
+        .send(CreateReply::default().content(format!("🟢  {display_name} is now playing Lunaro")))
         .await?;
 
     Ok(())
@@ -43,7 +49,12 @@ async fn now(context: PoiseContext<'_>) -> Result<(), Error> {
 
 /// ⭕ Unequip your Arcata
 #[command(slash_command)]
-async fn later(context: PoiseContext<'_>) -> Result<(), Error> {
+async fn later(
+    context: PoiseContext<'_>,
+    #[rename = "enable-tracking"]
+    #[description = "Whether you also want to (re-) enable Lunaro tracking again"]
+    enable_lunaro_tracking: Option<bool>,
+) -> Result<(), Error> {
     let env = Environment::instance();
 
     let member = &mut context
@@ -52,18 +63,23 @@ async fn later(context: PoiseContext<'_>) -> Result<(), Error> {
         .get_member(env.home_guild_id, context.author().id)
         .await?;
 
+    if let Some(true) = enable_lunaro_tracking {
+        lunaro_tracking::allow_for(&member.user).await?;
+    }
+
+    play::remove(member, context.serenity_context()).await?;
+
     let display_name = match &member.nick {
         Some(nick) => nick,
         None => &member.user.name,
     };
 
     context
-        .send(CreateReply::default().content(format!(
-            "⭕  {display_name} is no longer available for Lunaro"
-        )))
+        .send(
+            CreateReply::default()
+                .content(format!("⭕  {display_name} is no longer playing Lunaro")),
+        )
         .await?;
-
-    play::remove(member, context.serenity_context()).await?;
 
     Ok(())
 }
