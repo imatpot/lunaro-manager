@@ -9,17 +9,17 @@ use crate::{errors::data::DataError, traits::config_file::ConfigFile, types::err
 
 use super::data;
 
-static CONFIG: OnceLock<Mutex<Config>> = OnceLock::new();
+static CONFIG: OnceLock<Mutex<LunaroTrackingConfig>> = OnceLock::new();
 const CONFIG_FILE: &str = "lunaro_tracking.json";
 
 /// Configures the Lunaro tracker's behaviour.
 #[derive(Serialize, Deserialize, Default, Debug)]
-pub struct Config {
+pub struct LunaroTrackingConfig {
     /// List of user IDs to ignore Lunaro updates from.
     pub blocklist: HashSet<UserId>,
 }
 
-impl Config {
+impl LunaroTrackingConfig {
     /// Check if a user is on the tracking blocklist.
     pub fn is_blocked(&self, user_id: &UserId) -> bool {
         self.blocklist.contains(user_id)
@@ -39,13 +39,13 @@ impl Config {
 }
 
 #[async_trait]
-impl ConfigFile for Config {
+impl ConfigFile for LunaroTrackingConfig {
     fn load() -> Result<Box<Self>, Error> {
         match data::read_config(CONFIG_FILE) {
             Ok(config) => Ok(config),
             Err(error) => match error.downcast_ref::<DataError>() {
                 Some(DataError::MissingConfigFile(_)) => {
-                    let config = Config::default();
+                    let config = LunaroTrackingConfig::default();
                     config.save()?;
                     Ok(config.into())
                 }
@@ -60,7 +60,7 @@ impl ConfigFile for Config {
 
     async fn instance<'a>() -> MutexGuard<'a, Self> {
         CONFIG
-            .get_or_init(|| Mutex::new(*Config::load().unwrap_or_default()))
+            .get_or_init(|| Mutex::new(*LunaroTrackingConfig::load().unwrap_or_default()))
             .lock()
             .await
     }
@@ -68,7 +68,7 @@ impl ConfigFile for Config {
 
 /// Remove a user from the tracking blocklist, if present.
 pub async fn allow_for(user: &User) -> Result<(), Error> {
-    let mut config = Config::instance().await;
+    let mut config = LunaroTrackingConfig::instance().await;
 
     config.remove_from_blocklist(&user.id)?;
 
@@ -83,7 +83,7 @@ pub async fn allow_for(user: &User) -> Result<(), Error> {
 
 /// Add a user to the tracking blocklist.
 pub async fn deny_for(user: &User) -> Result<(), Error> {
-    let mut config = Config::instance().await;
+    let mut config = LunaroTrackingConfig::instance().await;
 
     config.add_to_blocklist(&user.id)?;
 

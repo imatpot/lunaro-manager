@@ -42,7 +42,9 @@ async fn main() {
     let framework_options = FrameworkOptions {
         pre_command: |context| Box::pin(log_invocation(context)),
         on_error: |error| Box::pin(on_framework_error(error)),
-
+        event_handler: |context, event, framework, data| {
+            Box::pin(events::event_handler(context, event, framework, data))
+        },
 
         commands: vec![
             commands::about::run(),
@@ -61,7 +63,7 @@ async fn main() {
         .setup(|context, ready, framework| Box::pin(update_commands(ready, context, framework)))
         .build();
 
-    let intents = GatewayIntents::GUILD_PRESENCES;
+    let intents = GatewayIntents::GUILD_MEMBERS | GatewayIntents::GUILD_PRESENCES;
 
     let client_builder = Client::builder(&env.client_token.trim(), intents)
         .application_id(env.client_id)
@@ -87,7 +89,9 @@ async fn main() {
 /// Logs command invocations.
 async fn log_invocation(context: PoiseContext<'_>) {
     let author = &context.author().tag();
+    let author_id = &context.author().id;
     let guild = &context.partial_guild().await.unwrap().name;
+    let guild_id = &context.guild_id().unwrap();
     let parent_commands = context
         .parent_commands()
         .iter()
@@ -102,7 +106,7 @@ async fn log_invocation(context: PoiseContext<'_>) {
         format!("{} {}", parent_commands, context.command().name)
     };
 
-    log::info!("{author} ran [{command}] in {guild}");
+    log::info!("{author} ({author_id}) ran [{command}] in {guild} ({guild_id})");
 }
 
 /// Handles framework errors according to their severity.
@@ -125,12 +129,14 @@ async fn on_framework_error(error: FrameworkError<'_, PoiseData, Error>) {
 /// Logs the error and notifies the affected guild.
 async fn log_error(message: &str, context: PoiseContext<'_>) {
     let user = &context.author().tag();
+    let user_id = &context.author().id;
     let command = &context.command().name;
     let guild = &context.partial_guild().await.unwrap().name;
+    let guild_id = &context.guild_id().unwrap();
 
     let trace_id = Uuid::new_v4();
 
-    log::error!("{user} ran [{command}] in {guild} and got an error: {message} ({trace_id})",);
+    log::error!("{user} ({user_id}) ran [{command}] in {guild} ({guild_id}) and got an error: {message} ({trace_id})",);
 
     send_error_to_chat(message, trace_id, context).await;
 }

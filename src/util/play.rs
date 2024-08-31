@@ -30,7 +30,11 @@ pub async fn add(member: &mut Member, context: &Context) -> Result<(), Error> {
         .add_role(context, Environment::instance().playing_role_id)
         .await?;
 
-    log::debug!("Added {} to playing role", member.user.tag());
+    log::debug!(
+        "Added {} ({}) to playing role",
+        member.user.tag(),
+        member.user.id
+    );
 
     Ok(())
 }
@@ -41,7 +45,11 @@ pub async fn remove(member: &mut Member, context: &Context) -> Result<(), Error>
         .remove_role(context, Environment::instance().playing_role_id)
         .await?;
 
-    log::debug!("Removed {} from playing role", member.user.tag());
+    log::debug!(
+        "Removed {} ({}) from playing role",
+        member.user.tag(),
+        member.user.id
+    );
 
     Ok(())
 }

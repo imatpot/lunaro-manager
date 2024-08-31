@@ -1,21 +1,32 @@
-use poise::serenity_prelude::{async_trait, Context, Event, RawEventHandler};
+use poise::{
+    serenity_prelude::{Context, FullEvent},
+    FrameworkContext,
+};
+
+use crate::types::{error::Error, poise::PoiseData};
 
 mod presence_update;
 mod ready;
 
-pub struct EventHandlers;
+pub async fn event_handler(
+    context: &Context,
+    event: &FullEvent,
+    _framework: FrameworkContext<'_, PoiseData, Error>,
+    _data: &PoiseData,
+) -> Result<(), Error> {
+    let handled_event = match event {
+        FullEvent::Ready { data_about_bot } => ready::handle(context, data_about_bot).await,
+        FullEvent::PresenceUpdate { new_data } => presence_update::handle(context, new_data).await,
+        _ => Ok(()),
+    };
 
-#[async_trait]
-impl RawEventHandler for EventHandlers {
-    async fn raw_event(&self, context: Context, raw_event: Event) {
-        let handler = match &raw_event {
-            Event::Ready(event) => ready::handle(context, &event.ready).await,
-            Event::PresenceUpdate(event) => presence_update::handle(context, &event.presence).await,
-            _ => Ok(()),
-        };
-
-        if let Err(error) = handler {
-            log::warn!("Error while handling {:?}: {error:?}: {error}", raw_event);
-        }
+    if let Err(error) = handled_event {
+        log::error!(
+            "Error handling event {}: {:?}",
+            event.snake_case_name(),
+            error
+        );
     }
+
+    Ok(())
 }

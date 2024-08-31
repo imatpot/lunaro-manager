@@ -38,7 +38,7 @@ struct Committer {
 pub async fn run(context: PoiseContext<'_>) -> Result<(), Error> {
     let env = Environment::instance();
 
-    let tracking_config = lunaro_tracking::Config::instance().await;
+    let tracking_config = lunaro_tracking::LunaroTrackingConfig::instance().await;
     let member_count = context
         .partial_guild()
         .await
@@ -99,7 +99,7 @@ pub async fn run(context: PoiseContext<'_>) -> Result<(), Error> {
                     format!("⚙️  [Serenity](<https://github.com/serenity-rs/serenity>) {serenity_version} / [Poise](<https://github.com/serenity-rs/poise>) {poise_version}"),
                     format!("🚧  [Last updated](<{commit_url}>) {commit_date}",),
                     String::new(),
-                    format!("⏱️  Started online {uptime}"),
+                    format!("⏱️  Instance went online {uptime}"),
                 ]
                 .join("\n"),
             ),
