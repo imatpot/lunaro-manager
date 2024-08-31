@@ -12,7 +12,7 @@ pub async fn run(_context: PoiseContext<'_>) -> Result<(), Error> {
     Ok(())
 }
 
-/// 💤 Pause Lunaro tracking on your account
+/// 💤 Pause Lunaro tracking for your account
 #[command(slash_command)]
 async fn pause(context: PoiseContext<'_>) -> Result<(), Error> {
     let member = context.author();
@@ -30,7 +30,7 @@ async fn pause(context: PoiseContext<'_>) -> Result<(), Error> {
     Ok(())
 }
 
-/// 👁️ Resume Lunaro tracking on your account
+/// 👁️ Resume Lunaro tracking for your account
 #[command(slash_command)]
 async fn resume(context: PoiseContext<'_>) -> Result<(), Error> {
     let member = context.author();
