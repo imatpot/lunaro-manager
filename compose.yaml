@@ -1,4 +1,3 @@
-version: '3'
 services:
   lunaro-manager:
     image: lunaro-manager
@@ -7,8 +6,8 @@ services:
     restart: unless-stopped
     build: .
     volumes:
-      - "./data:/mnt/app/data"
-      - "./log:/mnt/app/log"
+      - "./data:/app/data"
+      - "./log:/app/log"
     environment:
       CLIENT_ID: ${CLIENT_ID:-example}
       CLIENT_TOKEN: ${CLIENT_TOKEN:-example}
