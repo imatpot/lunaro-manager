@@ -1,4 +1,4 @@
-name: lunaro_manager
+name: build
 
 on: [push, pull_request]
 
