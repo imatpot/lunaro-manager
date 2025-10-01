@@ -41,7 +41,7 @@ impl Cargo {
     pub fn get(&self, name: &str) -> Option<&Package> {
         match &self.package.iter().find(|p| p.name == name) {
             Some(pkg) => Some(pkg),
-            None => None,
+            _ => None,
         }
     }
 }
@@ -59,13 +59,13 @@ pub struct Package {
 impl Environment {
     /// Returns a reference to the `Environment` singleton.
     pub fn instance() -> &'static Environment {
-        ENV.get_or_init(|| Environment::load().unwrap_or_default())
+        ENV.get_or_init(|| Environment::load().expect("Failed to load environment variables"))
     }
 
     /// Fetches and validates required environment variables and returns them in
     /// an `Environment` struct.
     fn load() -> Result<Environment, Error> {
-        dotenv()?;
+        dotenv().ok();
 
         Ok(Environment {
             client_id: get_client_id()?.into(),

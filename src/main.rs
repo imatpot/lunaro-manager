@@ -24,7 +24,7 @@ use crate::types::poise::{PoiseContext, PoiseData};
 /// Entry point. Initializes the logger & environment, then runs the bot.
 #[tokio::main]
 async fn main() {
-    log4rs::init_file("log4rs.yaml", Default::default()).unwrap();
+    log4rs::init_file("log4rs.yaml", Default::default()).expect("log4rs.yaml not found");
 
     let default_panic = panic::take_hook();
 
