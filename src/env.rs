@@ -13,6 +13,9 @@ static CARGO_LOCK_PATH: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), 
 /// Contains read & validated environment variables.
 #[derive(Default, Debug)]
 pub struct Environment {
+    /// The data directory path.
+    pub data_dir: String,
+
     /// The bot's Discord user ID.
     pub client_id: ApplicationId,
 
@@ -68,6 +71,7 @@ impl Environment {
         dotenv().ok();
 
         Ok(Environment {
+            data_dir: get_data_dir()?.into(),
             client_id: get_client_id()?.into(),
             client_token: get_client_token()?,
             home_guild_id: get_home_guild_id()?.into(),
@@ -99,6 +103,14 @@ fn parse_id(id_string: &str, name: &str) -> Result<u64, Error> {
         Ok(id) => Ok(id),
         Err(_) => Err(EnvironmentError::Invalid(name.to_string()).into()),
     }
+}
+
+/// Fetches and validates the data directory environment variable.
+fn get_data_dir() -> Result<String, Error> {
+    let env_name = "DATA_DIR";
+    let data_dir = read_variable(env_name)?;
+
+    Ok(data_dir)
 }
 
 /// Fetches and validates the client ID environment variable.

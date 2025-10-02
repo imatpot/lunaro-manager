@@ -3,17 +3,17 @@ use std::{
     io::{Read, Write},
 };
 
-const DATA_DIR: &str = "data";
-
 use serde::{de::DeserializeOwned, Serialize};
 
-use crate::{errors::data::DataError, types::error::Error};
+use crate::{env::Environment, errors::data::DataError, types::error::Error};
 
 /// Write content to a file in the data directory. If the data directory doesn't
 /// exist, it will be created.
 fn write_file(path: &str, content: &str) -> std::io::Result<()> {
-    create_dir_all(DATA_DIR)?;
-    let mut file = File::create(format!("{DATA_DIR}/{}", path))?;
+    let env = &Environment::instance();
+
+    create_dir_all(env.data_dir.clone())?;
+    let mut file = File::create(format!("{}/{}", env.data_dir, path))?;
 
     file.write_all(content.as_bytes())?;
 
@@ -22,7 +22,9 @@ fn write_file(path: &str, content: &str) -> std::io::Result<()> {
 
 /// Read the contents of a file in the data directory.
 fn read_file(path: &str) -> std::io::Result<String> {
-    let mut file = File::open(format!("{DATA_DIR}/{}", path))?;
+    let env = &Environment::instance();
+
+    let mut file = File::open(format!("{}/{}", env.data_dir, path))?;
     let mut content = String::new();
 
     file.read_to_string(&mut content)?;

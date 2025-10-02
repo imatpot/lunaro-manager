@@ -45,13 +45,13 @@ pub async fn handle(context: &Context, presence: &Presence) -> Result<(), Error>
 
 async fn add_ready_role(member: &mut Member, context: &Context) -> Result<(), Error> {
     match context.get_scheduled_cancellation(member.user.id).await {
-        None => play::add(member, context).await,
         Some(cancellation_token) => {
             cancellation_token.cancel();
             Ok(context
                 .remove_cancellation_schedule_for(member.user.id)
                 .await)
-        }
+        },
+        _ => play::add(member, context).await,
     }
 }
 
@@ -118,7 +118,7 @@ impl RemovalScheduler for Context {
     async fn cancellation_schedule(&self) -> CancellationSchedule {
         match self.data.read().await.get::<CancellationScheduleData>() {
             Some(data) => data.schedule.clone(),
-            None => CancellationSchedule::new(),
+            _ => CancellationSchedule::new(),
         }
     }
 

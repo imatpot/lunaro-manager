@@ -9,6 +9,8 @@ services:
       - "./data:/app/data"
       - "./log:/app/log"
     environment:
+      LOG_DIR: ${LOG_DIR:-logs}
+      DATA_DIR: ${DATA_DIR:-data}
       CLIENT_ID: ${CLIENT_ID:-example}
       CLIENT_TOKEN: ${CLIENT_TOKEN:-example}
       HOME_GUILD_ID: ${HOME_GUILD_ID:-example}

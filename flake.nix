@@ -47,6 +47,11 @@
             [ pkgs.darwin.apple_sdk.frameworks.SystemConfiguration ];
 
           shellHook = ''
+            set -a
+            touch .env
+            source .env
+            set +a
+
             echo
             echo "                                       ....                              ..=#%#."
             echo "                                    .+%@@@#                            -*@@@@@@:"
