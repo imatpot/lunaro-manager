@@ -152,3 +152,7 @@ data/
 
 # Nix build output
 result
+
+# Direnv
+.direnv
+.envrc
