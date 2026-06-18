@@ -13,11 +13,9 @@
     };
   };
 
-  outputs =
-    inputs:
+  outputs = inputs:
     inputs.utils.lib.eachDefaultSystem (
-      system:
-      let
+      system: let
         pkgs = inputs.nixpkgs.legacyPackages.${system}.appendOverlays [
           inputs.rust.overlays.default
         ];
@@ -36,8 +34,7 @@
           };
         };
         manifest = pkgs.lib.importTOML ./Cargo.toml;
-      in
-      {
+      in {
         packages = rec {
           default = lunaro-manager;
 

@@ -3,4 +3,4 @@ let
   flake = builtins.getFlake root;
   system = builtins.currentSystem;
 in
-flake.devShells.${system}.default
+  flake.devShells.${system}.default

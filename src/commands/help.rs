@@ -1,11 +1,11 @@
-use poise::{command, CreateReply};
+use poise::{CreateReply, command};
 
 use crate::types::{error::Error, poise::PoiseContext};
 
 /// ❓ Learn how to use Lunaro Manager
 #[command(slash_command, rename = "help")]
 pub async fn run(context: PoiseContext<'_>) -> Result<(), Error> {
-    context
+	context
         .send(
             CreateReply::default().content(
                 [
@@ -21,5 +21,5 @@ pub async fn run(context: PoiseContext<'_>) -> Result<(), Error> {
         )
         .await?;
 
-    Ok(())
+	Ok(())
 }

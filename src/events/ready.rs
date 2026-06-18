@@ -4,7 +4,7 @@ use crate::types::error::Error;
 
 /// Handles the ready event.
 pub async fn handle(context: &Context, ready: &Ready) -> Result<(), Error> {
-    log::info!("{} ({}) is ready", ready.user.tag(), ready.user.id);
-    context.online();
-    Ok(())
+	log::info!("{} ({}) is ready", ready.user.tag(), ready.user.id);
+	context.online();
+	Ok(())
 }
