@@ -7,7 +7,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::{errors::data::DataError, traits::config_file::ConfigFile, types::error::Error};
 
-use super::data;
+use super::filesystem;
 
 static CONFIG: OnceLock<Mutex<LunaroTrackingConfig>> = OnceLock::new();
 const CONFIG_FILE: &str = "lunaro_tracking.json";
@@ -41,7 +41,7 @@ impl LunaroTrackingConfig {
 #[async_trait]
 impl ConfigFile for LunaroTrackingConfig {
     fn load() -> Result<Box<Self>, Error> {
-        match data::read_config(CONFIG_FILE) {
+        match filesystem::read_config(CONFIG_FILE) {
             Ok(config) => Ok(config),
             Err(error) => match error.downcast_ref::<DataError>() {
                 Some(DataError::MissingConfigFile(_)) => {
@@ -55,7 +55,7 @@ impl ConfigFile for LunaroTrackingConfig {
     }
 
     fn save(&self) -> Result<(), Error> {
-        data::write_config(CONFIG_FILE, self)
+        filesystem::write_config(CONFIG_FILE, self)
     }
 
     async fn instance<'a>() -> MutexGuard<'a, Self> {

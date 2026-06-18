@@ -8,7 +8,7 @@ use crate::{
     env::Environment,
     traits::config_file::ConfigFile,
     types::error::Error,
-    util::{lunaro_tracking, play},
+    util::{lunaro_tracking, playing_role},
 };
 
 type CancellationSchedule = HashMap<UserId, CancellationToken>;
@@ -45,13 +45,13 @@ pub async fn handle(context: &Context, presence: &Presence) -> Result<(), Error>
 
 async fn add_ready_role(member: &mut Member, context: &Context) -> Result<(), Error> {
     match context.get_scheduled_cancellation(member.user.id).await {
+        None => playing_role::add(member, context).await,
         Some(cancellation_token) => {
             cancellation_token.cancel();
             Ok(context
                 .remove_cancellation_schedule_for(member.user.id)
                 .await)
         },
-        _ => play::add(member, context).await,
     }
 }
 
@@ -85,9 +85,9 @@ async fn schedule_ready_removal(mut member: Member, context: &Context) {
             _ = cancellation_token.cancelled() => {
                 log::debug!("Cancelling ready removal for {} ({})", member.user.tag(), member.user.id);
             }
-            _ = sleep(Duration::from_secs(60)) => {
+            _ = sleep(Duration::from_secs(120)) => {
                 context.remove_cancellation_schedule_for(member.user.id).await;
-                play::remove(&mut member, &context).await.unwrap_or_else(|error| {
+                playing_role::remove(&mut member, &context).await.unwrap_or_else(|error| {
                     log::error!("Failed to remove ready role for {} ({}): {}", member.user.tag(), member.user.id, error);
                 });
             }

@@ -3,7 +3,7 @@ use poise::{command, CreateReply};
 use crate::{
     env::Environment,
     types::{error::Error, poise::PoiseContext},
-    util::{lunaro_tracking, play},
+    util::{lunaro_tracking, playing_role},
 };
 
 /// 🥍 Manage your Lunaro status
@@ -33,7 +33,7 @@ async fn now(
         lunaro_tracking::deny_for(&member.user).await?;
     }
 
-    play::add(member, context.serenity_context()).await?;
+    playing_role::add(member, context.serenity_context()).await?;
 
     let display_name = match &member.nick {
         Some(nick) => nick,
@@ -67,7 +67,7 @@ async fn later(
         lunaro_tracking::allow_for(&member.user).await?;
     }
 
-    play::remove(member, context.serenity_context()).await?;
+    playing_role::remove(member, context.serenity_context()).await?;
 
     let display_name = match &member.nick {
         Some(nick) => nick,
@@ -87,7 +87,7 @@ async fn later(
 /// 👀 Check who's equipped their Arcata
 #[command(slash_command)]
 async fn info(context: PoiseContext<'_>) -> Result<(), Error> {
-    let playing_member_count = play::count(context.serenity_context()).await?;
+    let playing_member_count = playing_role::count(context.serenity_context()).await?;
 
     let verb = match playing_member_count {
         1 => "is",
