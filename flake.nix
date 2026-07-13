@@ -90,8 +90,9 @@
             echo "                          .--+**=-.          ..=*%@@@@@%*+-."
             echo "                                                   :=*%@@@@@%*=-."
             echo "                                                       .=*%@@@@@@%+:"
-            echo "The near Moon eclipses the far Sun.                        .-+#@@@@@@%*=."
-            echo "                                                                .=*%@@@@@@@%*#%*"
+            echo "                                                           .-+#@@@@@@%*=."
+            echo "The near Moon eclipses the far Sun.                             .=*%@@@@@@@%*#%*"
+            echo
             echo "- $(rustc --version)"
             echo "- $(cargo --version)"
             echo
