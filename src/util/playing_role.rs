@@ -77,7 +77,7 @@ pub async fn remove(member: &mut Member, context: &Context) -> Result<(), Error>
 		notification_channel
 			.say(
 				&context.http,
-				format!("⭕️  {} is no longer playing Lunaro", display_name),
+				format!("⭕  {} is no longer playing Lunaro", display_name),
 			)
 			.await?;
 	}
