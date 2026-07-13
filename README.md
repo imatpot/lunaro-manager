@@ -138,5 +138,5 @@ $ nix run
 $ nix run github:imatpot/lunaro-manager
 
 # run specific version using remote repository
-$ nix run github:imatpot/lunaro-manager/2.1.0
+$ nix run github:imatpot/lunaro-manager/2.2.0
 ```
