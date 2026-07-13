@@ -1,4 +1,4 @@
-use poise::{CreateReply, command};
+use poise::{command, CreateReply};
 
 use crate::{
 	env::Environment,
@@ -35,13 +35,12 @@ async fn now(
 
 	playing_role::add(member, context.serenity_context()).await?;
 
-	let display_name = match &member.nick {
-		Some(nick) => nick,
-		None => &member.user.name,
-	};
-
 	context
-		.send(CreateReply::default().content(format!("🟢  {display_name} is now playing Lunaro")))
+		.send(
+			CreateReply::default()
+				.content(format!("🟢  Good luck in the arena, Tenno!"))
+				.ephemeral(true),
+		)
 		.await?;
 
 	Ok(())
@@ -69,15 +68,11 @@ async fn later(
 
 	playing_role::remove(member, context.serenity_context()).await?;
 
-	let display_name = match &member.nick {
-		Some(nick) => nick,
-		None => &member.user.name,
-	};
-
 	context
 		.send(
 			CreateReply::default()
-				.content(format!("⭕  {display_name} is no longer playing Lunaro")),
+				.content(format!("⭕  The arena eagerly awaits your return."))
+				.ephemeral(true),
 		)
 		.await?;
 

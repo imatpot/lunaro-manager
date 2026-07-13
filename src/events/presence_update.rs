@@ -48,9 +48,11 @@ async fn add_ready_role(member: &mut Member, context: &Context) -> Result<(), Er
 		None => playing_role::add(member, context).await,
 		Some(cancellation_token) => {
 			cancellation_token.cancel();
-			Ok(context
+			context
 				.remove_cancellation_schedule_for(member.user.id)
-				.await)
+				.await;
+
+			Ok(())
 		}
 	}
 }
@@ -87,9 +89,10 @@ async fn schedule_ready_removal(mut member: Member, context: &Context) {
 			}
 			_ = sleep(Duration::from_secs(120)) => {
 				context.remove_cancellation_schedule_for(member.user.id).await;
-				playing_role::remove(&mut member, &context).await.unwrap_or_else(|error| {
+
+				if let Err(error) = playing_role::remove(&mut member, &context).await {
 					log::error!("Failed to remove ready role for {} ({}): {}", member.user.tag(), member.user.id, error);
-				});
+				}
 			}
 		}
 	});

@@ -16,7 +16,12 @@ const CONFIG_FILE: &str = "lunaro_tracking.json";
 #[derive(Serialize, Deserialize, Default, Debug)]
 pub struct LunaroTrackingConfig {
 	/// List of user IDs to ignore Lunaro updates from.
+	/// Disjoint from [`LunaroTrackingConfig::hidelist`].
 	pub blocklist: HashSet<UserId>,
+
+	/// List of user IDs to silently track Lunaro updates from.
+	/// Disjoint from [`LunaroTrackingConfig::blocklist`].
+	pub hidelist: HashSet<UserId>,
 }
 
 impl LunaroTrackingConfig {
@@ -25,15 +30,34 @@ impl LunaroTrackingConfig {
 		self.blocklist.contains(user_id)
 	}
 
+	/// Check if a user is on the silent list.
+	pub fn is_hidden(&self, user_id: &UserId) -> bool {
+		self.hidelist.contains(user_id)
+	}
+
 	/// Add a user to the tracking blocklist.
 	fn add_to_blocklist(&mut self, user_id: &UserId) -> Result<(), Error> {
 		self.blocklist.insert(user_id.clone());
+		self.hidelist.remove(user_id);
+		self.save()
+	}
+
+	/// Add a user to the silent list.
+	fn add_to_hidelist(&mut self, user_id: &UserId) -> Result<(), Error> {
+		self.hidelist.insert(user_id.clone());
+		self.blocklist.remove(user_id);
 		self.save()
 	}
 
 	/// Remove a user from the tracking blocklist.
 	fn remove_from_blocklist(&mut self, user_id: &UserId) -> Result<(), Error> {
 		self.blocklist.remove(user_id);
+		self.save()
+	}
+
+	/// Remove a user from the silent list.
+	fn remove_from_hidelist(&mut self, user_id: &UserId) -> Result<(), Error> {
+		self.hidelist.remove(user_id);
 		self.save()
 	}
 }
@@ -70,14 +94,25 @@ impl ConfigFile for LunaroTrackingConfig {
 pub async fn allow_for(user: &User) -> Result<(), Error> {
 	let mut config = LunaroTrackingConfig::instance().await;
 
+	config.remove_from_hidelist(&user.id)?;
 	config.remove_from_blocklist(&user.id)?;
 
 	log::debug!(
-		"Removed {} ({}) from tracking blocklist",
+		"Resumed trakcing for {} ({})",
 		user.tag(),
 		user.id
 	);
 
+	Ok(())
+}
+
+/// Add a user to the silent list.
+pub async fn hide_for(user: &User) -> Result<(), Error> {
+	let mut config = LunaroTrackingConfig::instance().await;
+
+	config.add_to_hidelist(&user.id)?;
+
+	log::debug!("Added {} ({}) to hidelist", user.tag(), user.id);
 	Ok(())
 }
 

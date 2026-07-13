@@ -1,6 +1,9 @@
 use poise::serenity_prelude::{Context, Member};
 
-use crate::{env::Environment, types::error::Error};
+use crate::{
+	env::Environment, traits::config_file::ConfigFile, types::error::Error,
+	util::lunaro_tracking::LunaroTrackingConfig,
+};
 
 /// Count how many members have the playing role.
 pub async fn count(context: &Context) -> Result<usize, Error> {
@@ -30,6 +33,23 @@ pub async fn add(member: &mut Member, context: &Context) -> Result<(), Error> {
 		.add_role(context, Environment::instance().playing_role_id)
 		.await?;
 
+	let tracking_config = LunaroTrackingConfig::instance().await;
+	if !tracking_config.is_hidden(&member.user.id) {
+		let display_name = match &member.nick {
+			Some(nick) => nick,
+			None => &member.user.name,
+		};
+
+		let env = Environment::instance();
+		let notification_channel = env.notification_channel_id;
+		notification_channel
+			.say(
+				&context.http,
+				format!("🟢  {} is now playing Lunaro", display_name),
+			)
+			.await?;
+	}
+
 	log::debug!(
 		"Added {} ({}) to playing role",
 		member.user.tag(),
@@ -44,6 +64,23 @@ pub async fn remove(member: &mut Member, context: &Context) -> Result<(), Error>
 	member
 		.remove_role(context, Environment::instance().playing_role_id)
 		.await?;
+
+	let tracking_config = LunaroTrackingConfig::instance().await;
+	if !tracking_config.is_hidden(&member.user.id) {
+		let display_name = match &member.nick {
+			Some(nick) => nick,
+			None => &member.user.name,
+		};
+
+		let env = Environment::instance();
+		let notification_channel = env.notification_channel_id;
+		notification_channel
+			.say(
+				&context.http,
+				format!("⭕️  {} is no longer playing Lunaro", display_name),
+			)
+			.await?;
+	}
 
 	log::debug!(
 		"Removed {} ({}) from playing role",

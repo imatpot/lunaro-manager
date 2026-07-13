@@ -55,6 +55,11 @@ You can optionally re-enable Lunaro tracking for your account at the same time.
 
 Lists the number of members playing Lunaro.
 
+### `👻 /tracking silence`
+
+Prevents others from being notified when you play Lunaro.
+Your activity will still be tracked, but the bot will not send a message to subscribers when you start or stop playing Lunaro.
+
 ### `💤 /tracking pause`
 
 Disables Lunaro tracking for your account.

@@ -1,7 +1,7 @@
 use std::{env, sync::OnceLock};
 
 use dotenv::dotenv;
-use poise::serenity_prelude::{ApplicationId, GuildId, RoleId};
+use poise::serenity_prelude::{ApplicationId, ChannelId, GuildId, RoleId};
 use regex::Regex;
 use serde::Deserialize;
 
@@ -27,6 +27,9 @@ pub struct Environment {
 
 	/// The role ID of the role to be given to users playing Lunaro.
 	pub playing_role_id: RoleId,
+
+	/// The channel ID of the channel to send activity notifications to.
+	pub notification_channel_id: ChannelId,
 
 	/// The bot's Cargo package information.
 	pub cargo: Cargo,
@@ -76,6 +79,7 @@ impl Environment {
 			client_token: get_client_token()?,
 			home_guild_id: get_home_guild_id()?.into(),
 			playing_role_id: get_playing_role_id()?.into(),
+			notification_channel_id: get_notification_channel_id()?.into(),
 			cargo: get_cargo()?,
 		})
 	}
@@ -143,6 +147,14 @@ fn get_playing_role_id() -> Result<u64, Error> {
 	let playing_role_id_string = read_variable(env_name)?;
 
 	parse_id(&playing_role_id_string, env_name)
+}
+
+/// Fetches and validates the notification channel ID environment variable.
+fn get_notification_channel_id() -> Result<u64, Error> {
+	let env_name = "NOTIFICATION_CHANNEL_ID";
+	let notification_channel_id_string = read_variable(env_name)?;
+
+	parse_id(&notification_channel_id_string, env_name)
 }
 
 /// Fetches and validates the Cargo package information.
