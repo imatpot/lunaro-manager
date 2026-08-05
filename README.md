@@ -6,7 +6,7 @@
 
 <p align="center">
   <i>
-    Discord bot for managing everything <a href="https://warframe.fandom.com/wiki/Lunaro">Lunaro</a> for the <a href="https://discord.gg/rFBzmpEQxc">Academia Lunaris Discord Server</a>
+    Discord bot for managing everything <a href="https://warframe.fandom.com/wiki/Lunaro">Lunaro</a> for the <a href="https://discord.lunaro.wf">Academia Lunaris Discord Server</a>
   </i>
 </p>
 
@@ -17,7 +17,7 @@
   <a href="LICENSE.md" style="text-decoration: none">
     <img src="https://img.shields.io/github/license/imatpot/lunaro-manager?color=blue&style=flat-square">
   </a>
-  <a href="https://discord.gg/rFBzmpEQxc" style="text-decoration: none">
+  <a href="https://discord.lunaro.wf" style="text-decoration: none">
     <img src="https://img.shields.io/badge/Join-Academia%20Lunaris-%237289da?logo=discord&style=flat-square">
   </a>
 </p>
